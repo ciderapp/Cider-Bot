@@ -1,0 +1,24 @@
+{
+  "name": "Cider-Bot",
+  "version": "1.0.0",
+  "description": "Simple Discord Bot for use with Cider and its Discord server.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ciderapp/Cider-Bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ciderapp/Cider-Bot/issues"
+  },
+  "homepage": "https://github.com/ciderapp/Cider-Bot#readme",
+  "dependencies": {
+    "discord.js": "^13"
+  }
+}
