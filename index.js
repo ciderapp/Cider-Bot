@@ -19,35 +19,36 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
 
         if (activity && (activity.applicationId === ( "911790844204437504" ) || (activity.applicationId === ( "886578863147192350" )))) {
-            try {
-                let listenerinfo = {
-                    userid: newMember.userId,
-                    userName: newMember.member.user.username,
-                    songName: activity.details
-                }
-
-                if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
-                    console.log("\x1b[2m", "Listener updated -", listenerinfo)
-                    return // not changing any roles, just a log
-                } else {
-                    console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                    using_cider = true // code below will handle it
-                    break
-                }
-         
-            } catch(e) {
-                console.log("An error occurred. ",e)
+            
+            let listenerinfo = {
+                userid: newMember.userId,
+                userName: newMember.member.user.username,
+                songName: activity.details
             }
+
+            if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
+                console.log("\x1b[2m", "Listener updated -", listenerinfo)
+                return // not changing any roles, just a log
+            } else {
+                console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
+                using_cider = true // code below will handle it
+                break
+            }
+        
+           
         }
     }
     
     if(using_cider){
-        newMember.member.roles.add(role) // add listening on cider role
-
-
-        if (!newMember.member._roles.includes("932816700305469510")) {
-            newMember.member.roles.add("932816700305469510") // Add Cider User role.
+        try {
+            newMember.member.roles.add(role) // add listening on cider role
+            if (!newMember.member._roles.includes("932816700305469510")) {
+                newMember.member.roles.add("932816700305469510") // Add Cider User role.
+            }
+        } catch(e) {
+            console.log("An error occurred. ",e)
         }
+        
     } else { // Remove role if exists or ignore.
         try {
             if (newMember.member._roles.includes("932784788115427348")) {
