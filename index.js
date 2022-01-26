@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const auth = require('./tokens.json');
 const client = new Discord.Client({
-    intents: [ Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES ]
+    intents: [ Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS ]
 });
 
 client.on('ready', () => {
@@ -12,7 +12,7 @@ client.on('ready', () => {
 client.on('presenceUpdate', async (oldMember, newMember) => {
     const role = newMember.guild.roles.cache.get("932784788115427348");
     const activities = newMember.activities[1];
-
+    
     // 911790844204437504 - Cider
     // 886578863147192350 - Apple Music
 
