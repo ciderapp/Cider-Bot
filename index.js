@@ -43,7 +43,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         try {
             newMember.member.roles.add(role) // add listening on cider role
             if (!newMember.member._roles.includes("932816700305469510")) {
-                newMember.member.roles.add("932816700305469510") // Add Cider User role.
+                try {newMember.member.roles.add("932816700305469510")} catch(e) {console.log("An error occurred while adding role. ",e)} // Add Cider User role.
             }
         } catch(e) {
             console.log("An error occurred. ",e)
@@ -52,7 +52,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     } else { // Remove role if exists or ignore.
         try {
             if (newMember.member._roles.includes("932784788115427348")) {
-                newMember.member.roles.remove("932784788115427348"); // remove listening on cider role
+                try {
+                    newMember.member.roles.remove("932784788115427348"); // remove listening on cider role
+                } catch(e) {console.log("An error occurred on role removal. ",e)}
                 let rmlistenerinfo = {
                     userid: newMember.userId,
                     userName: newMember.member.user.username,
