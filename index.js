@@ -142,7 +142,7 @@ client.on('interactionCreate', async interaction => {
         })
 
 
-        await interaction.reply({ content: 'What file do you want?', ephemeral: false, components: [buttons] })
+        await interaction.reply({ content: 'What file do you want?', ephemeral: true, components: [buttons] })
     };
 })
 
