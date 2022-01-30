@@ -78,7 +78,7 @@ client.on('messageCreate', async message => {
     link = link[0].replace('https://', '')
 
     let new_link = "cider://" + link
-    return message.reply('<:external:937230359890890803> Open in Cider <' + new_link + '>')
+    return message.reply('<:openIn:937249676707659776> Open in Cider <' + new_link + '>')
 })
 
 client.login(auth.token).then();
