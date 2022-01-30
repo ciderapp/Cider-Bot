@@ -81,8 +81,8 @@ client.on('messageCreate', async message => {
     console.log("[Link] Creating redirect embed.")
 
     try {
-        fetch(link)
-            .then(result => result.text())
+        fetch(link).catch(e => console.log("[Link] Error creating redirect embed."))
+            .then(result => result.text()).catch(e => null)
             .then(html => {
                 const $ = cheerio.load(html)
                 const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
@@ -118,7 +118,7 @@ client.on('messageCreate', async message => {
                     message.delete()
                     return message.channel.send({ embeds: [embed], components: [interaction]});
                 } catch(e) {}
-            }).catch(e)
+            }).catch(e => null)
     } catch(e) {}
 })
 
