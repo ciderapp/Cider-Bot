@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const auth = require('./tokens.json');
+const cheerio = require('cheerio');
+const fetch = require('node-fetch');
+
 const client = new Discord.Client({
     intents: [ Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS ]
 });
@@ -75,10 +78,46 @@ client.on('messageCreate', async message => {
 
     if (!link) return
 
-    link = link[0].replace('https://', '')
+    try {
+        fetch(link)
+            .then(result => result.text())
+            .then(html => {
+                const $ = cheerio.load(html)
+                const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
+                const description = $('meta[property="twitter:description"]').attr('content')
+                const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
 
-    let new_link = "cider://" + link
-    return message.reply('<:openIn:937249676707659776> Open in Cider <' + new_link + '>')
+                let modlink = link[0].replace('https://', '')
+                let play_link = "https://cider.sh/p?" + modlink
+                let view_link = "https://cider.sh/o?" + modlink
+
+                let embed = new Discord.MessageEmbed()
+                    .setColor('#fb003f')
+                    .setTitle(title)
+                    .setURL(link.toString())
+                    .setThumbnail(image)
+                    .setDescription(description)
+                    .setFooter({ text: "Shared by "+message.author.username, iconURL: message.author.avatarURL() })
+                    .setTimestamp()
+                
+                let interaction = new Discord.MessageActionRow()
+                    .addComponents(
+                        new Discord.MessageButton()
+                            .setLabel('Play In Cider')
+                            .setStyle('LINK')
+                            .setURL(play_link),
+                        new Discord.MessageButton()
+                            .setLabel('View In Cider')
+                            .setStyle('LINK')
+                            .setURL(view_link)
+                    )
+                
+                try {
+                    message.delete()
+                    return message.channel.send({ embeds: [embed], components: [interaction]});
+                } catch(e) {}
+            }).catch(e)
+    } catch(e) {}
 })
 
 client.login(auth.token).then();
