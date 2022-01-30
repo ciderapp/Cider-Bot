@@ -68,4 +68,17 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     }
 })
 
+client.on('messageCreate', async message => {
+    if (message.author.bot) return
+
+    let link = message.content.match(/^(?!cider:\/\/).+(apple\.music\.com)([^\s]+)/gi)
+
+    if (!link) return
+
+    link = link[0].replace('https://', '')
+
+    let new_link = "cider://" + link
+    return message.reply('<:external:937230359890890803> Open in Cider <' + new_link + '>')
+})
+
 client.login(auth.token).then();
