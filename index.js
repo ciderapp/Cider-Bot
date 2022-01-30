@@ -2,27 +2,27 @@ const Discord = require('discord.js');
 const auth = require('./tokens.json');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
-
+const deploy = require('./deploy-commands.js');
 const client = new Discord.Client({
-    intents: [ Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS ]
+    intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
 
 client.on('ready', () => {
- console.log(`Logged in as ${client.user.tag} at`);
- console.log(Date())
+    console.log(`Logged in as ${client.user.tag} at`);
+    console.log(Date())
 });
 
-client.on('presenceUpdate', async (oldMember, newMember) => {
+client.on('presenceUpdate', async(oldMember, newMember) => {
     const role = newMember.guild.roles.cache.get("932784788115427348");
 
 
     let using_cider = false
-    for (const activity of newMember.activities){
+    for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
 
-        if (activity && (activity.applicationId === ( "911790844204437504" ) || (activity.applicationId === ( "886578863147192350" )))) {
-            
+        if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
+
             let listenerinfo = {
                 userid: newMember.userId,
                 userName: newMember.member.user.username,
@@ -37,27 +37,27 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 using_cider = true // code below will handle it
                 break
             }
-        
-           
+
+
         }
     }
-    
-    if(using_cider){
+
+    if (using_cider) {
         try {
             newMember.member.roles.add(role) // add listening on cider role
             if (!newMember.member._roles.includes("932816700305469510")) {
-                try {newMember.member.roles.add("932816700305469510")} catch(e) {console.log("An error occurred while adding role. ",e)} // Add Cider User role.
+                try { newMember.member.roles.add("932816700305469510") } catch (e) { console.log("An error occurred while adding role. ", e) } // Add Cider User role.
             }
-        } catch(e) {
-            console.log("An error occurred. ",e)
+        } catch (e) {
+            console.log("An error occurred. ", e)
         }
-        
+
     } else { // Remove role if exists or ignore.
         try {
             if (newMember.member._roles.includes("932784788115427348")) {
                 try {
                     newMember.member.roles.remove("932784788115427348"); // remove listening on cider role
-                } catch(e) {console.log("An error occurred on role removal. ",e)}
+                } catch (e) { console.log("An error occurred on role removal. ", e) }
                 let rmlistenerinfo = {
                     userid: newMember.userId,
                     userName: newMember.member.user.username,
@@ -65,7 +65,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
             }
-        } catch(e) {
+        } catch (e) {
             console.log(e)
         }
     }
@@ -99,27 +99,54 @@ client.on('messageCreate', async message => {
                     .setURL(link.toString())
                     .setThumbnail(image)
                     .setDescription(description)
-                    .setFooter({ text: "Shared by "+message.author.username, iconURL: message.author.avatarURL() })
+                    .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
                     .setTimestamp()
-                
+
                 let interaction = new Discord.MessageActionRow()
                     .addComponents(
                         new Discord.MessageButton()
-                            .setLabel('Play In Cider')
-                            .setStyle('LINK')
-                            .setURL(play_link),
+                        .setLabel('Play In Cider')
+                        .setStyle('LINK')
+                        .setURL(play_link),
                         new Discord.MessageButton()
-                            .setLabel('View In Cider')
-                            .setStyle('LINK')
-                            .setURL(view_link)
+                        .setLabel('View In Cider')
+                        .setStyle('LINK')
+                        .setURL(view_link)
                     )
-                
+
                 try {
                     message.delete()
-                    return message.channel.send({ embeds: [embed], components: [interaction]});
-                } catch(e) {}
+                    return message.channel.send({ embeds: [embed], components: [interaction] });
+                } catch (e) {}
             }).catch(e => null)
-    } catch(e) {}
+    } catch (e) {}
 })
+client.on('interactionCreate', async interaction => {
+    if (!interaction.isCommand()) return;
+
+    const { commandName } = interaction;
+
+    if (commandName === 'nightly') {
+        let latestNightly = await fetch('https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=main&filter=successful')
+        latestNightly = await latestNightly.json()
+            //console.log(latestNightly)
+
+        let buttons = new Discord.MessageActionRow()
+        latestNightly.forEach(element => {
+            buttons.addComponents(
+                new Discord.MessageButton()
+                .setLabel(`.${String(element.path).split('.')[String(element.path).split('.').length - 1]}`)
+                .setStyle('LINK')
+                .setURL(element.url)
+            )
+        })
+
+
+        await interaction.reply({ content: 'What file do you want?', ephemeral: false, components: [buttons] })
+    };
+})
+
+
+
 
 client.login(auth.token).then();
