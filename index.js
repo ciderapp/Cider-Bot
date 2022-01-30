@@ -71,7 +71,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 client.on('messageCreate', async message => {
     if (message.author.bot) return
 
-    let link = message.content.match(/^(?!cider:\/\/).+(apple\.music\.com)([^\s]+)/gi)
+    let link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
 
     if (!link) return
 
