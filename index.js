@@ -78,13 +78,15 @@ client.on('messageCreate', async message => {
 
     if (!link) return
 
+    console.log("[Link] Creating redirect embed.")
+
     try {
         fetch(link)
             .then(result => result.text())
             .then(html => {
                 const $ = cheerio.load(html)
                 const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
-                const description = $('meta[property="twitter:description"]').attr('content')
+                const description = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
                 const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
 
                 let modlink = link[0].replace('https://', '')
