@@ -134,6 +134,7 @@ client.on('interactionCreate', async interaction => {
 
         let buttons = new Discord.MessageActionRow()
         latestNightly.forEach(element => {
+            if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'yml') return;
             buttons.addComponents(
                 new Discord.MessageButton()
                 .setLabel(`.${String(element.path).split('.')[String(element.path).split('.').length - 1]}`)
