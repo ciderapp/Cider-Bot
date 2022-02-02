@@ -142,7 +142,13 @@ client.on('interactionCreate', async interaction => {
                 .setURL(element.url)
             )
         })
-
+        
+         buttons.addComponents(
+                new Discord.MessageButton()
+                .setLabel(`MacOS .dmg`)
+                .setStyle('LINK')
+                .setURL('https://bit.ly/macoscider')
+            )
 
         await interaction.reply({ content: 'What file do you want?', ephemeral: true, components: [buttons] })
     };
