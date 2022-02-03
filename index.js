@@ -125,10 +125,10 @@ client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
 
     const { commandName } = interaction;
-
-    if (commandName === 'nightly') {
-        let latestNightly = await fetch('https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=main&filter=successful')
-        if (latestNightly.status != 200) return interaction.reply('Error fetching latest nightly.')
+    let branch = interaction.options.getString('branch') || 'main'
+    if (commandName === 'nightly' || commandName === 'branchbuilds') {
+        let latestNightly = await fetch(`https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=${branch}&filter=successful`)
+        if (latestNightly.status != 200) return interaction.reply('Error fetching latest artifact.')
         latestNightly = await latestNightly.json()
             //console.log(latestNightly)
 
@@ -145,13 +145,13 @@ client.on('interactionCreate', async interaction => {
         
          buttons.addComponents(
                 new Discord.MessageButton()
-                .setLabel(`MacOS .dmg`)
+                .setLabel(`.dmg`)
                 .setStyle('LINK')
                 .setURL('https://bit.ly/macoscider')
             )
 
-        await interaction.reply({ content: 'What file do you want?', ephemeral: true, components: [buttons] })
-    };
+        await interaction.reply({ content: 'What file do you want?', ephemeral: !interaction.options.getString('branch'), components: [buttons] })
+    }
 })
 
 
