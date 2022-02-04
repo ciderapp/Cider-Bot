@@ -128,7 +128,7 @@ client.on('interactionCreate', async interaction => {
     let branch = interaction.options.getString('branch') || 'main'
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
         let latestNightly = await fetch(`https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=${branch}&filter=successful`)
-        if (latestNightly.status != 200) return interaction.reply('Error fetching latest artifact.')
+        if (latestNightly.status != 200) return interaction.reply(`Error fetching latest artifact from the **${branch}** branch`)
         latestNightly = await latestNightly.json()
             //console.log(latestNightly)
 
