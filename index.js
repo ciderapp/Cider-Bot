@@ -151,7 +151,7 @@ client.on('interactionCreate', async interaction => {
         )
         console.log(show)
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
-        await interaction.reply({ content: 'What file do you want?', ephemeral: !show, components: [buttons] })
+        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
     }
 })
 
