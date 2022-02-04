@@ -124,8 +124,9 @@ client.on('messageCreate', async message => {
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
-    let branch = interaction.options.getString('branch') || 'main'
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
+        let branch = interaction.options.getString('branch') || 'main'
+        let show = interaction.options.getBoolean('show') || true
         let latestNightly = await fetch(`https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=${branch}&filter=successful`)
         if (latestNightly.status != 200) return interaction.reply(`Error fetching latest artifact from the **${branch}** branch`)
         latestNightly = await latestNightly.json()
@@ -148,8 +149,9 @@ client.on('interactionCreate', async interaction => {
             .setStyle('LINK')
             .setURL('https://bit.ly/macoscider')
         )
-
-        await interaction.reply({ content: 'What file do you want?', ephemeral: !interaction.options.getBoolean('show'), components: [buttons] })
+        console.log(show)
+        if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
+        await interaction.reply({ content: 'What file do you want?', ephemeral: !show, components: [buttons] })
     }
 })
 
