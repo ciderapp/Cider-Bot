@@ -123,7 +123,6 @@ client.on('messageCreate', async message => {
 })
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
-
     const { commandName } = interaction;
     let branch = interaction.options.getString('branch') || 'main'
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
@@ -142,15 +141,15 @@ client.on('interactionCreate', async interaction => {
                 .setURL(element.url)
             )
         })
-        
-         buttons.addComponents(
-                new Discord.MessageButton()
-                .setLabel(`.dmg`)
-                .setStyle('LINK')
-                .setURL('https://bit.ly/macoscider')
-            )
 
-        await interaction.reply({ content: 'What file do you want?', ephemeral: !interaction.options.getString('branch'), components: [buttons] })
+        buttons.addComponents(
+            new Discord.MessageButton()
+            .setLabel(`.dmg`)
+            .setStyle('LINK')
+            .setURL('https://bit.ly/macoscider')
+        )
+
+        await interaction.reply({ content: 'What file do you want?', ephemeral: !interaction.options.getBoolean('show'), components: [buttons] })
     }
 })
 
