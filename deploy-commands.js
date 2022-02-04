@@ -6,7 +6,7 @@ const clientId = '921475709694771252';
 const guildId = '843954443845238864';
 const commands = [
         new SlashCommandBuilder().setName('nightly').setDescription('Gives you download links for the latest nightly builds').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
-        new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(option => option.setName('branch').setDescription('The branch').setRequired(false))
+        new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(option => option.setName('branch').setDescription('The branch to get artifacts from').setRequired(true))
     ]
     .map(command => command.toJSON());
 
