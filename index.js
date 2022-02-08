@@ -153,7 +153,7 @@ client.on('interactionCreate', async interaction => {
             new Discord.MessageButton()
             .setLabel(`.dmg (Apple Silicon)`)
             .setStyle('LINK')
-            .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg)
+            .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg')
         )        console.log(show)
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
         await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
