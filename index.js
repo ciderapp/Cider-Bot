@@ -147,7 +147,7 @@ client.on('interactionCreate', async interaction => {
             new Discord.MessageButton()
             .setLabel(`.dmg`)
             .setStyle('LINK')
-            .setURL('https://bit.ly/macoscider')
+            .setURL('https://github.com/vapormusic/Cider/releases/tag/macos')
         )
         console.log(show)
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
