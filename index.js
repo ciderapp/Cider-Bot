@@ -14,15 +14,11 @@ client.on('ready', () => {
 
 client.on('presenceUpdate', async(oldMember, newMember) => {
     const role = newMember.guild.roles.cache.get("932784788115427348");
-
-
     let using_cider = false
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
-
             let listenerinfo = {
                 userid: newMember.userId,
                 userName: newMember.member.user.username,
@@ -37,11 +33,8 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 using_cider = true // code below will handle it
                 break
             }
-
-
         }
     }
-
     if (using_cider) {
         try {
             newMember.member.roles.add(role) // add listening on cider role
@@ -73,13 +66,9 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return
-
     let link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
-
     if (!link) return
-
     console.log("[Link] Creating redirect embed.")
-
     try {
         fetch(link).catch(e => console.log("[Link] Error creating redirect embed."))
             .then(result => result.text()).catch(e => null)
@@ -88,11 +77,9 @@ client.on('messageCreate', async message => {
                 const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
                 const description = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
                 const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
-
                 let modlink = link[0].replace('https://', '')
                 let play_link = "https://cider.sh/p?" + modlink
                 let view_link = "https://cider.sh/o?" + modlink
-
                 let embed = new Discord.MessageEmbed()
                     .setColor('#fb003f')
                     .setTitle(title)
@@ -101,7 +88,6 @@ client.on('messageCreate', async message => {
                     .setDescription(description)
                     .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
                     .setTimestamp()
-
                 let interaction = new Discord.MessageActionRow()
                     .addComponents(
                         new Discord.MessageButton()
@@ -113,7 +99,6 @@ client.on('messageCreate', async message => {
                         .setStyle('LINK')
                         .setURL(view_link)
                     )
-
                 try {
                     message.delete()
                     return message.channel.send({ embeds: [embed], components: [interaction] });
@@ -131,7 +116,6 @@ client.on('interactionCreate', async interaction => {
         if (latestNightly.status != 200) return interaction.reply(`Error fetching latest artifact from the **${branch}** branch`)
         latestNightly = await latestNightly.json()
             //console.log(latestNightly)
-
         let buttons = new Discord.MessageActionRow()
         latestNightly.forEach(element => {
             if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'yml') return;
@@ -142,7 +126,6 @@ client.on('interactionCreate', async interaction => {
                 .setURL(element.url)
             )
         })
-
         buttons.addComponents(
             new Discord.MessageButton()
             .setLabel(`.dmg (Intel)`)
@@ -156,11 +139,9 @@ client.on('interactionCreate', async interaction => {
             .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg')
         )        console.log(show)
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
-        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] }).then(msg => {
+            msg.delete(5000) //Time to clear, in milliseconds
+        })
     }
 })
-
-
-
-
 client.login(auth.token).then();
