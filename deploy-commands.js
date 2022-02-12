@@ -17,7 +17,8 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
 
     const commands = [
             new SlashCommandBuilder().setName('nightly').setDescription('Gives you download links for the latest nightly builds').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
-            new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(branchMenu).addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false))
+            new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(branchMenu).addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
+            new SlashCommandBuilder().setName('macos').setDescription('Shows available macOS builds (Signed for M1 and Intel Macs)').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false))
         ]
         .map(command => command.toJSON());
 

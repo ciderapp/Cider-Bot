@@ -126,22 +126,26 @@ client.on('interactionCreate', async interaction => {
                 .setURL(element.url)
             )
         })
-        buttons.addComponents(
-            new Discord.MessageButton()
-            .setLabel(`.dmg (Intel)`)
-            .setStyle('LINK')
-            .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-x64.dmg')
-        )
-        buttons.addComponents(
-            new Discord.MessageButton()
-            .setLabel(`.dmg (Apple Silicon)`)
-            .setStyle('LINK')
-            .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg')
-        )        console.log(show)
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
-        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] }).then(msg => {
-            msg.delete(5000) //Time to clear, in milliseconds
-        })
+        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+    } else {
+        if (commandName === 'macos') {
+            let buttons = new Discord.MessageActionRow()
+            buttons.addComponents(
+                new Discord.MessageButton()
+                .setLabel(`.dmg (Intel)`)
+                .setStyle('LINK')
+                .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-x64.dmg')
+            )
+            buttons.addComponents(
+                new Discord.MessageButton()
+                .setLabel(`.dmg (Apple Silicon)`)
+                .setStyle('LINK')
+                .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg')
+            )
+            if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
+            await interaction.reply({ content: `Listing available macOS installation packages.`, ephemeral: !show, components: [buttons]})
+        }
     }
 })
 client.login(auth.token).then();
