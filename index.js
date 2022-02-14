@@ -133,16 +133,17 @@ client.on('interactionCreate', async interaction => {
             let buttons = new Discord.MessageActionRow()
             buttons.addComponents(
                 new Discord.MessageButton()
-                .setLabel(`.dmg (Intel)`)
+                .setLabel(`.dmg (Universal)`)
                 .setStyle('LINK')
-                .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-x64.dmg')
+                .setURL('https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg')
             )
             buttons.addComponents(
                 new Discord.MessageButton()
-                .setLabel(`.dmg (Apple Silicon)`)
+                .setLabel(`.pkg (Universal)`)
                 .setStyle('LINK')
-                .setURL('https://github.com/vapormusic/Cider/releases/download/macos/Cider-arm64.dmg')
+                .setURL('https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.pkg')
             )
+           
             if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
             await interaction.reply({ content: `Listing available macOS installation packages.`, ephemeral: !show, components: [buttons]})
         }
