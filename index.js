@@ -119,6 +119,8 @@ client.on('interactionCreate', async interaction => {
         let buttons = new Discord.MessageActionRow()
         latestNightly.forEach(element => {
             if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'yml') return;
+            else if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'blockmap') return;
+            else if (String(element.path).split('-')[String(element.path).split('-').length - 2 == 'winget') return;
             buttons.addComponents(
                 new Discord.MessageButton()
                 .setLabel(`.${String(element.path).split('.')[String(element.path).split('.').length - 1]}`)
