@@ -19,7 +19,8 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
             new SlashCommandBuilder().setName('nightly').setDescription('Gives you download links for the latest nightly builds').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
             new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(branchMenu).addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
             new SlashCommandBuilder().setName('macos').setDescription('Shows available macOS builds (Signed for M1 and Intel Macs)').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
-            new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)')
+            new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
+            new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa')
         ]
         .map(command => command.toJSON());
 
