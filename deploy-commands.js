@@ -27,8 +27,10 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
 
     const rest = new REST({ version: '9' }).setToken(token);
 
-    rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
+    await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
         .then(() => console.log('Successfully registered application commands.'))
         .catch(console.error);
-
+    await rest.put(Routes.applicationCommands(clientId), {body: commands})
+        .then(() => console.log('Successfully registered global application commands.'))
+        .catch(console.error);
 })
