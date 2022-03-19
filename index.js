@@ -111,7 +111,8 @@ client.on('interactionCreate', async interaction => {
     const { commandName } = interaction;
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
         let branch = interaction.options.getString('branch') || 'main'
-        let show = interaction.options.getBoolean('show') || true
+        let show = interaction.options.getBoolean('show') || false
+        /*
         let latestNightly = await fetch(`https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=${branch}&filter=successful`)
         if (latestNightly.status != 200) return interaction.reply(`Error fetching latest artifact from the **${branch}** branch`)
         latestNightly = await latestNightly.json()
@@ -130,6 +131,15 @@ client.on('interactionCreate', async interaction => {
         })
         if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
         await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+         */
+
+
+        let link =  new Discord.MessageButton()
+            .setLabel(`Files`)
+            .setStyle('LINK')
+            .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
+        await interaction.reply({ content: `CircleCI unavailable \n\n Using Github Releases`, ephemeral: show, components: [link] })
+
     } else {
         if (commandName === 'macos') {
             let buttons = new Discord.MessageActionRow()
