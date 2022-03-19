@@ -3,6 +3,7 @@ const auth = require('./tokens.json');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const deploy = require('./deploy-commands.js');
+const { MessageEmbed } = require('discord.js');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
@@ -11,6 +12,8 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
 });
+
+
 
 client.on('presenceUpdate', async(oldMember, newMember) => {
     const role = newMember.guild.roles.cache.get("932784788115427348");
@@ -135,10 +138,10 @@ client.on('interactionCreate', async interaction => {
 
 
         let link =  new Discord.MessageButton()
-            .setLabel(`Files`)
+            .setLabel(`Releases for the ${branch} branch`)
             .setStyle('LINK')
             .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
-        await interaction.reply({ content: `CircleCI unavailable \n\n Using Github Releases`, ephemeral: show, components: [link] })
+        await interaction.reply({ ephemeral: show, components: [new Discord.MessageActionRow().addComponents(link)] })
 
     } else {
         if (commandName === 'macos') {
@@ -216,9 +219,38 @@ client.on('interactionCreate', async interaction => {
                         .setTimestamp()
     
                     await interaction.reply({ content: `marin best girl <3`, embeds: [embed], ephemeral: true, components: [buttons]})
+                } else {
+                    if (commandName === 'donate') {
+                        let embed = new Discord.MessageEmbed()
+                            .setColor(client.user.hexAccentColor)
+                            .setTitle("Donate")
+                            .setDescription(`You can donate via our Open Collective Organization (<@&923351772532199445>) or via Ko-Fi (<@&905457688211783690>, <@&905457957486067843>). Whichever is most convenient for your country/payment method and both are eligible for a <@&932811694751768656> role.\n\n Some of us also have individual donation links, if you would rather support one person.\n\n  **Note: the payment processor might take a percentage of your donation before the rest reaches to us!**`)
+                            .setFooter({ text: "Requested by " + interaction.member.user.username, iconURL: interaction.member.user.avatarURL() })
+                            .setTimestamp()
+                        let user = interaction.options.getUser('user') || '.'
+                        let oc =  new Discord.MessageButton()
+                            .setLabel(`OpenCollective`)
+                            .setStyle('LINK')
+                            .setURL(`https://opencollective.com/ciderapp`)
+                        let kofi =  new Discord.MessageButton()
+                            .setLabel(`Ko-fi`)
+                            .setStyle('LINK')
+                            .setURL(`https://ko-fi.com/cryptofyre`)
+                        let ghSponsors =  new Discord.MessageButton()
+                            .setLabel(`Github Sponsors`)
+                            .setStyle('LINK')
+                            .setURL(`https://github.com/sponsors/ciderapp`)
+                        client.channels.cache.get(interaction.channelId).send({ content: `${user}`, embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])]})
+                        await interaction.reply({ephemeral: true, content: "Sent!"})
+                    }
                 }
             }
         }
     }
 })
-client.login(auth.token).then();
+client.login(auth.token)
+
+
+// Reload Commands to take into account branch changes
+// 20 minutes in milliseconds
+setInterval(() => {const deploy = require('./deploy-commands.js');}, 1200000)

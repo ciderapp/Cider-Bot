@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
+const { SlashCommandBuilder, SlashCommandStringOption, ContextMenuCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const { token } = require('./tokens.json');
@@ -20,7 +20,8 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
             new SlashCommandBuilder().setName('branchbuilds').setDescription('Gives you download links for the latest builds of a specified branch').addStringOption(branchMenu).addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
             new SlashCommandBuilder().setName('macos').setDescription('Shows available macOS builds (Signed for M1 and Intel Macs)').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
             new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
-            new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa')
+            new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),
+            new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to'))
         ]
         .map(command => command.toJSON());
 
@@ -29,4 +30,5 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
     rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
         .then(() => console.log('Successfully registered application commands.'))
         .catch(console.error);
+
 })
