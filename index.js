@@ -134,14 +134,14 @@ client.on('interactionCreate', async interaction => {
             let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
             let buttons = new Discord.MessageActionRow()
             latestNightly.forEach(element => {
-            if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'yml') return;
-            else if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'blockmap') return;
-            else if (String(element.path).split('-')[String(element.path).split('-').length - 2] == 'winget') return;
+            if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
+            else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
+            else if (String(element.name).split('-')[String(element.name).split('-').length - 2] == 'winget') return;
             buttons.addComponents(
                 new Discord.MessageButton()
-                .setLabel(`.${String(element.path).split('.')[String(element.path).split('.').length - 1]}`)
+                .setLabel(`.${String(element.name).split('.')[String(element.pname).split('.').length - 1]}`)
                 .setStyle('LINK')
-                .setURL(element.url)
+                .setURL(element.browser_download_url)
             )
         }
         else {
