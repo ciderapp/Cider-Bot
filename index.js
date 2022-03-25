@@ -127,53 +127,32 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
         let branch = interaction.options.getString('branch') || 'main'
         let show = interaction.options.getBoolean('show') || false
-        if(branch == 'develop')
-        {
+        if(branch == 'develop') {
             let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/latest`)
             latestNightly = await latestNightly.json()
             latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
             let buttons = new Discord.MessageActionRow()
             latestNightly.forEach(element => {
-            if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
-            else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
-            else if (String(element.name).split('-')[String(element.name).split('-').length - 2] == 'winget') return;
-            buttons.addComponents(
-                new Discord.MessageButton()
-                .setLabel(`.${String(element.name).split('.')[String(element.pname).split('.').length - 1]}`)
-                .setStyle('LINK')
-                .setURL(element.browser_download_url)
-            )
+                if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
+                else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
+                else if (String(element.name).split('-')[String(element.name).split('-').length - 2] == 'winget') return;
+                buttons.addComponents(
+                    new Discord.MessageButton()
+                    .setLabel(`.${String(element.name).split('.')[String(element.pname).split('.').length - 1]}`)
+                    .setStyle('LINK')
+                    .setURL(element.browser_download_url)
+                )
+            })
         }
         else {
-        /*
-        let latestNightly = await fetch(`https://circleci.com/api/v1.1/project/gh/ciderapp/Cider/latest/artifacts?branch=${branch}&filter=successful`)
-        if (latestNightly.status != 200) return interaction.reply(`Error fetching latest artifact from the **${branch}** branch`)
-        latestNightly = await latestNightly.json()
-            //console.log(latestNightly)
-        let buttons = new Discord.MessageActionRow()
-        latestNightly.forEach(element => {
-            if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'yml') return;
-            else if (String(element.path).split('.')[String(element.path).split('.').length - 1] == 'blockmap') return;
-            else if (String(element.path).split('-')[String(element.path).split('-').length - 2] == 'winget') return;
-            buttons.addComponents(
-                new Discord.MessageButton()
-                .setLabel(`.${String(element.path).split('.')[String(element.path).split('.').length - 1]}`)
-                .setStyle('LINK')
-                .setURL(element.url)
-            )
-        })
-        if (typeof interaction.options.getBoolean('show') == 'undefined') { show = false } else { show = interaction.options.getBoolean('show') }
-        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
-         */
-
-
         let link =  new Discord.MessageButton()
             .setLabel(`Releases for the ${branch} branch`)
             .setStyle('LINK')
             .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
-        await interaction.reply({ ephemeral: show, components: [new Discord.MessageActionRow().addComponents(link)] }})
-
-    } else {
+        await interaction.reply({ ephemeral: show, components: [new Discord.MessageActionRow().addComponents(link)] })
+        }
+    } 
+    else {
         if (commandName === 'macos') {
             let buttons = new Discord.MessageActionRow()
             buttons.addComponents(
