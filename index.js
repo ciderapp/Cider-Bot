@@ -149,8 +149,8 @@ client.on('interactionCreate', async interaction => {
             .setLabel(`Releases for the ${branch} branch`)
             .setStyle('LINK')
             .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
-        await interaction.reply({ ephemeral: show, components: [new Discord.MessageActionRow().addComponents(link)] })
         }
+        await interaction.reply({ ephemeral: !show, components: [new Discord.MessageActionRow().addComponents(link)] })
     } 
     else {
         if (commandName === 'macos') {
