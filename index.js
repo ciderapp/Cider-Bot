@@ -131,7 +131,7 @@ client.on('interactionCreate', async interaction => {
         {
             let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/latest`)
             latestNightly = await latestNightly.json()
-            let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
+            latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
             let buttons = new Discord.MessageActionRow()
             latestNightly.forEach(element => {
             if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
