@@ -127,30 +127,33 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
         let branch = interaction.options.getString('branch') || 'main'
         let show = interaction.options.getBoolean('show') || false
-        if(branch == 'develop') {
+        if(branch == 'develop'|| branch == 'main') {
             let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/latest`)
             latestNightly = await latestNightly.json()
             latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
+            latestNightly = await latestNightly.json()
             let buttons = new Discord.MessageActionRow()
             latestNightly.forEach(element => {
                 if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
                 else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
-                else if (String(element.name).split('-')[String(element.name).split('-').length - 2] == 'winget') return;
+                else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
                 buttons.addComponents(
                     new Discord.MessageButton()
-                    .setLabel(`.${String(element.name).split('.')[String(element.pname).split('.').length - 1]}`)
+                    .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
                     .setStyle('LINK')
                     .setURL(element.browser_download_url)
                 )
             })
+            await interaction.reply({ content:`What installer do you want from the **develop** branch?`, ephemeral: !show, components: [buttons] })
         }
         else {
         let link =  new Discord.MessageButton()
             .setLabel(`Releases for the ${branch} branch`)
             .setStyle('LINK')
             .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
+            await interaction.reply({ content:``, ephemeral: !show, components: [buttons] })
         }
-        await interaction.reply({ ephemeral: !show, components: [new Discord.MessageActionRow().addComponents(link)] })
+        
     } 
     else {
         if (commandName === 'macos') {
