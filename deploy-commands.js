@@ -21,7 +21,8 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
             new SlashCommandBuilder().setName('macos').setDescription('Shows available macOS builds (Signed for M1 and Intel Macs)').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
             new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
             new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),
-            new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to'))
+            new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
+            new SlashCommandBuilder().setName('discordrpc').setDescription('Responds to \"why discord no work????\"').addUserOption(option => option.setName('user').setDescription('User to repond to'))
         ]
         .map(command => command.toJSON());
 
@@ -30,7 +31,7 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
     await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
         .then(() => console.log('Successfully registered application commands.'))
         .catch(console.error);
-    await rest.put(Routes.applicationCommands(clientId), {body: commands})
+    await rest.put(Routes.applicationCommands(clientId), { body: commands })
         .then(() => console.log('Successfully registered global application commands.'))
         .catch(console.error);
 })
