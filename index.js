@@ -127,33 +127,32 @@ client.on('interactionCreate', async interaction => {
     if (commandName === 'nightly' || commandName === 'branchbuilds') {
         let branch = interaction.options.getString('branch') || 'main'
         let show = interaction.options.getBoolean('show') || false
-        if(branch == 'develop'|| branch == 'main') {
-            let latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/latest`)
-            latestNightly = await latestNightly.json()
-            latestNightly = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${latestNightly.id}/assets`)
-            latestNightly = await latestNightly.json()
-            let buttons = new Discord.MessageActionRow()
-            latestNightly.forEach(element => {
-                if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
-                else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
-                else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
-                buttons.addComponents(
-                    new Discord.MessageButton()
-                    .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
-                    .setStyle('LINK')
-                    .setURL(element.browser_download_url)
-                )
-            })
-            await interaction.reply({ content:`What installer do you want from the **develop** branch?`, ephemeral: !show, components: [buttons] })
+        let buttons = new Discord.MessageActionRow()
+        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases`)
+        releases = await releases.json()
+        for(let release of releases) {
+            if(String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g,'') === branch) {
+                release = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${release.id}/assets`)
+                release = await release.json()
+                release.forEach(element => {
+                    if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
+                    else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
+                    else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
+                    buttons.addComponents(
+                        new Discord.MessageButton()
+                        .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
+                        .setStyle('LINK')
+                        .setURL(element.browser_download_url)
+                    )
+                })
+                break; 
+            }
         }
-        else {
-        let link =  new Discord.MessageButton()
-            .setLabel(`Releases for the ${branch} branch`)
-            .setStyle('LINK')
-            .setURL(`https://github.com/ciderapp/Cider/releases/tag/${branch}-build`)
-            await interaction.reply({ content:``, ephemeral: !show, components: [buttons] })
+        if(buttons.components.length == 0) {
+            await interaction.reply({ content:`I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+        } else {
+            await interaction.reply({ content:`What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
         }
-        
     } 
     else {
         if (commandName === 'macos') {
