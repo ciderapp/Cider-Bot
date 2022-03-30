@@ -82,13 +82,14 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 client.on('messageCreate', async message => {
     if (message.author.bot) return
 
-    if (message.includes('turn on lossless')) {
+    if (message.includes('turn on lossless') || message.includes('is lossless')) {
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Notice on Lossless Support in Cider")
         .setDescription("Lossless playback is not currently supported in Cider. This is due to MusicKit not having lossless capability.")
         .setFooter({ text: "Requested by " + message.author.username, iconURL: message.author.avatarURL() })
         .setTimestamp()
+        return message.channel.send({ embeds: [embed] });
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         console.log("[Link] Creating redirect embed.")
