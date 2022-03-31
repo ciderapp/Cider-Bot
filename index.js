@@ -1,12 +1,15 @@
 const Discord = require('discord.js');
+const auth
 if (process.argv[2] && process.argv[2] === '-t') {
   let flagIndex = process.argv.indexOf('-t');
   let tokenValue = process.argv[flagIndex + 1];
   console.log('Token flag is present. Using token: ', tokenValue);
-  const auth = { "token": tokenValue }
+  auth = { "token": tokenValue }
+  console.log('Binded Tokens:')
+  console.log(auth)
 } else {
   console.log('Token flag is not present using token.json file instead.');
-  const auth = require('./tokens.json');
+  auth = require('./tokens.json');
 }
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
