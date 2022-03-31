@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const auth
+let auth;
 if (process.argv[2] && process.argv[2] === '-t') {
   let flagIndex = process.argv.indexOf('-t');
   let tokenValue = process.argv[flagIndex + 1];
