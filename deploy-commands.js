@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, SlashCommandStringOption, ContextMenuCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const { token } = require('./tokens.json');
+const { token } = auth;
 const clientId = '921475709694771252';
 const guildId = '843954443845238864';
 const fetch = require('node-fetch');
