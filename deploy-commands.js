@@ -13,8 +13,6 @@ if (process.argv[2] && process.argv[2] === '-t') {
   console.log('Token flag is not present using token.json file instead.');
   auth = require('./tokens.json');
 }
-const { token } = auth.token;
-console.log(token)
 const clientId = '921475709694771252';
 const guildId = '843954443845238864';
 const fetch = require('node-fetch');
@@ -39,7 +37,7 @@ fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async(branche
         ]
         .map(command => command.toJSON());
 
-    const rest = new REST({ version: '9' }).setToken(token);
+    const rest = new REST({ version: '9' }).setToken(auth.token);
 
     await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
         .then(() => console.log('Successfully registered application commands.'))
