@@ -1,6 +1,18 @@
 const { SlashCommandBuilder, SlashCommandStringOption, ContextMenuCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+let auth;
+if (process.argv[2] && process.argv[2] === '-t') {
+  let flagIndex = process.argv.indexOf('-t');
+  let tokenValue = process.argv[flagIndex + 1];
+  console.log('Token flag is present. Using token: ', tokenValue);
+  auth = { "token": tokenValue }
+  console.log('Binded Tokens:')
+  console.log(auth)
+} else {
+  console.log('Token flag is not present using token.json file instead.');
+  auth = require('./tokens.json');
+}
 const { token } = auth;
 const clientId = '921475709694771252';
 const guildId = '843954443845238864';
