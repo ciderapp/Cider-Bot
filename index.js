@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
-const auth = require('./tokens.json');
 if (process.argv[2] && process.argv[2] === '-t') {
-  console.log('Token flag is present. Using token: ', process.argv.indexOf('-t'));
-  const auth = { "token": process.argv.indexOf('-t') }
+  let flagIndex = process.argv.indexOf('-t');
+  let tokenValue = process.argv[flagIndex + 1];
+  console.log('Token flag is present. Using token: ', tokenValue);
+  const auth = { "token": tokenValue }
 } else {
   console.log('Token flag is not present using token.json file instead.');
   const auth = require('./tokens.json');
