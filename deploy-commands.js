@@ -13,7 +13,7 @@ if (process.argv[2] && process.argv[2] === '-t') {
   console.log('Token flag is not present using token.json file instead.');
   auth = require('./tokens.json');
 }
-const { token } = auth;
+const { token } = auth.token;
 const clientId = '921475709694771252';
 const guildId = '843954443845238864';
 const fetch = require('node-fetch');
