@@ -8,7 +8,6 @@ module.exports = {
             .setColor(client.user.hexAccentColor)
             .setTitle("Donate")
             .setDescription(`You can donate via our Open Collective Organization (<@&923351772532199445>) or via Ko-Fi (<@&905457688211783690>, <@&905457957486067843>). Whichever is most convenient for your country/payment method and both are eligible for a <@&932811694751768656> role.\n\n Some of us also have individual donation links, if you would rather support one person.\n\n  **Note: the payment processor might take a percentage of your donation before the rest reaches to us!**`)
-            .setFooter({ text: "Requested by " + interaction.member.user.username, iconURL: interaction.member.user.avatarURL() })
             .setTimestamp()
         let user = interaction.options.getUser('user') || null
         let oc = new Discord.MessageButton()
@@ -25,11 +24,10 @@ module.exports = {
             .setURL(`https://github.com/sponsors/ciderapp`)
 
         if (user) {
-            client.channels.cache.get(interaction.channelId).send({ content: `${user}`, embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
+            await interaction.reply({ content: `${user}`, embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
         } else {
-            client.channels.cache.get(interaction.channelId).send({ embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
+            await interaction.reply({ embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
         }
-        client.channels.cache.get(interaction.channelId).send({ content: `${user}`, embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
-        await interaction.reply({ ephemeral: true, content: "Sent!" })
+        
     },
 };

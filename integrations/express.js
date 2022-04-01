@@ -11,7 +11,6 @@ app.get('/', async (request, response) => {
     const code = request.query.code || null;
     if (code) {
         try {
-            console.log(`code: ${code}\nclientID: ${clientId()}\nclientSecret: ${clientSecret()}`);
             const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
                 method: 'POST',
                 body: new URLSearchParams({
@@ -29,6 +28,7 @@ app.get('/', async (request, response) => {
 
             const oauthData = await oauthResult.json();
             console.log(oauthData);
+            response.send(oauthData);
         } catch (error) {
             // NOTE: An unauthorized token will not throw an error;
             // it will return a 401 Unauthorized response in the try block above
@@ -42,4 +42,4 @@ app.get('/verify', (request, response) => {
     response.redirect(`https://discord.com/api/oauth2/authorize?client_id=921475709694771252&redirect_uri=http%3A%2F%2F${url}&response_type=code&scope=identify`)
 });
 
-app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+app.listen(port, () => console.log(`App listening at http://${url}`));
