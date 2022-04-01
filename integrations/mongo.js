@@ -7,10 +7,17 @@ module.exports = {
         console.log('[mongo] Connected!')
     },
     async addDonation(user) {
-        mongo.db('bot').collection('donations').insertOne({
-            _id: user.id,
-            transactionID: user.transactionID,
-        })
+        let userEntry = mongo.db('bot').collection('scores').find({ _id: `${interaction.user.id}` })
+        userEntry = await userEntry.toArray()
+
+        if (userEntry.length == 0) {
+
+            mongo.db('bot').collection('donations').insertOne({
+                _id: user.id,
+                transactionID: user.transactionID,
+            })
+            return
+        }
     },
 
 }
