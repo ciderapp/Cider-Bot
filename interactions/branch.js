@@ -4,9 +4,9 @@ const fetch = require("node-fetch");
 module.exports = {
     data: { name: 'branch'},
     async execute(interaction) {
+        console.log(interaction.user.username+"#"+interaction.user.discriminator+" with UserID: "+interaction.user.id +" used branchbuild");
         let branch = interaction.values[0].split('|')[0];
         let show = interaction.values[0].split('|')[1] == 'true' || false
-        console.log(branch, show);
         let buttons = new Discord.MessageActionRow()
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases`)
         releases = await releases.json()
