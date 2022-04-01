@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, SlashCommandStringOption} = require('@discordjs/builders');
+const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
@@ -13,8 +13,7 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(interaction) {
-        /*
-        await ('https://api.github.com/repos/ciderapp/cider/branches').then(async(branches) => {
+        await fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async (branches) => {
             branches = await branches.json()
             let branchMenu = new SlashCommandStringOption().setName('branch').setDescription('The branch to get builds from.').setRequired(true);
 
@@ -46,14 +45,10 @@ module.exports = {
             }
         }
         if (buttons.components.length == 0) {
-                    await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
 
-        */
-        await interaction.reply({ content: `Under Construction, use \`/nightly\``, ephemeral: true })
-        /*
         } else {
             await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
         }
-*/
-    },
+    }
 }
