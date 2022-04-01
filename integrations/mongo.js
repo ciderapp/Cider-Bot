@@ -8,7 +8,7 @@ module.exports = {
     },
     async addDonation(user) {
         mongo.db('bot').collection('donations').insertOne({
-            discordID: user.id,
+            _id: user.id,
             transactionID: user.transactionID,
         })
     },
