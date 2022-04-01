@@ -95,8 +95,8 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return
-
-    if (String(message).includes('turn on lossless') || String(message).includes('is lossless')) {
+    var messageToUpperCase = message.content.toUpperCase();
+    if (String(messageToUpperCase).includes('TURN ON LOSSLESS') || String(messageToUpperCase).includes('IS LOSSLESS')) {
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Notice on Lossless Support in Cider")
