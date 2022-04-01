@@ -9,6 +9,7 @@ const app = express();
 
 app.get('/', async (request, response) => {
     const code = request.query.code || null;
+    const transactionId = request.query.transaction_id || null
     if (code) {
         try {
             const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
@@ -34,6 +35,8 @@ app.get('/', async (request, response) => {
             // it will return a 401 Unauthorized response in the try block above
             console.error(error);
         }
+    //} else if (transactionId) {
+    //    response.redirect('/verify')
     } else {
         response.send('Hello World!');
     }
