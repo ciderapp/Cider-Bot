@@ -24,6 +24,9 @@
     "cheerio": "^1.0.0-rc.10",
     "discord-api-types": "^0.26.1",
     "discord.js": "^13",
+    "express": "^4.17.3",
+    "is-railway": "^1.1.3",
+    "mongodb": "^4.4.1",
     "node-fetch": "2.6.7"
   }
 }
