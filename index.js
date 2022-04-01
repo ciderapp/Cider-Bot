@@ -6,13 +6,14 @@ const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const deploy = require('./deploy-commands.js');
 const { MessageEmbed } = require('discord.js');
-const mongo = require('./integrations/mongo.js');
+const mongo = require('./integrations/mongo');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
 
 
 client.commands = new Collection();
+client.interactions = new Collection();
 const fs = require('node:fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -20,7 +21,17 @@ for (const file of commandFiles) {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     client.commands.set(command.data.name, command);
+    console.log("Registered Command: ", command.data.name);
 }
+const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
+for (const file of interactionFiles) {
+    const interaction = require(`./interactions/${file}`);
+    // Set a new item in the Collection
+    // With the key as the command name and the value as the exported module
+    client.interactions.set(interaction.data.name, interaction);
+    console.log("Registered Interaction: ", interaction.data.name);
+}
+
 
 
 let cider_guild = "843954443845238864"
@@ -161,6 +172,18 @@ client.on('interactionCreate', async interaction => {
     } catch (error) {
         console.error(error);
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    }
+});
+
+client.on('interactionCreate', async interaction => {
+	if (!interaction.isSelectMenu()) return;
+    const iAction = client.interactions.get(interaction.customId);
+    if (!iAction) return;
+    try {
+        await iAction.execute(interaction);
+    } catch (error) {
+        console.error(error);
+        await iAction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 });
 client.login(auth)
