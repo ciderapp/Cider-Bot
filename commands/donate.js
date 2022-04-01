@@ -1,11 +1,9 @@
 const { SlashCommandBuilder} = require('@discordjs/builders');
 const Discord = require("discord.js");
-const { client } = require('../index.js');
 module.exports = {
     data: new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
     async execute(interaction) {
         let embed = new Discord.MessageEmbed()
-            .setColor(client.user.hexAccentColor)
             .setTitle("Donate")
             .setDescription(`You can donate via our Open Collective Organization (<@&923351772532199445>) or via Ko-Fi (<@&905457688211783690>, <@&905457957486067843>). Whichever is most convenient for your country/payment method and both are eligible for a <@&932811694751768656> role.\n\n Some of us also have individual donation links, if you would rather support one person.\n\n  **Note: the payment processor might take a percentage of your donation before the rest reaches to us!**`)
             .setTimestamp()

@@ -11,14 +11,13 @@ module.exports = {
         userEntry = await userEntry.toArray()
 
         if (userEntry.length == 0) {
-
             mongo.db('bot').collection('donations').insertOne({
                 _id: user.id,
                 transactionID: user.transactionID,
                 connectedAt: Date.now(),
             })
-            return
         }
+        return
     },
 
 }

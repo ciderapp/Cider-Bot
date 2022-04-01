@@ -187,9 +187,3 @@ client.on('interactionCreate', async interaction => {
     }
 });
 client.login(auth)
-exports.client = client
-
-
-// Reload Commands to take into account branch changes
-// 20 minutes in milliseconds
-setInterval(() => { const deploy = require('./deploy-commands.js'); }, 1200000)
