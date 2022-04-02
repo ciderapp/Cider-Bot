@@ -61,14 +61,14 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 songName: activity.details,
                 artistName: String(activity.state).split("by ")[1],
             }
-
+            mongo.logRPMetadata(listenerinfo)
 
             if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
                 console.log("\x1b[2m", "Listener updated -", listenerinfo)
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                mongo.logRPMetadata(listenerinfo)
+
                 using_cider = true // code below will handle it
                 break
             }
