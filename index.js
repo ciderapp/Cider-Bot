@@ -58,8 +58,10 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
             let listenerinfo = {
                 userid: newMember.userId,
                 userName: newMember.member.user.username,
-                songName: activity.details
+                songName: activity.details,
+                artistName: String(activity.state).split("by ")[1],
             }
+            mongo.logRPMetadata(listenerinfo)
 
             if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
                 console.log("\x1b[2m", "Listener updated -", listenerinfo)
@@ -168,6 +170,7 @@ client.on('interactionCreate', async interaction => {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
     try {
+        mongo.commandCounter(interaction.commandName)
         await command.execute(interaction);
     } catch (error) {
         console.error(error);

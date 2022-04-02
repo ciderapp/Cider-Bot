@@ -45,5 +45,12 @@ module.exports = {
                 return require('./tokens.json').auth.clientSecret;
             }
         },
+    },
+    ocKey: function () {
+        if (isRailway()){
+            return process.env.ocKey
+        } else {
+            return require('./tokens.json').ocKey;
+        }
     }
 }
