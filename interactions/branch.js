@@ -6,7 +6,6 @@ module.exports = {
     async execute(interaction) {
         let timeStamp = new Date().toTimeString().split(' ')[0];
         console.log(timeStamp + " - " + interaction.user.username+"#"+interaction.user.discriminator+" with UserID: "+interaction.user.id +" used branchbuild" );
-        console.log(interaction.user.username+"#"+interaction.user.discriminator+" with UserID: "+interaction.user.id +" used branchbuild");
         let branch = interaction.values[0].split('|')[0];
         let show = interaction.values[0].split('|')[1] == 'true' || false
         let buttons = new Discord.MessageActionRow()
