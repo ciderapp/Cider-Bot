@@ -2,3 +2,4 @@ package-lock.json
 tokens.json
 node_modules/
 yarn.lock
+.history
