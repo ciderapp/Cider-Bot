@@ -112,7 +112,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 client.on('messageCreate', async message => {
     if (message.author.bot) return
     
-    if (message.toString().toLocaleLowerCase().includes('turn on lossless') || message.toString().toLocaleLowerCase().includes('is lossless') || message.toString().toLocaleLowerCase().includes('play lossless')) {
+    if (message.toString().toLocaleLowerCase().includes('turn on lossless') || message.toString().toLocaleLowerCase().includes(' lossless ') || message.toString().toLocaleLowerCase().includes('play lossless')) {
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Lossless Audio in Cider")
