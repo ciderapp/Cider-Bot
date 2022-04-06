@@ -111,14 +111,12 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     if (message.author.bot) return
-
-    if (String(message).toLocaleLowerCase().includes('turn on lossless') || String(message).toLocaleLowerCase().includes('is lossless')) {
+    
+    if (message.toString().toLocaleLowerCase().includes('turn on lossless') || message.toString().toLocaleLowerCase().includes('is lossless') || message.toString().toLocaleLowerCase().includes('play lossless')) {
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
-        .setTitle("Notice on Lossless Support in Cider")
-        .setDescription("Lossless playback is not currently supported in Cider. This is due to MusicKit not having lossless capability.")
-        .setFooter({ text: "Requested by " + message.author.username, iconURL: message.author.avatarURL() })
-        .setTimestamp()
+        .setTitle("Lossless Audio in Cider")
+        .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
         return message.channel.send({ embeds: [embed] });
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
