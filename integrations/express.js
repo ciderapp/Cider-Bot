@@ -38,7 +38,7 @@ app.get('/', async (request, response) => {
     //} else if (transactionId) {
     //    response.redirect('/verify')
     } else {
-        response.send('Hello World!');
+        response.redirect('https://cdn.cryptofyre.org/Videos/lagtrain.mp4');
     }
 });
 app.get('/verify', (request, response) => {
