@@ -113,12 +113,14 @@ client.on('messageCreate', async message => {
     const losslessRegex = new RegExp('/(lossless)/gm');
     if (message.author.bot) return
     
-    if (!message.member.roles.has('932811694751768656') && losslessRegex.test(message.toString().toLocaleLowerCase())) {
+    if (losslessRegex.test(message.toString().toLocaleLowerCase())) {
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Lossless Audio in Cider")
         .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-        return message.channel.send({ embeds: [embed] });
+        return message.reply({ embeds: [embed], ephemeral: true })
+
+
         
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
