@@ -110,7 +110,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 })
 
 client.on('messageCreate', async message => {
-    const losslessRegex = new RegExp('/(lossless)/gm');
+    const losslessRegex = new RegExp(/(lossless)/gm);
     if (message.author.bot) return
     
     if (losslessRegex.test(message.toString().toLocaleLowerCase())) {
