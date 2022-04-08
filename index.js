@@ -114,7 +114,7 @@ client.on('messageCreate', async message => {
     const slowRegex = new RegExp(/(slow)/gi);
     if (message.author.bot) return
 
-    if(!message.member.roles.toString().includes("848363050205446165") && !message.member.roles.toString().includes("8932811694751768656")) {
+    if(!message.member._roles.contains("848363050205446165") && !message.member._roles.contains("8932811694751768656")) {
         if (slowRegex.test(message.toString())) {
         
             const embed = new Discord.MessageEmbed()
