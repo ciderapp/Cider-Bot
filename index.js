@@ -114,7 +114,7 @@ client.on('messageCreate', async message => {
     if (message.author.bot) return
     
     if (losslessRegex.test(message.toString())) {
-        console.log(message.author)
+        
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Lossless Audio in Cider")
