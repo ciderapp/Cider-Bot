@@ -9,7 +9,7 @@ module.exports = {
         let branch = interaction.values[0].split('|')[0];
         let show = interaction.values[0].split('|')[1] == 'true' || false
         let buttons = new Discord.MessageActionRow()
-        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases`)
+        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=1000`)
         releases = await releases.json()
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {

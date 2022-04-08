@@ -118,7 +118,9 @@ client.on('messageCreate', async message => {
         .setColor('#fb003f')
         .setTitle("Lossless Audio in Cider")
         .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-        message.reply({ embeds: [embed] })
+        message.reply({ embeds: [embed] }).then(reply => {
+            setTimeout(() => reply.delete(), 12000)
+        })
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         console.log("[Link] Creating redirect embed.")
