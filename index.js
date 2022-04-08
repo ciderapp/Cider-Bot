@@ -110,10 +110,11 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 })
 
 client.on('messageCreate', async message => {
-    const losslessRegex = new RegExp(/(lossless)/gm);
+    const losslessRegex = new RegExp(/(lossless)/gi);
     if (message.author.bot) return
     
-    if (losslessRegex.test(message.toString().toLocaleLowerCase())) {
+    if (losslessRegex.test(message.toString())) {
+        console.log(message.author)
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
         .setTitle("Lossless Audio in Cider")
@@ -121,6 +122,7 @@ client.on('messageCreate', async message => {
         message.reply({ embeds: [embed] }).then(reply => {
             setTimeout(() => reply.delete(), 12000)
         })
+
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         console.log("[Link] Creating redirect embed.")
