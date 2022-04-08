@@ -111,9 +111,20 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     const losslessRegex = new RegExp(/(lossless)/gi);
+    const slowRegex = new RegExp(/(slow)/gi);
     if (message.author.bot) return
-    
-    if (losslessRegex.test(message.toString())) {
+
+    if (slowRegex.test(message.toString())) {
+        
+        const embed = new Discord.MessageEmbed()
+        .setColor('#fb003f')
+        .setTitle("Why is Cider Slow?")
+        .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do :KeyCtrl: (or ⌘) :KeyComma: <a:righter_arrow:509735362994896924> “Advanced” <a:righter_arrow:509735362994896924> “Enable Hardware Acceleration” <a:righter_arrow:509735362994896924> “WebGPU”")
+        message.reply({ embeds: [embed] }).then(reply => {
+            setTimeout(() => reply.delete(), 12000)
+        })
+
+    } else if (losslessRegex.test(message.toString())) {
         
         const embed = new Discord.MessageEmbed()
         .setColor('#fb003f')
