@@ -114,26 +114,28 @@ client.on('messageCreate', async message => {
     const slowRegex = new RegExp(/(slow)/gi);
     if (message.author.bot) return
 
-    if (slowRegex.test(message.toString())) {
+    if(!message.member.roles.includes("848363050205446165") && !message.member.roles.includes("8932811694751768656")) {
+        if (slowRegex.test(message.toString())) {
         
-        const embed = new Discord.MessageEmbed()
-        .setColor('#fb003f')
-        .setTitle("Why is Cider Slow?")
-        .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> “Advanced” <a:righter_arrow:509735362994896924> “Enable Hardware Acceleration” <a:righter_arrow:509735362994896924> “WebGPU”")
-        message.reply({ embeds: [embed] }).then(reply => {
-            setTimeout(() => reply.delete(), 12000)
-        })
-
-    } else if (losslessRegex.test(message.toString())) {
-        
-        const embed = new Discord.MessageEmbed()
-        .setColor('#fb003f')
-        .setTitle("Lossless Audio in Cider")
-        .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-        message.reply({ embeds: [embed] }).then(reply => {
-            setTimeout(() => reply.delete(), 12000)
-        })
-
+            const embed = new Discord.MessageEmbed()
+            .setColor('#fb003f')
+            .setTitle("Why is Cider Slow?")
+            .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> “Advanced” <a:righter_arrow:509735362994896924> “Enable Hardware Acceleration” <a:righter_arrow:509735362994896924> “WebGPU”")
+            message.reply("<:KeyCtrl:830276580835721239>")
+            message.reply({ embeds: [embed] }).then(reply => {
+                setTimeout(() => reply.delete(), 20000)
+            })
+    
+        } else if (losslessRegex.test(message.toString())) {
+            
+            const embed = new Discord.MessageEmbed()
+            .setColor('#fb003f')
+            .setTitle("Lossless Audio in Cider")
+            .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
+            message.reply({ embeds: [embed] }).then(reply => {
+                setTimeout(() => reply.delete(), 12000)
+            })
+        }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         console.log("[Link] Creating redirect embed.")
