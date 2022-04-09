@@ -114,14 +114,13 @@ client.on('messageCreate', async message => {
     const slowRegex = new RegExp(/(slow)/gi);
     if (message.author.bot) return
 
-    if(!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("8932811694751768656")) {
+    if(!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656")) { // exclude dev team and donators
         if (slowRegex.test(message.toString())) {
         
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
             .setTitle("Why is Cider Slow?")
-            .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> “Advanced” <a:righter_arrow:509735362994896924> “Enable Hardware Acceleration” <a:righter_arrow:509735362994896924> “WebGPU”")
-            message.reply("<:KeyCtrl:830276580835721239>")
+            .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> Advanced <a:righter_arrow:509735362994896924> Enable Hardware Acceleration <a:righter_arrow:509735362994896924> WebGPU")
             message.reply({ embeds: [embed] }).then(reply => {
                 setTimeout(() => reply.delete(), 20000)
             })
