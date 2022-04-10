@@ -32,14 +32,21 @@ module.exports = {
                 break;
             }
         }
-        if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
-            await interaction.send({ content: `${user}`, ephemeral: !show })
+        console.log(interaction.member)
+        if (show && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
+            if (buttons.components.length == 0) {
+                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+    
+            } else {
+                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons]})
+            }
+            
         }
         if (buttons.components.length == 0) {
-            await interaction.send({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
 
         } else {
-            await interaction.send({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+            await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
         }
     }
 }
