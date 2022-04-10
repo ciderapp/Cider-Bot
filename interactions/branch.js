@@ -30,7 +30,7 @@ module.exports = {
         //         break;
         //     }
         // }
-        console.log(interaction.member);
+        console.log(interaction.member)
         // if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
         //     if (buttons.components.length == 0) {
         //         await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
@@ -45,6 +45,6 @@ module.exports = {
         //         await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
         //     }
         // }
-        await interaction.reply({ content: `Command has been disabled, please use \`/nightly\` instead.` })
+        await interaction.reply({ content: `Command has been disabled, please use /nightly instead.` })
     }
 }
