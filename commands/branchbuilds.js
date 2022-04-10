@@ -11,9 +11,13 @@ module.exports = {
         .addBooleanOption(option => option.setName('show')
             .setDescription('Show to everyone!')
             .setRequired(false)
+        )
+        .addUserOption(option => option.setName('ping')
+        .setDescription('User to respond to (for use by Dev Team and Moderators only)')
+            .setRequired(false)
         ),
     async execute(interaction) {
-        
+        let ping = interaction.options.getUser('ping') || null;
         await fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async (branches) => {
             let show = interaction.options.getBoolean('show') || false
             branches = await branches.json()
@@ -21,7 +25,7 @@ module.exports = {
             branches.forEach(branch => {
                 let component = {}
                 component["label"] = branch.name
-                component["value"] = branch.name + "|" + interaction.options.getBoolean('show') || false
+                component["value"] = branch.name + "|" + (interaction.options.getBoolean('show') || false) + "|" + (ping.toString() || null);
                 components.push(component)
             })
             let branchMenu = new MessageActionRow()
