@@ -8,7 +8,7 @@ module.exports = {
         console.log(timeStamp + " - " + interaction.user.username + "#" + interaction.user.discriminator + " with UserID: " + interaction.user.id + " used branchbuild");
         let branch = interaction.values[0].split('|')[0];
         let show = interaction.values[0].split('|')[1] == 'true' || false
-        let user = interaction.values[0].split('|')[2];
+        let user = interaction.values[0].split('|')[2] || "";
         let buttons = new Discord.MessageActionRow()
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=1000`)
         releases = await releases.json()
@@ -30,21 +30,20 @@ module.exports = {
                 break;
             }
         }
-        
-        // if (show && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
-        //     if (buttons.components.length == 0) {
-        //         await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-    
-        //     } else {
-        //         await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons]})
-        //     }
-            
-        // }
-        if (buttons.components.length == 0) {
-            await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
 
-        } else {
-            await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+        if (show && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
+            if (buttons.components.length == 0) {
+                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            } else {
+                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons] })
+            }
+        }
+        else {
+            if (buttons.components.length == 0) {
+                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            } else {
+                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+            }
         }
     }
 }
