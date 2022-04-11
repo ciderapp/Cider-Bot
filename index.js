@@ -11,7 +11,6 @@ const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
 
-
 client.commands = new Collection();
 client.interactions = new Collection();
 const fs = require('node:fs');
