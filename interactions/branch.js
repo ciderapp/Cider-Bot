@@ -32,18 +32,20 @@ module.exports = {
         }
         console.log(interaction.member)
         if (ping != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
-            if (buttons.components.length == 0) {
-                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else {
-                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons] })
-            }
+            // if (buttons.components.length == 0) {
+            //     await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            // } else {
+            //     await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons] })
+            // }
+            console.log("IT WORKS! USER: " + user)
         }
         else {
-            if (buttons.components.length == 0) {
-                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else {
-                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
-            }
+            // if (buttons.components.length == 0) {
+            //     await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            // } else {
+            //     await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+            // }
+            console.log("NO USERS PROVIDED")
         }
         await interaction.reply({ content: `Command has been disabled, please use /nightly instead.` })
     }

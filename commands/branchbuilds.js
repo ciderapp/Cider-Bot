@@ -17,7 +17,8 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(interaction) {
-        let ping = interaction.options.getUser('ping').toString()  || "";
+        let ping = interaction.options.getUser('ping')  || "";
+        if(ping != ""){ ping = ping.toString() }
         await fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async (branches) => {
             let show = interaction.options.getBoolean('show') || false
             branches = await branches.json()
