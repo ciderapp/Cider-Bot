@@ -112,6 +112,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 client.on('messageCreate', async message => {
     const losslessRegex = new RegExp(/(lossless)/gi);
     const slowRegex = new RegExp(/(slow)/gi);
+    const lyricsRegex = new RegExp(/(lyrics)/gi);
     if (message.author.bot) return
 
     if(!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656")) { // exclude dev team and donators
@@ -134,6 +135,17 @@ client.on('messageCreate', async message => {
             message.reply({ embeds: [embed] }).then(reply => {
                 setTimeout(() => reply.delete(), 12000)
             })
+        }
+        else if (lyricsRegex.test(message.toString())) {
+        
+            const embed = new Discord.MessageEmbed()
+            .setColor('#fb003f')
+            .setTitle("Why are Lyrics not Showing?")
+            .setDescription("Apple has locked down their lyrics in the API, thus Cider cannot show lyrics from Apple's database, latest builds have musixmatch automatically on but this may not include the songs that were previously available before.")
+            message.reply({ embeds: [embed] }).then(reply => {
+                setTimeout(() => reply.delete(), 15000)
+            })
+    
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
