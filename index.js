@@ -112,9 +112,10 @@ client.on('messageCreate', async message => {
     const losslessRegex = new RegExp(/(lossless)/gi);
     const slowRegex = new RegExp(/(slow)/gi);
     const lyricsRegex = new RegExp(/(lyrics)/gi);
+    const overrideRegex = new RegExp(/\!/m);
     if (message.author.bot) return
 
-    if(!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656")) { // exclude dev team and donators
+    if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         if (slowRegex.test(message.toString())) {
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
