@@ -31,7 +31,7 @@ module.exports = {
             }
         }
         console.log(interaction.member)
-        if (ping != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
+        if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             // if (buttons.components.length == 0) {
             //     await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
             // } else {
