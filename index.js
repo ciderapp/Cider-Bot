@@ -126,17 +126,7 @@ client.on('messageCreate', async message => {
                 setTimeout(() => reply.delete(), 20000)
             })
     
-        } else if (losslessRegex.test(message.toString())) {
-            
-            const embed = new Discord.MessageEmbed()
-            .setColor('#fb003f')
-            .setTitle("Lossless Audio in Cider")
-            .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-            message.reply({ embeds: [embed] }).then(reply => {
-                setTimeout(() => reply.delete(), 12000)
-            })
-        }
-        else if (lyricsRegex.test(message.toString())) {
+        } else if (lyricsRegex.test(message.toString())) {
         
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
@@ -146,6 +136,15 @@ client.on('messageCreate', async message => {
                 setTimeout(() => reply.delete(), 15000)
             })
     
+        } else if (losslessRegex.test(message.toString())) {
+            
+            const embed = new Discord.MessageEmbed()
+            .setColor('#fb003f')
+            .setTitle("Lossless Audio in Cider")
+            .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
+            message.reply({ embeds: [embed] }).then(reply => {
+                setTimeout(() => reply.delete(), 12000)
+            })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
