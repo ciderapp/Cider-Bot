@@ -13,6 +13,8 @@ const client = new Discord.Client({
 
 client.commands = new Collection();
 client.interactions = new Collection();
+client.application.command.set({}) 
+client.application.interaction.set({})
 const fs = require('node:fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
