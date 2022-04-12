@@ -117,6 +117,7 @@ client.on('messageCreate', async message => {
 
     if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         if (slowRegex.test(message.toString())) {
+            message.react("✅")
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
             .setTitle("Why is Cider Slow?")
@@ -126,6 +127,7 @@ client.on('messageCreate', async message => {
             })
     
         } else if (lyricsRegex.test(message.toString())) {
+            message.react("✅")
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
             .setTitle("Why are Lyrics not Showing?")
@@ -135,6 +137,7 @@ client.on('messageCreate', async message => {
             })
     
         } else if (losslessRegex.test(message.toString())) {
+            message.react("✅")
             const embed = new Discord.MessageEmbed()
             .setColor('#fb003f')
             .setTitle("Lossless Audio in Cider")
