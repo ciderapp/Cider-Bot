@@ -122,7 +122,7 @@ client.on('messageCreate', async message => {
             .setColor('#fb003f')
             .setTitle("Why is Cider Slow?")
             .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> Advanced <a:righter_arrow:509735362994896924> Enable Hardware Acceleration <a:righter_arrow:509735362994896924> WebGPU")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: interaction.member.user.avatarURL() })
+            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
             .setTimestamp()
             message.reply({ embeds: [embed] }).then(reply => {
                 setTimeout(() => reply.delete(), 20000)
@@ -134,7 +134,7 @@ client.on('messageCreate', async message => {
             .setColor('#fb003f')
             .setTitle("Why are Lyrics not Showing?")
             .setDescription("Apple has locked down their lyrics in the API, thus Cider cannot show lyrics from Apple's database, latest builds have musixmatch automatically on but this may not include the songs that were previously available before.")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: interaction.member.user.avatarURL() })
+            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
             .setTimestamp()
             message.reply({ embeds: [embed] }).then(reply => {
                 setTimeout(() => reply.delete(), 15000)
@@ -146,7 +146,7 @@ client.on('messageCreate', async message => {
             .setColor('#fb003f')
             .setTitle("Lossless Audio in Cider")
             .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: interaction.member.user.avatarURL() })
+            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
             .setTimestamp()
             message.reply({ embeds: [embed] }).then(reply => {
                 setTimeout(() => reply.delete(), 12000)
