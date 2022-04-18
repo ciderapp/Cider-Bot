@@ -12,12 +12,6 @@ module.exports = {
         let buttons = new Discord.MessageActionRow()
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
         releases = await releases.json()
-        let releases2 = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100&page=2`)
-        releases2 = await releases2.json()
-        releases = releases.concat(releases2)
-        releases2 = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100&page=3`)
-        releases2 = await releases2.json()
-        releases = releases.concat(releases2)
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 release = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${release.id}/assets`)
