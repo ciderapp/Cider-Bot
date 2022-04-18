@@ -24,6 +24,16 @@ module.exports = {
     },
     async logRPMetadata(listenerData) {
         mongo.db('bot').collection('rp-data').updateOne({ _id: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now()}, $inc: { count: 1}, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
+    },
+    async syncLatestReleases(branch, release) {
+        if(branch && release) { mongo.db('bot').collection('releases').updateOne({ _id: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID:`${release.id}` } }, { upsert: true }); console.log(`[mongo] Updated ${branch}`) }
+        else { console.log(`[mongo] Failed to sync latest release for branch ${branch}`) }
+    },
+    async getLatestRelease(branch) {
+        let release = mongo.db('bot').collection('releases').find({ _id: `${branch}` })
+        release = await release.toArray()
+        if(release.length == 0) { return null }
+        return release[0]
     }
 
 }
