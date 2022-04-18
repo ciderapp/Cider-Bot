@@ -22,6 +22,9 @@ module.exports = {
     async commandCounter(command) {
         mongo.db('bot').collection('analytics').updateOne({ _id: `${command}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
     },
+    async replyCounter(reply) {
+        mongo.db('bot').collection('analytics').updateOne({ _id: `reply-${reply}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
+    },
     async logRPMetadata(listenerData) {
         mongo.db('bot').collection('rp-data').updateOne({ _id: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now()}, $inc: { count: 1}, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
     },

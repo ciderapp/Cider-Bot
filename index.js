@@ -127,6 +127,7 @@ client.on('messageCreate', async message => {
             var regex = new RegExp(`${reply.name}`, "gi");
             if(regex.test(message.toString())) {
                 console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
+                mongo.replyCounter(reply.name)
                 message.react("✅")
                 const embed = new Discord.MessageEmbed()
                 .setColor(reply.color)
