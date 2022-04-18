@@ -13,6 +13,7 @@ const client = new Discord.Client({
 
 client.commands = new Collection();
 client.interactions = new Collection();
+replies = [];
 const fs = require('node:fs');
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -26,10 +27,19 @@ const interactionFiles = fs.readdirSync('./interactions').filter(file => file.en
 for (const file of interactionFiles) {
     const interaction = require(`./interactions/${file}`);
     // Set a new item in the Collection
-    // With the key as the command name and the value as the exported module
+    // With the key as the interaction name and the value as the exported module
     client.interactions.set(interaction.data.name, interaction);
     console.log("Registered Interaction: ", interaction.data.name);
 }
+const replyFiles = fs.readdirSync('./replies').filter(file => file.endsWith('.json'));
+for (const file of replyFiles) {
+    let reply = require(`./replies/${file}`);
+    // Set a new item in the Collection
+    // With the key as the reply name and the value as the exported module
+    replies.push(reply);
+    console.log("Registered Reply: ", reply.name);
+}
+
 
 
 
@@ -109,48 +119,25 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 })
 
 client.on('messageCreate', async message => {
-    const losslessRegex = new RegExp(/(lossless)/gi);
-    const slowRegex = new RegExp(/(slow)/gi);
-    const lyricsRegex = new RegExp(/(lyrics)/gi);
     const overrideRegex = new RegExp(/^\!/g);
     if (message.author.bot) return
 
     if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
-        if (slowRegex.test(message.toString())) {
-            message.react("✅")
-            const embed = new Discord.MessageEmbed()
-            .setColor('#fb003f')
-            .setTitle("Why is Cider Slow?")
-            .setDescription("Cider is slow because its not taking full advantage of your hardware. To turn on, do <:KeyCtrl:830276580835721239> (or ⌘) <:KeyComma:830276581036523561> <a:righter_arrow:509735362994896924> Advanced <a:righter_arrow:509735362994896924> Enable Hardware Acceleration <a:righter_arrow:509735362994896924> WebGPU")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-            .setTimestamp()
-            message.reply({ embeds: [embed] }).then(reply => {
-                setTimeout(() => reply.delete(), 20000)
-            })
-    
-        } else if (lyricsRegex.test(message.toString())) {
-            message.react("✅")
-            const embed = new Discord.MessageEmbed()
-            .setColor('#fb003f')
-            .setTitle("Why are Lyrics not Showing?")
-            .setDescription("Apple has locked down their lyrics in the API, thus Cider cannot show lyrics from Apple's database, latest builds have musixmatch automatically on but this may not include the songs that were previously available before.")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-            .setTimestamp()
-            message.reply({ embeds: [embed] }).then(reply => {
-                setTimeout(() => reply.delete(), 15000)
-            })
-    
-        } else if (losslessRegex.test(message.toString())) {
-            message.react("✅")
-            const embed = new Discord.MessageEmbed()
-            .setColor('#fb003f')
-            .setTitle("Lossless Audio in Cider")
-            .setDescription("Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.")
-            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-            .setTimestamp()
-            message.reply({ embeds: [embed] }).then(reply => {
-                setTimeout(() => reply.delete(), 12000)
-            })
+        for(reply of replies) {
+            var regex = new RegExp(`${reply.name}`, "gi");
+            if(regex.test(message.toString())) {
+                console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
+                message.react("✅")
+                const embed = new Discord.MessageEmbed()
+                .setColor(reply.color)
+                .setTitle(`${reply.title}`)
+                .setDescription(`${reply.description}`)
+                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                .setTimestamp()
+                message.channel.send({embeds: [embed]}).then(msg => {
+                    setTimeout(() => msg.delete(), reply.timeout)
+                })
+            }
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)

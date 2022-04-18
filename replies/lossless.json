@@ -1,0 +1,7 @@
+{
+    "name": "Lossless",
+    "color": "#fb003f",
+    "title": "Lossless Audio in Cider",
+    "description": "Lossless playback is not currently supported in Cider. Apple's MusicKit Framework does have lossless support, however, decryption of this audio is not supported.",
+    "timeout": 20000
+}
