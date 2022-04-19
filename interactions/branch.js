@@ -15,9 +15,7 @@ module.exports = {
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
         releases = await releases.json()
         for (let release of releases) {
-            if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
-                await syncLatestReleases(branch, release)
-            }
+            await syncLatestReleases(branch, release)
             let rel = await getLatestRelease(branch)
             console.log(rel)
             rel = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${rel.releaseID}/assets`)
