@@ -46,9 +46,9 @@ let users = 0;
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
-    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
     mongo.init()
     users = mongo.userCounter();
+    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
 });
 
 
@@ -117,6 +117,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
             console.log(e)
         }
     }
+    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
 })
 
 client.on('messageCreate', async message => {
