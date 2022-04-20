@@ -37,6 +37,17 @@ module.exports = {
         release = await release.toArray()
         if(release.length == 0) { return null }
         return release[0]
+    },
+    // async funtion usercounter that accepts mode (add or remove)
+    async userCounter(mode) {
+        if(mode == 'add') {
+            mongo.db('bot').collection('analytics').updateOne({ _id: 'currActiveUsers' }, { $inc: { count: 1 } }, { upsert: true })
+        } else if(mode == 'remove') {
+            mongo.db('bot').collection('analytics').updateOne({ _id: 'currActiveUsers' }, { $inc: { count: -1} }, { upsert: true })
+        }
+        let currActiveUsers = mongo.db('bot').collection('analytics').find({ _id: 'currActiveUsers' })
+        currActiveUsers = await currActiveUsers.toArray()
+        return currActiveUsers[0].count;
     }
 
 }

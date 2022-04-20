@@ -41,12 +41,13 @@ for (const file of replyFiles) {
 }
 
 let cider_guild = "843954443845238864"
-
+let users = 0;
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
-    client.user.setActivity('Cider Users', { type: 'LISTENING' });
+    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
     mongo.init()
+    users = mongo.userCounter();
 });
 
 
@@ -75,7 +76,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-
+                users = mongo.userCounter("add")
                 using_cider = true // code below will handle it
                 break
             }
@@ -109,7 +110,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
-                
+                users = mongo.userCounter("remove")
             }
         } catch (e) {
             console.log(e)
