@@ -41,13 +41,13 @@ for (const file of replyFiles) {
 }
 
 let cider_guild = "843954443845238864"
-let clientusers = 0;
+let clientusers;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    mongo.userCounter().then(users => {
+    mongo.getActiveUsers().then(users => {
         clientusers = users;
         client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
     })
@@ -55,7 +55,7 @@ client.on('ready', () => {
 
 
 
-client.on('presenceUpdate', async(oldMember, newMember) => {
+client.on('presenceUpdate', async (oldMember, newMember) => {
     //If role not found in guild, do nothing.
     try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
     // or else it'll go BONK
@@ -79,9 +79,11 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                mongo.userCounter("add").then(users => {
-                    clientusers = users;
-                    client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                mongo.incrementActiveUsers().then(() => {
+                    mongo.getActiveUsers().then(users => {
+                        clientusers = users;
+                        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                    })
                 })
                 using_cider = true // code below will handle it
                 break
@@ -116,9 +118,11 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
-                mongo.userCounter("remove").then(users => {
-                    clientusers = users;
-                    client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                mongo.decrementActiveUsers().then(() => {
+                    mongo.getActiveUsers().then(users => {
+                        clientusers = users;
+                        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                    })
                 })
             }
         } catch (e) {
@@ -130,22 +134,24 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     const overrideRegex = new RegExp(/^\!/g);
+    const updateRegex = new RegExp(/(updateme add)/g);
+    const removeRegex = new RegExp(/(updateme remove)/g);
     if (message.author.bot) return
 
-    if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
-        for(reply of replies) {
+    if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
+        for (reply of replies) {
             var regex = new RegExp(`${reply.name}`, "gi");
-            if(regex.test(message.toString())) {
+            if (regex.test(message.toString())) {
                 console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
                 mongo.replyCounter(reply.name)
                 message.react("✅")
                 const embed = new Discord.MessageEmbed()
-                .setColor(reply.color)
-                .setTitle(`${reply.title}`)
-                .setDescription(`${reply.description}`)
-                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-                .setTimestamp()
-                message.channel.send({embeds: [embed]}).then(msg => {
+                    .setColor(reply.color)
+                    .setTitle(`${reply.title}`)
+                    .setDescription(`${reply.description}`)
+                    .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                    .setTimestamp()
+                message.channel.send({ embeds: [embed] }).then(msg => {
                     setTimeout(() => msg.delete(), reply.timeout)
                 })
             }
@@ -175,23 +181,23 @@ client.on('messageCreate', async message => {
                     const interaction = new Discord.MessageActionRow()
                         .addComponents(
                             new Discord.MessageButton()
-                            .setLabel('Play In Cider')
-                            .setStyle('LINK')
-                            .setURL(play_link),
+                                .setLabel('Play In Cider')
+                                .setStyle('LINK')
+                                .setURL(play_link),
                             new Discord.MessageButton()
-                            .setLabel('View In Cider')
-                            .setStyle('LINK')
-                            .setURL(view_link)
+                                .setLabel('View In Cider')
+                                .setStyle('LINK')
+                                .setURL(view_link)
                         )
                     try {
                         message.delete()
                         return message.channel.send({ embeds: [embed], components: [interaction] });
-                    } catch (e) {}
+                    } catch (e) { }
                 }).catch(e => null)
-        } catch (e) {}
+        } catch (e) { }
     }
 
-    
+
 
 
 })
@@ -210,7 +216,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isSelectMenu()) return;
+    if (!interaction.isSelectMenu()) return;
     const iAction = client.interactions.get(interaction.customId);
     if (!iAction) return;
     try {
