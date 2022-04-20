@@ -6,30 +6,53 @@ module.exports = {
         await mongo.connect()
         console.log('[mongo] Connected!')
     },
-    async addDonation(user) {
-        let userEntry = mongo.db('bot').collection('donations').find({ _id: `${user.id}` })
-        userEntry = await userEntry.toArray()
-
-        if (userEntry.length == 0) {
-            mongo.db('bot').collection('donations').insertOne({
-                _id: user.id,
-                transactionID: user.transactionID,
-                connectedAt: Date.now(),
-            })
+    async addDonation(transaction, userId) {
+        try {
+            mongo.db('connect').collection('users').updateOne({ _id: userId }, { $addToSet: { donations: transaction } }, { upsert: true })
+        } catch (e) {
+            console.log("Mongo Not Available. \n" + e)
         }
         return
     },
     async commandCounter(command) {
-        mongo.db('bot').collection('analytics').updateOne({ _id: `${command}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
+        try {
+            mongo.db('bot')
+                .collection('analytics')
+                .updateOne({ _id: `${command}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
+        } catch (e) {
+            console.log("Mongo Not Available. \n" + e)
+        }
+
     },
     async replyCounter(reply) {
-        mongo.db('bot').collection('analytics').updateOne({ _id: `reply-${reply}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
+        try {
+            mongo
+                .db('bot')
+                .collection('analytics')
+                .updateOne({ _id: `reply-${reply}` }, { $set: { lastUsed: Date.now()}, $inc: { count: 1} }, { upsert: true })
+        } catch (e) {
+            console.log("Mongo Not Availible. \n" + e)
+        }
+
     },
     async logRPMetadata(listenerData) {
-        mongo.db('bot').collection('rp-data').updateOne({ _id: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now()}, $inc: { count: 1}, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
+        try {
+            mongo
+                .db('bot')
+                .collection('rp-data')
+                .updateOne({ _id: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now()}, $inc: { count: 1}, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
+        } catch (e) {
+            console.log("Mongo Not Available. \n" + e)
+        }
+
     },
     async syncLatestReleases(branch, release) {
-        if(branch && release) { mongo.db('bot').collection('releases').updateOne({ _id: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID:`${release.id}` } }, { upsert: true }); console.log(`[mongo] Updated ${branch}`) }
+        if(branch && release) {
+            mongo.db('bot')
+                .collection('releases')
+                .updateOne({ _id: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID:`${release.id}` } }, { upsert: true });
+            console.log(`[mongo] Updated ${branch}`)
+        }
         else { console.log(`[mongo] Failed to sync latest release for branch ${branch}`) }
     },
     async getLatestRelease(branch) {

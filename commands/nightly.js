@@ -13,6 +13,7 @@ module.exports = {
     async execute(interaction) {
         let branch = interaction.options.getString('branch') || 'develop';
         let show = interaction.options.getBoolean('show') || false
+
         let buttons = new Discord.MessageActionRow()
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases`)
         releases = await releases.json()

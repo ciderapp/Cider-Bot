@@ -21,7 +21,7 @@ for (const file of commandFiles) {
     // Set a new item in the Collection
     // With the key as the command name and the value as the exported module
     client.commands.set(command.data.name, command);
-    console.log("Registered Command: ", command.data.name);
+    console.log("\x1b[32m%s\x1b[0m", "Registered Command: ", command.data.name);
 }
 const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
 for (const file of interactionFiles) {
@@ -29,7 +29,7 @@ for (const file of interactionFiles) {
     // Set a new item in the Collection
     // With the key as the interaction name and the value as the exported module
     client.interactions.set(interaction.data.name, interaction);
-    console.log("Registered Interaction: ", interaction.data.name);
+    console.log("\x1b[32m%s\x1b[0m", "Registered Interaction: ", interaction.data.name);
 }
 const replyFiles = fs.readdirSync('./replies').filter(file => file.endsWith('.json'));
 for (const file of replyFiles) {
@@ -37,25 +37,23 @@ for (const file of replyFiles) {
     // Set a new item in the Collection
     // With the key as the reply name and the value as the exported module
     replies.push(reply);
-    console.log("Registered Reply: ", reply.name);
+    console.log("\x1b[32m%s\x1b[0m", "Registered Reply: ", reply.name);
 }
 
+
+
+
 let cider_guild = "843954443845238864"
-let clientusers;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    mongo.getActiveUsers().then(users => {
-        clientusers = users;
-        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
-    })
 });
 
 
 
-client.on('presenceUpdate', async (oldMember, newMember) => {
+client.on('presenceUpdate', async(oldMember, newMember) => {
     //If role not found in guild, do nothing.
     try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
     // or else it'll go BONK
@@ -72,23 +70,14 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 songName: activity.details,
                 artistName: String(activity.state).split("by ")[1],
             }
-
+            mongo.logRPMetadata(listenerinfo)
 
             if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
                 console.log("\x1b[2m", "Listener updated -", listenerinfo)
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                try{
-                    mongo.incrementActiveUsers().then(() => {
-                        mongo.getActiveUsers().then(users => {
-                            clientusers = users;
-                            client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
-                        })
-                    })
-                } catch (e) {
-                    console.log("An error occurred. ", e)
-                }
+
                 using_cider = true // code below will handle it
                 break
             }
@@ -122,17 +111,6 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
-                try{
-                    mongo.decrementActiveUsers().then(() => {
-                        mongo.getActiveUsers().then(users => {
-                            clientusers = users;
-                            client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
-                        })
-                    })
-                } catch (e) {
-                    console.log("An error occurred on active user decrement. ", e)
-                }
-                
             }
         } catch (e) {
             console.log(e)
@@ -142,24 +120,22 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     const overrideRegex = new RegExp(/^\!/g);
-    const updateRegex = new RegExp(/(updateme add)/g);
-    const removeRegex = new RegExp(/(updateme remove)/g);
     if (message.author.bot) return
 
-    if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
-        for (reply of replies) {
+    if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
+        for(reply of replies) {
             var regex = new RegExp(`${reply.name}`, "gi");
-            if (regex.test(message.toString())) {
+            if(regex.test(message.toString())) {
                 console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
                 mongo.replyCounter(reply.name)
                 message.react("✅")
                 const embed = new Discord.MessageEmbed()
-                    .setColor(reply.color)
-                    .setTitle(`${reply.title}`)
-                    .setDescription(`${reply.description}`)
-                    .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-                    .setTimestamp()
-                message.channel.send({ embeds: [embed] }).then(msg => {
+                .setColor(reply.color)
+                .setTitle(`${reply.title}`)
+                .setDescription(`${reply.description}`)
+                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                .setTimestamp()
+                message.reply({embeds: [embed]}).then(msg => {
                     setTimeout(() => msg.delete(), reply.timeout)
                 })
             }
@@ -189,23 +165,23 @@ client.on('messageCreate', async message => {
                     const interaction = new Discord.MessageActionRow()
                         .addComponents(
                             new Discord.MessageButton()
-                                .setLabel('Play In Cider')
-                                .setStyle('LINK')
-                                .setURL(play_link),
+                            .setLabel('Play In Cider')
+                            .setStyle('LINK')
+                            .setURL(play_link),
                             new Discord.MessageButton()
-                                .setLabel('View In Cider')
-                                .setStyle('LINK')
-                                .setURL(view_link)
+                            .setLabel('View In Cider')
+                            .setStyle('LINK')
+                            .setURL(view_link)
                         )
                     try {
                         message.delete()
                         return message.channel.send({ embeds: [embed], components: [interaction] });
-                    } catch (e) { }
+                    } catch (e) {}
                 }).catch(e => null)
-        } catch (e) { }
+        } catch (e) {}
     }
 
-
+    
 
 
 })
@@ -224,7 +200,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isSelectMenu()) return;
+	if (!interaction.isSelectMenu()) return;
     const iAction = client.interactions.get(interaction.customId);
     if (!iAction) return;
     try {
