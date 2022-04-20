@@ -154,7 +154,7 @@ client.on('messageCreate', async message => {
 
     if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         for (reply of replies) {
-            var regex = new RegExp(`(${reply.name})`, "gi");
+            var regex = new RegExp(`\\b${reply.name}\\b`, "gi");
             if (regex.test(message.toString())) {
                 console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
                 mongo.replyCounter(reply.name)
