@@ -39,7 +39,7 @@ module.exports = {
                 interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445')
 
             }
-            await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed]})
+            await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
             //loop through each object
         //    for(key in obj){
