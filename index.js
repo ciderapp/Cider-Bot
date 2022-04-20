@@ -104,7 +104,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     newMember.member.roles.add("932816700305469510")
                     mongo.incrementTotalUsers().then(() => {
                         mongo.getTotalUsers().then(users => {
-                            activeUsers = users;
+                            totalUsers = users;
                             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
                         })
                     })
@@ -133,7 +133,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 try {
                     mongo.decrementActiveUsers().then(() => {
                         mongo.getActiveUsers().then(users => {
-                            totalUsers = users;
+                            activeUsers = users;
                             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
                         })
                     })
