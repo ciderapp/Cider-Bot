@@ -8,15 +8,32 @@ module.exports = {
     async execute(interaction) {
         let timeStamp = new Date().toTimeString().split(' ')[0];
         console.log(timeStamp + " - " + interaction.user.username + "#" + interaction.user.discriminator + " with UserID: " + interaction.user.id + " used branchbuild");
-        const branch = interaction.values[0].split('|')[0];
-        const show = interaction.values[0].split('|')[1] == 'true' || false
-        const user = interaction.values[0].split('|')[2] || "";
+        let branch = interaction.values[0].split('|')[0];
+        let show = interaction.values[0].split('|')[1] == 'true' || false
+        let user = interaction.values[0].split('|')[2] || "";
         let buttons = new Discord.MessageActionRow()
-        let rel = await getLatestRelease(branch)
-        buttons.addComponents( new Discord.MessageButton().setLabel('.AppImage').setStyle('LINK').setURL(rel.links.AppImage))
-        buttons.addComponents( new Discord.MessageButton().setLabel('.exe').setStyle('LINK').setURL(rel.links.exe))
-        buttons.addComponents( new Discord.MessageButton().setLabel('.deb').setStyle('LINK').setURL(rel.links.deb))
-        buttons.addComponents( new Discord.MessageButton().setLabel('.snap').setStyle('LINK').setURL(rel.links.snap))
+        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
+        releases = await releases.json()
+        for (let release of releases) {
+            await syncLatestReleases(branch, release)
+            let rel = await getLatestRelease(branch)
+            console.log(rel)
+            rel = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${rel.releaseID}/assets`)
+            rel = await rel.json()
+            rel.forEach(element => {
+                if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
+                else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
+                else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
+                buttons.addComponents(
+                    new Discord.MessageButton()
+                        .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
+                        .setStyle('LINK')
+                        .setURL(element.browser_download_url)
+                )
+            })
+            break;
+        }
+        // console.log(interaction.member)
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
