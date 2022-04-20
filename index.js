@@ -53,6 +53,10 @@ client.on('ready', () => {
             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
         })
     })
+    let userRole = client.guild.roles.cache.get("932816700305469510");
+    console.log("Count of Total Cider Users: " + userRole.members.size)
+    let activeRole = client.guild.roles.cache.get("932784788115427348");
+    console.log("Count of Active Cider Users: " + activeRole.members.size)
 });
 
 
@@ -63,6 +67,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     // or else it'll go BONK
 
     const role = newMember.guild.roles.cache.get("932784788115427348");
+    
     let using_cider = false
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
