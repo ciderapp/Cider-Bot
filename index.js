@@ -47,8 +47,9 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    users = await mongo.userCounter();
-    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+    mongo.userCounter().then(users => {
+        client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+    })
 });
 
 
@@ -77,7 +78,9 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                users = await mongo.userCounter("add")
+                mongo.userCounter("add").then(users => {
+                    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+                })
                 using_cider = true // code below will handle it
                 break
             }
@@ -111,7 +114,9 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
-                users = await mongo.userCounter("remove")
+                mongo.userCounter("remove").then(users => {
+                    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+                })
             }
         } catch (e) {
             console.log(e)
