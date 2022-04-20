@@ -40,14 +40,12 @@ for (const file of replyFiles) {
     console.log("Registered Reply: ", reply.name);
 }
 
-
-
-
 let cider_guild = "843954443845238864"
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
+    client.user.setActivity('Cider Users', { type: 'LISTENING' });
     mongo.init()
 });
 
@@ -70,7 +68,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 songName: activity.details,
                 artistName: String(activity.state).split("by ")[1],
             }
-            mongo.logRPMetadata(listenerinfo)
+
 
             if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
                 console.log("\x1b[2m", "Listener updated -", listenerinfo)
@@ -111,6 +109,7 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
+                
             }
         } catch (e) {
             console.log(e)
