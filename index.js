@@ -129,7 +129,6 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
             console.log(e)
         }
     }
-    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
 })
 
 client.on('messageCreate', async message => {
