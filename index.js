@@ -41,14 +41,15 @@ for (const file of replyFiles) {
 }
 
 let cider_guild = "843954443845238864"
-let users = 0;
+let clientusers = 0;
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
     mongo.userCounter().then(users => {
-        client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+        clientusers = users;
+        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
     })
 });
 
@@ -79,7 +80,8 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
                 mongo.userCounter("add").then(users => {
-                    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+                    clientusers = users;
+                    client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
                 })
                 using_cider = true // code below will handle it
                 break
@@ -115,7 +117,8 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
                 mongo.userCounter("remove").then(users => {
-                    client.user.setActivity(`${users} Cider Users`, { type: 'LISTENING' });
+                    clientusers = users;
+                    client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
                 })
             }
         } catch (e) {
