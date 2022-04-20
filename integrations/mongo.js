@@ -75,4 +75,13 @@ module.exports = {
     async decrementActiveUsers() {
         mongo.db('bot').collection('analytics').updateOne({ _id: 'currActiveUsers' }, { $inc: { count: -1} }, { upsert: true })
     },
+    async incrementTotalUsers() {
+        mongo.db('bot').collection('analytics').updateOne({ _id: 'totalUsers' }, { $inc: { count: 1} }, { upsert: true })
+    },
+    async getTotalUsers() {
+        let totalUsers = mongo.db('bot').collection('analytics').find({ _id: 'totalUsers' })
+        totalUsers = await totalUsers.toArray()
+        if(totalUsers.length == 0) { return 0 }
+        return totalUsers[0].count
+    }
 }

@@ -40,20 +40,24 @@ for (const file of replyFiles) {
     console.log("\x1b[32m%s\x1b[0m", "Registered Reply: ", reply.name);
 }
 
-
-
-
 let cider_guild = "843954443845238864"
-
+let totalUsers, activeUsers;
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
+    mongo.getActiveUsers().then(users => {
+        activeUsers = users;
+        mongo.getTotalUsers().then(users => {
+            totalUsers = users;
+            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+        })
+    })
 });
 
 
 
-client.on('presenceUpdate', async(oldMember, newMember) => {
+client.on('presenceUpdate', async (oldMember, newMember) => {
     //If role not found in guild, do nothing.
     try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
     // or else it'll go BONK
@@ -77,7 +81,16 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-
+                try {
+                    mongo.incrementActiveUsers().then(() => {
+                        mongo.getActiveUsers().then(users => {
+                            activeUsers = users;
+                            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                        })
+                    })
+                } catch (e) {
+                    console.log("An error occurred. ", e)
+                }
                 using_cider = true // code below will handle it
                 break
             }
@@ -89,6 +102,12 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
             if (!newMember.member._roles.includes("932816700305469510")) {
                 try {
                     newMember.member.roles.add("932816700305469510")
+                    mongo.incrementTotalUsers().then(() => {
+                        mongo.getTotalUsers().then(users => {
+                            activeUsers = users;
+                            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                        })
+                    })
                 } catch (e) {
                     console.log("An error occurred while adding role. ", e)
                 } // Add Cider User role.
@@ -111,6 +130,16 @@ client.on('presenceUpdate', async(oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
+                try {
+                    mongo.decrementActiveUsers().then(() => {
+                        mongo.getActiveUsers().then(users => {
+                            totalUsers = users;
+                            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                        })
+                    })
+                } catch (e) {
+                    console.log("An error occurred. ", e)
+                }
             }
         } catch (e) {
             console.log(e)
@@ -122,20 +151,20 @@ client.on('messageCreate', async message => {
     const overrideRegex = new RegExp(/^\!/g);
     if (message.author.bot) return
 
-    if((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
-        for(reply of replies) {
+    if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
+        for (reply of replies) {
             var regex = new RegExp(`${reply.name}`, "gi");
-            if(regex.test(message.toString())) {
+            if (regex.test(message.toString())) {
                 console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
                 mongo.replyCounter(reply.name)
                 message.react("✅")
                 const embed = new Discord.MessageEmbed()
-                .setColor(reply.color)
-                .setTitle(`${reply.title}`)
-                .setDescription(`${reply.description}`)
-                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-                .setTimestamp()
-                message.reply({embeds: [embed]}).then(msg => {
+                    .setColor(reply.color)
+                    .setTitle(`${reply.title}`)
+                    .setDescription(`${reply.description}`)
+                    .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                    .setTimestamp()
+                message.reply({ embeds: [embed] }).then(msg => {
                     setTimeout(() => msg.delete(), reply.timeout)
                 })
             }
@@ -165,23 +194,23 @@ client.on('messageCreate', async message => {
                     const interaction = new Discord.MessageActionRow()
                         .addComponents(
                             new Discord.MessageButton()
-                            .setLabel('Play In Cider')
-                            .setStyle('LINK')
-                            .setURL(play_link),
+                                .setLabel('Play In Cider')
+                                .setStyle('LINK')
+                                .setURL(play_link),
                             new Discord.MessageButton()
-                            .setLabel('View In Cider')
-                            .setStyle('LINK')
-                            .setURL(view_link)
+                                .setLabel('View In Cider')
+                                .setStyle('LINK')
+                                .setURL(view_link)
                         )
                     try {
                         message.delete()
                         return message.channel.send({ embeds: [embed], components: [interaction] });
-                    } catch (e) {}
+                    } catch (e) { }
                 }).catch(e => null)
-        } catch (e) {}
+        } catch (e) { }
     }
 
-    
+
 
 
 })
@@ -200,7 +229,7 @@ client.on('interactionCreate', async interaction => {
 });
 
 client.on('interactionCreate', async interaction => {
-	if (!interaction.isSelectMenu()) return;
+    if (!interaction.isSelectMenu()) return;
     const iAction = client.interactions.get(interaction.customId);
     if (!iAction) return;
     try {
