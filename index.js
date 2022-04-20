@@ -150,10 +150,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     let userRole = message.guild.roles.cache.get("932816700305469510").members;
-    console.log("Count of Total Cider Users: " + userRole.members.size)
+    console.log("Count of Total Cider Users: " + userRole.size)
     let activeRole = message.guild.roles.cache.get("932784788115427348").members;
-    console.log("Count of Active Cider Users: " + activeRole.members.size)
-    
+    console.log("Count of Active Cider Users: " + activeRole.size)
+
     const overrideRegex = new RegExp(/^\!/g);
     if (message.author.bot) return
 
