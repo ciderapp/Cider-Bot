@@ -53,10 +53,6 @@ client.on('ready', () => {
             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
         })
     })
-    let userRole = client.guild.roles.cache.get("932816700305469510");
-    console.log("Count of Total Cider Users: " + userRole.members.size)
-    let activeRole = client.guild.roles.cache.get("932784788115427348");
-    console.log("Count of Active Cider Users: " + activeRole.members.size)
 });
 
 
@@ -153,6 +149,11 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 })
 
 client.on('messageCreate', async message => {
+    let userRole = message.guild.roles.cache.get("932816700305469510").members;
+    console.log("Count of Total Cider Users: " + userRole.members.size)
+    let activeRole = message.guild.roles.cache.get("932784788115427348").members;
+    console.log("Count of Active Cider Users: " + activeRole.members.size)
+    
     const overrideRegex = new RegExp(/^\!/g);
     if (message.author.bot) return
 
