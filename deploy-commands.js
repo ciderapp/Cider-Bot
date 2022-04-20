@@ -29,7 +29,7 @@ rest.get(Routes.applicationGuildCommands(clientId, guildId))
 rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands })
     .then(() => console.log('Successfully registered application commands.'))
     .catch(console.error);
-
+/*
 rest.get(Routes.applicationCommands(clientId, guildId))
     .then(data => {
         const promises = [];
@@ -44,3 +44,4 @@ rest.put(Routes.applicationCommands(clientId), { body: commands })
     .then(() => console.log('Successfully globally registered application commands.'))
     .catch(console.error)
 
+*/
