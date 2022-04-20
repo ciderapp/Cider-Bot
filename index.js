@@ -79,12 +79,16 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 return // not changing any roles, just a log
             } else {
                 console.log('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
-                mongo.incrementActiveUsers().then(() => {
-                    mongo.getActiveUsers().then(users => {
-                        clientusers = users;
-                        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                try{
+                    mongo.incrementActiveUsers().then(() => {
+                        mongo.getActiveUsers().then(users => {
+                            clientusers = users;
+                            client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                        })
                     })
-                })
+                } catch (e) {
+                    console.log("An error occurred. ", e)
+                }
                 using_cider = true // code below will handle it
                 break
             }
@@ -118,12 +122,17 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     dateRemoved: Date()
                 }
                 console.log("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
-                mongo.decrementActiveUsers().then(() => {
-                    mongo.getActiveUsers().then(users => {
-                        clientusers = users;
-                        client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                try{
+                    mongo.decrementActiveUsers().then(() => {
+                        mongo.getActiveUsers().then(users => {
+                            clientusers = users;
+                            client.user.setActivity(`${clientusers} Cider Users`, { type: 'LISTENING' });
+                        })
                     })
-                })
+                } catch (e) {
+                    console.log("An error occurred on active user decrement. ", e)
+                }
+                
             }
         } catch (e) {
             console.log(e)
