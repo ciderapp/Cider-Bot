@@ -7,6 +7,7 @@ const fetch = require('node-fetch');
 const deploy = require('./deploy-commands.js');
 const { MessageEmbed } = require('discord.js');
 const mongo = require('./integrations/mongo');
+const faqEmbed = require('./faq.json');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
@@ -151,6 +152,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 client.on('messageCreate', async message => {
     const overrideRegex = new RegExp(/^\!/g);
     const textRegex = new RegExp(/(test)/g);
+    const faqupdateRegex = new RegExp(/(faqupdate)/g);
     if (message.author.bot) return
 
     if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
@@ -171,16 +173,10 @@ client.on('messageCreate', async message => {
                 })
             }
         }
-        if(textRegex.test(message.toString())) {
-            console.log("\x1b[32m%s\x1b[0m", "Text triggered:", message.toString())
+        if(faqupdateRegex.test(message.toString())) {
+            console.log("\x1b[32m%s\x1b[0m", "FAQ update triggered.")
             message.react("✅")
-            const embed = new Discord.MessageEmbed()
-                .setColor("#ff375f")
-                .setTitle("How can I get Cider?")
-                .setDescription("If you want the **most stable** experience, you can get <:stable:936789492218609674> Cider from: \n - [<:MicrosoftStore:885923855510683699> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))\n\nIf you want the **beta** release that get compiled from our stable branch, you can get **<:nightly:936787944986017812> Cider Nightly** from:\n- Running `/nightly` in any channel\n\nIf you want the most bleeding edge release, you can get  <:canary:936787944843378709> **Cider Canary** from:\n- <a:processing:585955989178810379> [Compiling our main branch](https://anatidaephobia.notion.site/How-to-compile-Canary-Cider-375d2185f9d145679fd92e6c39bf72b6)")
-                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
-                .setTimestamp()
-            message.reply({ embeds: [embed] })
+            message.channel.send({embeds: faqEmbed})
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
