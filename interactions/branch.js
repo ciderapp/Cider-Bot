@@ -17,23 +17,23 @@ module.exports = {
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 await syncLatestReleases(branch, release)
-                let rel = await getLatestRelease(branch)
-                console.log(rel)
-                rel = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${rel.releaseID}/assets`)
-                rel = await rel.json()
-                rel.forEach(element => {
-                    if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
-                    else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
-                    else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
-                    buttons.addComponents(
-                        new Discord.MessageButton()
-                            .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
-                            .setStyle('LINK')
-                            .setURL(element.browser_download_url)
-                    )
-                })
-                break;
             }
+            let rel = await getLatestRelease(branch)
+            console.log(rel)
+            rel = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${rel.releaseID}/assets`)
+            rel = await rel.json()
+            rel.forEach(element => {
+                if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
+                else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
+                else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
+                buttons.addComponents(
+                    new Discord.MessageButton()
+                        .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
+                        .setStyle('LINK')
+                        .setURL(element.browser_download_url)
+                )
+            })
+            break;
         }
         // console.log(interaction.member)
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
