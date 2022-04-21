@@ -173,7 +173,6 @@ client.on('messageCreate', async message => {
         }
         if(textRegex.test(message.toString())) {
             console.log("\x1b[32m%s\x1b[0m", "Text triggered:", message.toString())
-            mongo.textCounter(message.toString())
             message.react("✅")
             const embed = new Discord.MessageEmbed()
                 .setColor("#ff375f")
