@@ -177,12 +177,10 @@ client.on('messageCreate', async message => {
             const embed = new Discord.MessageEmbed()
                 .setColor("#ff375f")
                 .setTitle("How can I get Cider?")
-                .setDescription("If you want the **most stable** experience, you can get <:stable:936789492218609674> Cider from: - [<:MicrosoftStore:885923855510683699> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))")
+                .setDescription("If you want the **most stable** experience, you can get <:stable:936789492218609674> Cider from: \n - [<:MicrosoftStore:885923855510683699> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))\n\nIf you want the **beta** release that get compiled from our stable branch, you can get **<:nightly:936787944986017812> Cider Nightly** from:\n- Running `/nightly` in any channel\n\nIf you want the most bleeding edge release, you can get  <:canary:936787944843378709> **Cider Canary** from:\n- <a:processing:585955989178810379> [Compiling our main branch](https://anatidaephobia.notion.site/How-to-compile-Canary-Cider-375d2185f9d145679fd92e6c39bf72b6)")
                 .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
                 .setTimestamp()
-            message.reply({ embeds: [embed] }).then(msg => {
-                setTimeout(() => msg.delete(), 5000)
-            })
+            message.reply({ embeds: [embed] })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
