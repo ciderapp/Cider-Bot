@@ -1,8 +1,7 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
-const { getLatestRelease } = require('../integrations/mongo');
-const { syncLatestReleases } = require("../integrations/mongo");
+const { syncReleaseData, syncReleaseLinks, getLatestRelease } = require('../integrations/mongo');
 module.exports = {
     data: { name: 'branch' },
     async execute(interaction) {
@@ -12,42 +11,27 @@ module.exports = {
         let show = interaction.values[0].split('|')[1] == 'true' || false
         let user = interaction.values[0].split('|')[2] || "";
         let buttons = new Discord.MessageActionRow()
-        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
-        releases = await releases.json()
-        for (let release of releases) {
-            if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
-                await syncLatestReleases(branch, release)
-            }
-            let rel = await getLatestRelease(branch)
-            console.log(rel)
-            rel = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/${rel.releaseID}/assets`)
-            rel = await rel.json()
-            rel.forEach(element => {
-                if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'yml') return;
-                else if (String(element.name).split('.')[String(element.name).split('.').length - 1] == 'blockmap') return;
-                else if (String(element.name).split('-')[String(element.name).split('-').length - 3] == 'winget') return;
-                buttons.addComponents(
-                    new Discord.MessageButton()
-                        .setLabel(`.${String(element.name).split('.')[String(element.name).split('.').length - 1]}`)
-                        .setStyle('LINK')
-                        .setURL(element.browser_download_url)
-                )
-            })
-            break;
-        }
-        // console.log(interaction.member)
+        await syncReleaseData(branch)
+        let release = await getLatestRelease(branch)
+        buttons.addComponents(
+            new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
+            new Discord.MessageButton().setLabel("exe").setStyle('LINK').setURL(`${release.links.exe}`),
+            new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
+            new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
+        )
+
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
             } else {
-                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?`, components: [buttons] })
+                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
             }
         }
         else {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
             } else {
-                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
+                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons] })
             }
         }
     }
