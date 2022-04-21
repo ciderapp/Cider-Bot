@@ -150,6 +150,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
 
 client.on('messageCreate', async message => {
     const overrideRegex = new RegExp(/^\!/g);
+    const textRegex = new RegExp(/(test)/g);
     if (message.author.bot) return
 
     if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
@@ -169,6 +170,20 @@ client.on('messageCreate', async message => {
                     setTimeout(() => msg.delete(), reply.timeout)
                 })
             }
+        }
+        if(textRegex.test(message.toString())) {
+            console.log("\x1b[32m%s\x1b[0m", "Text triggered:", message.toString())
+            mongo.textCounter(message.toString())
+            message.react("✅")
+            const embed = new Discord.MessageEmbed()
+                .setColor("#ff375f")
+                .setTitle("How can I get Cider?")
+                .setDescription("If you want the **most stable** experience, you can get <:stable:936789492218609674> Cider from: - [<:MicrosoftStore:885923855510683699> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))")
+                .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                .setTimestamp()
+            message.reply({ embeds: [embed] }).then(msg => {
+                setTimeout(() => msg.delete(), 5000)
+            })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
