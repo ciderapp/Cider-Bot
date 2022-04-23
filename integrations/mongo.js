@@ -102,7 +102,7 @@ module.exports = {
         if (totalUsers.length == 0) { return 0 }
         return totalUsers[0].count
     },
-    async setActiveusers(count){
+    async setActiveUsers(count){
         mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $set: { count: count } }, { upsert: true })
     },
     async setTotalUsers(count) {
