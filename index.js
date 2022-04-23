@@ -47,6 +47,10 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
+    const guild = client.guilds.cache.get(cider_guild)
+    let totalUsers = guild.roles.cache.get("932816700305469510").members.size
+    let activeUsers = guild.roles.cache.get("932784788115427348").members.size
+    console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
     mongo.getActiveUsers().then(users => {
         activeUsers = users;
         mongo.getTotalUsers().then(users => {
@@ -154,8 +158,6 @@ client.on('messageCreate', async message => {
     const textRegex = new RegExp(/(test)/g);
     const faqupdateRegex = new RegExp(/(faqupdate)/g);
     if (message.author.bot) return
-    mongo.setTotalUsers(message.guild.roles.cache.get("932816700305469510").members.size);
-    mongo.setActiveUsers(message.guild.roles.cache.get("932784788115427348").members.size);
 
     if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         for (reply of replies) {
