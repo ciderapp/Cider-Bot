@@ -69,7 +69,7 @@ module.exports = {
         return null
     },
     async getLatestRelease(branch) {
-        let release = mongo.db('bot').collection('releases').find({ _id: `${branch}` })
+        let release = mongo.db('bot').collection('releases').find({ branch: `${branch}` })
         release = await release.toArray()
         if (release.length == 0) { return null }
         return release[0]
