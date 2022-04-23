@@ -8,7 +8,7 @@ module.exports = {
     },
     async addDonation(transaction, userId) {
         try {
-            mongo.db('connect').collection('users').updateOne({ _id: userId }, { $addToSet: { donations: transaction } }, { upsert: true })
+            mongo.db('connect').collection('users').updateOne({ userId }, { $addToSet: { donations: transaction } }, { upsert: true })
         } catch (e) {
             console.log("Mongo Not Available. \n" + e)
         }
@@ -18,7 +18,7 @@ module.exports = {
         try {
             mongo.db('bot')
                 .collection('analytics')
-                .updateOne({ _id: `${command}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
+                .updateOne({ name: `command-${command}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
         } catch (e) {
             console.log("Mongo Not Available. \n" + e)
         }
@@ -29,7 +29,7 @@ module.exports = {
             mongo
                 .db('bot')
                 .collection('analytics')
-                .updateOne({ _id: `reply-${reply}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
+                .updateOne({ name: `autoreply-${reply}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
         } catch (e) {
             console.log("Mongo Not Availible. \n" + e)
         }
@@ -40,7 +40,7 @@ module.exports = {
             mongo
                 .db('bot')
                 .collection('rp-data')
-                .updateOne({ _id: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now() }, $inc: { count: 1 }, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
+                .updateOne({ song: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now() }, $inc: { count: 1 }, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
         } catch (e) {
             console.log("Mongo Not Available. \n" + e)
         }
@@ -64,6 +64,10 @@ module.exports = {
                 // return release if not empty
                     return release
             }
+            else{
+                console.log(`[mongo] Not ${release.name}`)
+            }
+            
         }
         // return null if no release found
         return null
@@ -77,24 +81,31 @@ module.exports = {
     // async funtion that gets count of currActiveUsers in analytics collection
 
     async getActiveUsers(mode) {
-        let activeUsers = mongo.db('bot').collection('analytics').find({ _id: 'currActiveUsers' })
+        let activeUsers = mongo.db('bot').collection('analytics').find({ name: 'currActiveUsers' })
         activeUsers = await activeUsers.toArray()
         if (activeUsers.length == 0) { return 0 }
         return activeUsers[0].count
     },
+    
     async incrementActiveUsers() {
-        mongo.db('bot').collection('analytics').updateOne({ _id: 'currActiveUsers' }, { $inc: { count: 1 } }, { upsert: true })
+        mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $inc: { count: 1 } }, { upsert: true })
     },
     async decrementActiveUsers() {
-        mongo.db('bot').collection('analytics').updateOne({ _id: 'currActiveUsers' }, { $inc: { count: -1 } }, { upsert: true })
+        mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $inc: { count: -1 } }, { upsert: true })
     },
     async incrementTotalUsers() {
-        mongo.db('bot').collection('analytics').updateOne({ _id: 'totalUsers' }, { $inc: { count: 1 } }, { upsert: true })
+        mongo.db('bot').collection('analytics').updateOne({ name: 'totalUsers' }, { $inc: { count: 1 } }, { upsert: true })
     },
     async getTotalUsers() {
-        let totalUsers = mongo.db('bot').collection('analytics').find({ _id: 'totalUsers' })
+        let totalUsers = mongo.db('bot').collection('analytics').find({ name: 'totalUsers' })
         totalUsers = await totalUsers.toArray()
         if (totalUsers.length == 0) { return 0 }
         return totalUsers[0].count
+    },
+    async setActiveusers(count){
+        mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $set: { count: count } }, { upsert: true })
+    },
+    async setTotalUsers(count) {
+        mongo.db('bot').collection('analytics').updateOne({ name: 'totalUsers' }, { $set: { count: count } }, { upsert: true })
     }
 }

@@ -13,12 +13,18 @@ module.exports = {
         let buttons = new Discord.MessageActionRow()
         await syncReleaseData(branch)
         let release = await getLatestRelease(branch)
-        buttons.addComponents(
-            new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
-            new Discord.MessageButton().setLabel("exe").setStyle('LINK').setURL(`${release.links.exe}`),
-            new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
-            new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
-        )
+        if  (!release) {
+            release = await getLatestRelease(branch)
+        }
+        console.log("[mongo] Release: " + release.tag)
+        if (release) {
+            buttons.addComponents(
+                new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
+                new Discord.MessageButton().setLabel("exe").setStyle('LINK').setURL(`${release.links.exe}`),
+                new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
+                new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
+            )
+        }
 
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             if (buttons.components.length == 0) {

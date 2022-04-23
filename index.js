@@ -47,6 +47,8 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
+    mongo.setActiveusers(message.guild.roles.cache.get("932816700305469510").members.size);
+    mongo.setTotalusers(message.guild.roles.cache.get("932784788115427348").members.size);
     mongo.getActiveUsers().then(users => {
         activeUsers = users;
         mongo.getTotalUsers().then(users => {
