@@ -48,9 +48,8 @@ client.on('ready', () => {
     console.log(Date())
     mongo.init()
     const guild = client.guilds.cache.get(cider_guild)
-    let totalUsers = guild.roles.cache.get("932816700305469510").members.size
-    let activeUsers = guild.roles.cache.get("932784788115427348").members.size
-    console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
     mongo.getActiveUsers().then(users => {
         activeUsers = users;
         mongo.getTotalUsers().then(users => {
@@ -58,6 +57,7 @@ client.on('ready', () => {
             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
         })
     })
+    console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
 });
 
 
