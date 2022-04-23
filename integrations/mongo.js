@@ -53,7 +53,7 @@ module.exports = {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 mongo.db('bot')
                     .collection('releases')
-                    .updateOne({ _id: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID: `${release.id}`, links: {
+                    .updateOne({ branch: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID: `${release.id}`, links: {
                         AppImage:   `${release.assets[1].browser_download_url}`,
                         exe:        `${release.assets[2].browser_download_url}`,
                         winget:     `${release.assets[4].browser_download_url}`,
