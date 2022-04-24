@@ -49,6 +49,10 @@ module.exports = {
     async syncReleaseData(branch) {
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
         releases = await releases.json()
+        if(branch == 'develop') {
+            macDmg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg"
+            macPkg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.pkg"
+        }
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 mongo.db('bot')
@@ -58,7 +62,9 @@ module.exports = {
                         exe:        `${release.assets[2].browser_download_url}`,
                         winget:     `${release.assets[4].browser_download_url}`,
                         deb:        `${release.assets[6].browser_download_url}`,
-                        snap:       `${release.assets[7].browser_download_url}`, }
+                        snap:       `${release.assets[7].browser_download_url}`,
+                        dmg:       `${macDmg}` || "",
+                        pkg:       `${macPkg}` || "", }
                     } }, { upsert: true });
                 console.log(`[mongo] Updated ${branch} details`)
                 // return release if not empty
