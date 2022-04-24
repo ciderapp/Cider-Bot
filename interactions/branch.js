@@ -24,6 +24,12 @@ module.exports = {
                 new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
                 new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
             )
+            if(branch == "develop") {
+                buttons.addComponents(
+                new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
+                new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
+                )
+            }
         }
 
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
