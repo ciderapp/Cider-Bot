@@ -55,9 +55,10 @@ client.on('ready', () => {
         mongo.getTotalUsers().then(users => {
             totalUsers = users;
             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+            console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
         })
     })
-    console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    
 });
 
 

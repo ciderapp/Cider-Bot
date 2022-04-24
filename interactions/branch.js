@@ -11,6 +11,7 @@ module.exports = {
         let show = interaction.values[0].split('|')[1] == 'true' || false
         let user = interaction.values[0].split('|')[2] || "";
         let buttons = new Discord.MessageActionRow()
+        let buttonsMac = new Discord.MessageActionRow()
         await syncReleaseData(branch)
         let release = await getLatestRelease(branch)
         if  (!release) {
@@ -25,7 +26,7 @@ module.exports = {
                 new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
             )
             if(branch == "develop") {
-                buttons.addComponents(
+                buttonsMac.addComponents(
                 new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
                 new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
                 )
@@ -35,15 +36,19 @@ module.exports = {
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else {
+            } else if(buttonsMac.components.length == 0) {
                 await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
+            } else {
+                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`,  components: [buttons, buttonsMac] })
             }
         }
         else {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else {
+            } else if(buttonsMac.components.length == 0) {
                 await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons] })
+            } else {
+                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons, buttonsMac] })
             }
         }
     }

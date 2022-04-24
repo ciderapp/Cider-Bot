@@ -69,11 +69,7 @@ module.exports = {
                 console.log(`[mongo] Updated ${branch} details`)
                 // return release if not empty
                     return release
-            }
-            else{
-                console.log(`[mongo] Not ${release.name}`)
-            }
-            
+            }  
         }
         // return null if no release found
         return null
