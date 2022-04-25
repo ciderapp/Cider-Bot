@@ -47,17 +47,17 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    const guild = client.guilds.cache.get(cider_guild)
-    mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    mongo.getActiveUsers().then(users => {
-        activeUsers = users;
-        mongo.getTotalUsers().then(users => {
-            totalUsers = users;
-            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-            console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-        })
-    })
+    // const guild = client.guilds.cache.get(cider_guild)
+    // mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    // mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    // mongo.getActiveUsers().then(users => {
+    //     activeUsers = users;
+    //     mongo.getTotalUsers().then(users => {
+    //         totalUsers = users;
+    //         client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+    //         console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    //     })
+    // })
 
 });
 
@@ -201,8 +201,7 @@ client.on('messageCreate', async message => {
             console.log("\x1b[32m%s\x1b[0m", "FAQ update triggered.")
             message.react("✅")
             // change bot name to "Cide FAQ"
-            client.user.setUsername("Cider FAQ")
-            message.channel.send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})
+            client.user.setUsername("Cider FAQ").then(() => {client.channels.cache.get("911395772803735612").send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})})
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
