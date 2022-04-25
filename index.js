@@ -202,6 +202,7 @@ client.on('messageCreate', async message => {
             message.react("✅")
             // change bot name to "Cide FAQ"
             client.user.setUsername("Cider FAQ").then(() => {client.channels.cache.get("911395772803735612").send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})})
+            client.user.setUsername("Cider FAQ").then(() => {message.channel.send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})})
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
