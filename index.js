@@ -200,9 +200,8 @@ client.on('messageCreate', async message => {
         if (faqupdateRegex.test(message.toString())) {
             console.log("\x1b[32m%s\x1b[0m", "FAQ update triggered.")
             message.react("✅")
-            // change bot name to "Cide FAQ"
-            client.user.setUsername("Cider FAQ").then(() => {client.channels.cache.get("911395772803735612").send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})})
-            client.user.setUsername("Cider FAQ").then(() => {message.channel.send({ embeds: faqEmbed }).then(() => {client.user.setUsername("Cider")})})
+            client.channels.cache.get("911395772803735612").send({ embeds: faqEmbed.embeds })
+            message.channel.send({ embeds: faqEmbed.embeds })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
