@@ -47,18 +47,18 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    const guild = client.guilds.cache.get(cider_guild)
-    mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    mongo.getActiveUsers().then(users => {
-        activeUsers = users;
-        mongo.getTotalUsers().then(users => {
-            totalUsers = users;
-            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-            console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-        })
-    })
-    
+    // const guild = client.guilds.cache.get(cider_guild)
+    // mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    // mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    // mongo.getActiveUsers().then(users => {
+    //     activeUsers = users;
+    //     mongo.getTotalUsers().then(users => {
+    //         totalUsers = users;
+    //         client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+    //         console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    //     })
+    // })
+
 });
 
 
@@ -69,7 +69,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     // or else it'll go BONK
 
     const role = newMember.guild.roles.cache.get("932784788115427348");
-    
+
     let using_cider = false
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
@@ -177,11 +177,30 @@ client.on('messageCreate', async message => {
                     setTimeout(() => msg.delete(), reply.timeout)
                 })
             }
+            if (reply.aliases) {
+                for (var i = 0; i < reply.aliases.length; i++) {
+                    var regex = new RegExp(`\\b${reply.aliases[i]}\\b`, "gi");
+                    if (regex.test(message.toString())) {
+                        console.log("\x1b[32m%s\x1b[0m", "Reply triggered:", reply.name)
+                        mongo.replyCounter(reply.name)
+                        message.react("✅")
+                        const embed = new Discord.MessageEmbed()
+                            .setColor(reply.color)
+                            .setTitle(`${reply.title}`)
+                            .setDescription(`${reply.description}`)
+                            .setFooter({ text: "Requested by " + message.member.user.username, iconURL: message.member.user.avatarURL() })
+                            .setTimestamp()
+                        message.reply({ embeds: [embed] }).then(msg => {
+                            setTimeout(() => msg.delete(), reply.timeout)
+                        })
+                    }
+                }
+            }
         }
-        if(faqupdateRegex.test(message.toString())) {
+        if (faqupdateRegex.test(message.toString())) {
             console.log("\x1b[32m%s\x1b[0m", "FAQ update triggered.")
             message.react("✅")
-            message.channel.send({embeds: faqEmbed})
+            message.channel.send({ embeds: faqEmbed })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)

@@ -1,0 +1,12 @@
+{
+    "name": "not showing",
+    "color": "#fb003f",
+    "title": "How to fix songs blanked out: (need to use iTunes for this)",
+    "description": "1. Remove the song from your Library and Playlists\n2. Update iCloud Music Library\n3. Close iTunes and reopen, checking to make sure the song is fully gone\n4. Re-add the song to your Library and Playlist, then edit the metadata for one of the songs you added (add a comment or something)\n5. Update iCloud Music Library\n\n- Song should now be fully synced and working again.\n\n(You can also try `/restrictions` command if this does not work)",
+    "timeout": 20000,
+    "aliases": [
+        "not play",
+        "not playing",
+        "not show"
+    ]
+}
