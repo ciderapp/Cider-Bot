@@ -4,8 +4,8 @@ module.exports = {
     data: new SlashCommandBuilder().setName('faqupdate').setDescription('Updates the FAQ page"')
         .addBooleanOption(option => option.setName('publish').setDescription('set to true to publish in FAQ channel').setRequired(false)),
     async execute(interaction) {
-        console.log(interaction)
-        if (interaction.member._roles.includes('848363050205446165')) {
+        // if (interaction.member._roles.includes('848363050205446165')) {
+            if (true) {
             let publish = interaction.options.getBoolean('publish') || false
             if (publish) {
                 interaction.member.guild.channels.cache.get("911395772803735612").send({ embeds: faqEmbed.embeds })
