@@ -7,7 +7,6 @@ const fetch = require('node-fetch');
 const deploy = require('./deploy-commands.js');
 const { MessageEmbed } = require('discord.js');
 const mongo = require('./integrations/mongo');
-const faqEmbed = require('./faq.json');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
@@ -196,12 +195,6 @@ client.on('messageCreate', async message => {
                     }
                 }
             }
-        }
-        if (faqupdateRegex.test(message.toString())) {
-            console.log("\x1b[32m%s\x1b[0m", "FAQ update triggered.")
-            message.react("✅")
-            client.channels.cache.get("911395772803735612").send({ embeds: faqEmbed.embeds })
-            message.channel.send({ embeds: faqEmbed.embeds })
         }
     } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
