@@ -46,17 +46,17 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
     mongo.init()
-    const guild = client.guilds.cache.get(cider_guild)
-    mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    mongo.getActiveUsers().then(users => {
-        activeUsers = users;
-        mongo.getTotalUsers().then(users => {
-            totalUsers = users;
-            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-            console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-        })
-    })
+    // const guild = client.guilds.cache.get(cider_guild)
+    // mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    // mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    // mongo.getActiveUsers().then(users => {
+    //     activeUsers = users;
+    //     mongo.getTotalUsers().then(users => {
+    //         totalUsers = users;
+    //         client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+    //         console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    //     })
+    // })
 
 });
 

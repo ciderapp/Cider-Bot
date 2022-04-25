@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const faqEmbed = require('../faq.json');
-const Discord = require("discord.js");
 module.exports = {
-    data: new SlashCommandBuilder().setName('faqupdate').setDescription('Updates the FAQ page"').setDefaultPermission(false)
+    data: new SlashCommandBuilder().setName('faqupdate').setDescription('Updates the FAQ page"')
         .addBooleanOption(option => option.setName('publish').setDescription('set to true to publish in FAQ channel').setRequired(false)),
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165')) {
