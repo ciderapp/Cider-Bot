@@ -42,6 +42,7 @@ for (const file of replyFiles) {
 
 let cider_guild = "843954443845238864"
 let totalUsers, activeUsers;
+
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag} at`);
     console.log(Date())
