@@ -17,7 +17,6 @@ module.exports = {
         if  (!release) {
             release = await getLatestRelease(branch)
         }
-        console.log("[mongo] Release: " + release.tag)
         if (release) {
             buttons.addComponents(
                 new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
