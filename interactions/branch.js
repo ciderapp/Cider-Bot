@@ -12,11 +12,13 @@ module.exports = {
         let user = interaction.values[0].split('|')[2] || "";
         let buttons = new Discord.MessageActionRow()
         let buttonsMac = new Discord.MessageActionRow()
-        await syncReleaseData(branch)
-        let release = await getLatestRelease(branch)
-        if  (!release) {
-            release = await getLatestRelease(branch)
-        }
+        let release = null;
+        await syncReleaseData(branch).then(async() => { 
+            await getLatestRelease(branch).then(branchrelease => {
+                release = branchrelease;
+            }).catch(err => { console.log(err) })
+        }).catch(async() => { console.log("Mongo Not Available. \n" + e) });
+        
         if (release) {
             buttons.addComponents(
                 new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
@@ -31,7 +33,6 @@ module.exports = {
                 )
             }
         }
-
         if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             if (buttons.components.length == 0) {
                 await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
