@@ -47,9 +47,11 @@ module.exports = {
                     }
                 }
             }
+            else{
+                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            }
         }
         catch(e){
-            await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
             console.log("Branch Interaction Failed " + e)
         }
         
