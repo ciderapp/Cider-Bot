@@ -18,38 +18,40 @@ module.exports = {
                 release = branchrelease;
             }).catch(err => { console.log(err) })
         }).catch(async() => { console.log("Mongo Not Available. \n" + e) });
-        
-        if (release) {
-            buttons.addComponents(
-                new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
-                new Discord.MessageButton().setLabel("exe").setStyle('LINK').setURL(`${release.links.exe}`),
-                new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
-                new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
-            )
-            if(branch == "develop") {
-                buttonsMac.addComponents(
-                new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
-                new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
+        try{
+            if (release) {
+                buttons.addComponents(
+                    new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
+                    new Discord.MessageButton().setLabel("exe").setStyle('LINK').setURL(`${release.links.exe}`),
+                    new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
+                    new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
                 )
+                if(branch == "develop") {
+                    buttonsMac.addComponents(
+                    new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
+                    new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
+                    )
+                }
+                if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
+                    if(buttonsMac.components.length == 0) {
+                        await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
+                    } else {
+                        await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`,  components: [buttons, buttonsMac] })
+                    }
+                }
+                else {
+                    if(buttonsMac.components.length == 0) {
+                        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons] })
+                    } else {
+                        await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons, buttonsMac] })
+                    }
+                }
             }
         }
-        if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
-            if (buttons.components.length == 0) {
-                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else if(buttonsMac.components.length == 0) {
-                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
-            } else {
-                await interaction.reply({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`,  components: [buttons, buttonsMac] })
-            }
+        catch(e){
+            await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
+            console.log("Branch Interaction Failed " + e)
         }
-        else {
-            if (buttons.components.length == 0) {
-                await interaction.reply({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show })
-            } else if(buttonsMac.components.length == 0) {
-                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons] })
-            } else {
-                await interaction.reply({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons, buttonsMac] })
-            }
-        }
+        
     }
 }
