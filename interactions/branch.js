@@ -52,7 +52,7 @@ module.exports = {
             }
         }
         catch(e){
-            console.log("Branch Interaction Failed " + e)
+            console.log("Branch Interaction Failed ", e)
         }
         
     }
