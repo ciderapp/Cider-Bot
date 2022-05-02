@@ -5,7 +5,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const clientId = '921475709694771252';
 
-const guildId = '843954443845238864'//'';
+const guildId = '843954443845238864'//'';843954443845238864
 
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -16,6 +16,7 @@ for (const file of commandFiles) {
 }
 
 const rest = new REST({ version: '9' }).setToken(auth);
+
 
 rest.get(Routes.applicationGuildCommands(clientId, guildId))
     .then(data => {

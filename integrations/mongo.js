@@ -8,7 +8,7 @@ module.exports = {
     },
     async addDonation(transaction, userId) {
         try {
-            mongo.db('connect').collection('users').updateOne({ userId }, { $addToSet: { donations: transaction } }, { upsert: true })
+            mongo.db('connect').collection('users').updateOne({ _id: userId }, { $addToSet: { donations: transaction } }, { upsert: true })
         } catch (e) {
             console.log("Mongo Not Available. \n" + e)
         }

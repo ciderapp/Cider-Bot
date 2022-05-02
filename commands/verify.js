@@ -31,7 +31,7 @@ module.exports = {
             embed.setColor('#0099ff')
             embed.setDescription('')
             donations.forEach(donation => {
-                embed.addField(donation.createdAt, donation.netAmountInCollectiveCurrency / 100 + ' ' + donation.hostCurrency)
+                embed.addField( `\<\t:${Date.parse(donation.createdAt).getTime()/1000}>`, `\`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}`)
                 mongo.addDonation(donation, interaction.member.id)
             })
             if (interaction.guild.id === '843954443845238864'){
