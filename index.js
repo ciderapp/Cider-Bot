@@ -265,3 +265,6 @@ client.on('interactionCreate', async interaction => {
     }
 });
 client.login(auth)
+
+process.on('unhandledRejection', console.error)
+process.on('uncaughtException', console.error)
