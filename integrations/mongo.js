@@ -58,15 +58,22 @@ module.exports = {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 mongo.db('bot')
                     .collection('releases')
-                    .updateOne({ branch: `${branch}` }, { $set: { tag: `${release.tag_name}`, lastUpdated: `${release.published_at}`, releaseID: `${release.id}`, links: {
-                        AppImage:   `${release.assets[1].browser_download_url}`,
-                        exe:        `${release.assets[2].browser_download_url}`,
-                        winget:     `${release.assets[4].browser_download_url}`,
-                        deb:        `${release.assets[6].browser_download_url}`,
-                        snap:       `${release.assets[7].browser_download_url}`,
-                        dmg:       `${macDmg}`,
-                        pkg:       `${macPkg}`, }
-                    } }, { upsert: true });
+                    .updateOne({ branch: `${branch}` }, { $set: {
+                            tag: `${release.tag_name}`,
+                            lastUpdated: `${release.published_at}`,
+                            jsDate: `${new Date(release.published_at).getTime()}`, //for timestamping
+                            releaseID: `${release.id}`,
+                            links: {
+                                AppImage:   `${release.assets[1].browser_download_url}`,
+                                exe:        `${release.assets[2].browser_download_url}`,
+                                winget:     `${release.assets[4].browser_download_url}`,
+                                deb:        `${release.assets[6].browser_download_url}`,
+                                snap:       `${release.assets[7].browser_download_url}`,
+                                dmg:       `${macDmg}`,
+                                pkg:       `${macPkg}`,
+                            }
+                        }
+                    }, { upsert: true });
                 console.log(`[mongo] Updated ${branch} details`)
                 // return release if not empty
                     return release
