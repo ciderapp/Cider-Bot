@@ -27,6 +27,7 @@ module.exports = {
                 let component = {}
                 component["label"] = branch.name
                 component["value"] = branch.name + "|" + (interaction.options.getBoolean('show') || false) + "|" + ping;
+                console.log(component)
                 components.push(component)
             })
             let branchMenu = new MessageActionRow()
@@ -36,7 +37,13 @@ module.exports = {
                 .setPlaceholder('Select a branch')
                 .addOptions(components)
             )
-            await interaction.reply({ content: 'Choose your branch:', ephemeral: !show, components: [branchMenu]});
+            if(interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')){
+                await interaction.reply({ content: `${ping} Choose your branch:`, ephemeral: !show, components: [branchMenu]});
+            }
+            else if(ping != ""){
+                await interaction.reply({ content: `Choose your branch:`, ephemeral: !show, components: [branchMenu]});
+                await interaction.followUp({ content: `You do not have the permission to ping users.`, ephemeral: true, components: [] })
+            }        
         })
     }
 }

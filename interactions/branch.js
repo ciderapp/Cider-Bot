@@ -34,16 +34,16 @@ module.exports = {
                 }
                 if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
                     if(buttonsMac.components.length == 0) {
-                        await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${Date.parse(release.lastUpdated)}`, components: [buttons] })
+                        await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
                     } else {
                         await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`,  components: [buttons, buttonsMac] })
                     }
                 }
                 else {
                     if(buttonsMac.components.length == 0) {
-                        await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons] })
+                        await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons] })
                     } else {
-                        await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, ephemeral: !show, components: [buttons, buttonsMac] })
+                        await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nUpdated: ${release.lastUpdated}`, components: [buttons, buttonsMac] })
                     }
                 }
             }
