@@ -240,10 +240,6 @@ client.on('messageCreate', async message => {
                 }).catch(e => null)
         } catch (e) { }
     }
-
-
-
-
 })
 
 client.on('interactionCreate', async interaction => {
