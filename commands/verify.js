@@ -44,8 +44,5 @@ module.exports = {
             }
             await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
-
-
-
     },
 };
