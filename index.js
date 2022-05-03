@@ -59,6 +59,9 @@ client.on('ready', () => {
         })
     })
 
+
+
+
 });
 
 
@@ -244,27 +247,25 @@ client.on('messageCreate', async message => {
 })
 
 client.on('interactionCreate', async interaction => {
-    if (!interaction.isCommand()) return;
-    const command = client.commands.get(interaction.commandName);
-    if (!command) return;
-    try {
-        mongo.commandCounter(interaction.commandName)
-        await command.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-    }
-});
-
-client.on('interactionCreate', async interaction => {
-    if (!interaction.isSelectMenu()) return;
-    const iAction = client.interactions.get(interaction.customId);
-    if (!iAction) return;
-    try {
-        await iAction.execute(interaction);
-    } catch (error) {
-        console.error(error);
-        await iAction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    //if (!interaction.isCommand()) return;
+    if (interaction.isSelectMenu()) {
+        if (!client.interactions.get(interaction.customId)) return;
+        try {
+            await client.interactions.get(interaction.customId).execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await client.interactions.get(interaction.customId).reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
+    } else if (interaction.isCommand()) {
+        const command = client.commands.get(interaction.commandName);
+        if (!command) return;
+        try {
+            mongo.commandCounter(interaction.commandName)
+            await command.execute(interaction);
+        } catch (error) {
+            console.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+        }
     }
 });
 client.login(auth)

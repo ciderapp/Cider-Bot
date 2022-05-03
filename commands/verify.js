@@ -31,25 +31,20 @@ module.exports = {
             embed.setColor('#0099ff')
             embed.setDescription('')
             donations.forEach(donation => {
-                embed.addField( `\<\t:${Date.parse(donation.createdAt).getTime()/1000}>`, `\`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}`)
+                embed.addField( donation.createdAt, `
+                Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
+                Payment Processor Fee: \`${donation.paymentProcessorFeeInHostCurrency / 100}\` ${donation.hostCurrency}
+                Received Amount: \`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}
+                `)
                 mongo.addDonation(donation, interaction.member.id)
             })
             if (interaction.guild.id === '843954443845238864'){
                 embed.setFooter('Your role should be given to you shortly')
-                interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445')
-
+                interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445').add('932811694751768656')
             }
             await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
-            //loop through each object
-        //    for(key in obj){
-        //        //check if object value contains value you are looking for
-        //        if(obj[key].includes(email)){
-        //            //add this object to the filtered array
-        //            return obj;
-        //        }
-         //   }
-        //});
+
 
 
     },
