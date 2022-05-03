@@ -61,7 +61,7 @@ module.exports = {
                     .updateOne({ branch: `${branch}` }, { $set: {
                             tag: `${release.tag_name}`,
                             lastUpdated: `${release.published_at}`,
-                            jsDate: `${new Date(release.published_at).getTime()}`, //for timestamping
+                            jsDate: new Date(release.published_at).getTime(), //for timestamping
                             releaseID: `${release.id}`,
                             links: {
                                 AppImage:   `${release.assets[1].browser_download_url}`,
