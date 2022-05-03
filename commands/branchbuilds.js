@@ -38,7 +38,7 @@ module.exports = {
                 .addOptions(components)
             )
             if(interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')){
-                await interaction.reply({ content: `${ping} Choose your branch:`, ephemeral: !show, components: [branchMenu]});
+                await interaction.reply({ content: `${ping} Choose your branch:`, components: [branchMenu]});
             }
             else if(ping != ""){
                 await interaction.reply({ content: `Choose your branch:`, ephemeral: !show, components: [branchMenu]});
