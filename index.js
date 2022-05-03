@@ -58,10 +58,6 @@ client.on('ready', () => {
             console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
         })
     })
-
-
-
-
 });
 
 
