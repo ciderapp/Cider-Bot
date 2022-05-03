@@ -36,7 +36,7 @@ module.exports = {
                 .setPlaceholder('Select a branch')
                 .addOptions(components)
             )
-            await interaction.reply({ content: 'Choose your branch:', ephemeral: true, components: [branchMenu]});
+            await interaction.reply({ content: 'Choose your branch:', ephemeral: !show, components: [branchMenu]});
         })
     }
 }
