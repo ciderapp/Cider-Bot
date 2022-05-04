@@ -1,5 +1,6 @@
 const { SlashCommandBuilder} = require('@discordjs/builders');
 const Discord = require("discord.js");
+
 module.exports = {
     data: new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
     async execute(interaction) {
@@ -26,6 +27,6 @@ module.exports = {
         } else {
             await interaction.reply({ embeds: [embed], components: [new Discord.MessageActionRow().addComponents([oc, kofi, ghSponsors])] })
         }
-        
+               
     },
 };
