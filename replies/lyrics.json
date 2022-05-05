@@ -1,0 +1,7 @@
+{
+    "name": "Lyrics",
+    "color": "#fb003f",
+    "title": "Why are Lyrics not Showing?",
+    "description": "Apple has locked down their lyrics in the API, thus Cider cannot show lyrics from Apple's database, latest builds have musixmatch automatically on but this may not include the songs that were previously available before.\n\n You can help add lyrics to musixmatch [here](https://www.musixmatch.com/contribute)",
+    "timeout": 15000
+}

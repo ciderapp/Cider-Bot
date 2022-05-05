@@ -1,0 +1,7 @@
+{
+    "name": "Slow",
+    "color": "#fb003f",
+    "title": "Why is Cider Slow?",
+    "description": "Cider is slow because its not taking full advantage of your hardware. To turn on go to [Cider Settings](cider://settigs) (by doing `Ctrl` or `⌘` + `,`) , then go to the `Visual` Tab and tick `Enable Hardware Acceleration`",
+    "timeout": 20000
+}
