@@ -1,0 +1,6 @@
+{
+  "name": "Dolby Atmos",
+  "title": "Does Cider have support for Dolby Atmos?",
+  "description": "Currently, because of Apple's MusicKit limitations, Cider cannot play music in Lossless or Dolby Atmos formats.\nHowever You may want to Try `Cider Tuned Audio Spatialization` made by Maikiwi which sounds close to Atmos.",
+  "timeout": 25000
+}

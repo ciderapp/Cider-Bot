@@ -1,3 +1,5 @@
+dist
+.env
 package-lock.json
 tokens.json
 node_modules/

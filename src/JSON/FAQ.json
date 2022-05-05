@@ -1,0 +1,96 @@
+{
+  "content": null,
+  "embeds": [
+    {
+      "color": 16725855,
+      "fields": [
+        {
+          "name": "What happened to the \"Apple Music Electron\"",
+          "value": "Apple Music Electron is now discontinued. Instead there is now Cider! Cider isn't just a modded version of the apple music website, it's a standalone application that's been programmed from scratch!"
+        },
+        {
+          "name": "What is Cider?",
+          "value": "Cider is an open source and cross-platform Apple Music client. It's fast and beautiful. Apple Podcast support will be added soon too!"
+        }
+      ]
+    },
+    {
+      "title": "How can I get Cider?",
+      "description": "If you want the **most stable** experience, you can get  <:canary:936787944843378709> Cider (Alpha) from: \n - [<:MicrosoftStore:967950621225394256> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))\n\nWe offer more releases in our GitHub, (also for other OS such as linux and macOS) you can access them using the `/branchbuilds` command and specify the branch you want to compile from.\n\n<:stable:936789492218609674> `main` - This is compiled from the main branch in GitHub, which is tested thoroughly and has minimal bugs.\n<:stable:936789492218609674> `develop` - This is for people who live in the bleeding edge and want the latest features and fixes.\nAlternatively, you can get the **develop** release, **<:nightly:936787944986017812> Cider Nightly** from:\n- Running `/nightly` in any channel.\n\n<:stable:936789492218609674> macOS builds of Cider are compiled by maintainers and can be accessed using the `/macos` command, it provides both a .dmg and .pkg file.\n\nIf you want to compile <:canary:936787944843378709> **Cider** for your system, you may do so, docs for compiling are listed below:\n- <a:processing:967950621338665000> [Cider Docs for Compiling](https://docs.cider.sh/compilation)",
+      "color": 16725855
+    },
+    {
+      "title": "What's the difference between all of them?",
+      "description": "<:canary:936787944843378709> [**Cider** (Alpha)](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) is the Microsoft store version which is updated weekly (usually) and is the most stable release.\n\n<:stable:936789492218609674> [**Cider Beta** (main branch)](https://github.com/ciderapp/cider-releases/releases?q=main) is the second most stable release, this updates every time the develop branch is stable enough to be merged.\n\n<:stable:936789492218609674> [**Cider Alpha** (develop branch)](https://github.com/ciderapp/cider-releases/releases?q=develop) this is the most  bleeding edge and where most of the updates first happen. These releases are fairly unstable and are not intended for daily use. There is a new alpha build for every commit and PR, so it requires a little bit of manual updating.\n\n<a:processing:967950621338665000> Compiling your own version of Cider requires manually pulling and compiling per commit. \n**DO NOT USE IF YOU DO NOT KNOW WHAT YOU ARE DOING**",
+      "color": 16725855
+    },
+    {
+      "title": "Audio",
+      "color": 16725855,
+      "fields": [
+        {
+          "name": "Does Cider supports Lossless Audio?",
+          "value": "Cider does not currently support lossless audio. This is because the core software Apple has forced us to use does not yet support it. If one day Apple adds support for lossless audio to this software, we'll add it to Cider. Cider only supports up to 256 kbps AAC at the moment."
+        },
+        {
+          "name": "How about Dolby Atmos and Spatial Audio?",
+          "value": "Unfortunately, Dolby Atmos and Spacial Audio stuff also works as stated in the question above. It's impossible for us to get them to work without Apple adding support. \nHowever You may want to Try `Cider Tuned Audio Spatialization` made by Maikiwi which sounds close to Atmos."
+        }
+      ]
+    },
+    {
+      "title": "How can I support this project?",
+      "color": 16725855,
+      "fields": [
+        {
+          "name": "Donate",
+          "value": "- You can donate to our [OpenCollective](https://opencollective.com/ciderapp), via [Ko-Fi](https://ko-fi.com/cryptofyre) or via [Github Sponsors](https://github.com/sponsors/ciderapp)",
+          "inline": true
+        },
+        {
+          "name": "Contributing",
+          "value": "Look at our [good-first-issues/help-wanted issues](https://github.com/ciderapp/Cider/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+label%3A%22help+wanted%22)",
+          "inline": true
+        }
+      ]
+    },
+    {
+      "title": "I want a feature!",
+      "description": "[<:github:967957574525804624> Make a feature request](https://github.com/ciderapp/Cider/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BEnhancement%5D)",
+      "color": 16725855
+    },
+    {
+      "title": "I found a bug!",
+      "description": "[<:github:967957574525804624> File a bug report](https://github.com/ciderapp/Cider/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+)",
+      "color": 16725855
+    },
+    {
+      "title": "LastFM",
+      "color": 16725855,
+      "fields": [
+        {
+          "name": "How do I connect LastFM?",
+          "value": "Click your profile picture in the bottom left<a:righter_arrow:967950621338640424> Settings <a:righter_arrow:967950621338640424> Connectivity <a:righter_arrow:967950621338640424> Connect LastFM"
+        },
+        {
+          "name": "Why did LastFM scrobbling break?",
+          "value": "We changed the API key (we do this for various reasons, not important)\n\nSteps to fix:\n1. Disconnect lastfm in Cider\n2. Exit Cider\n3. Delete %appdata%/Cider/session.json\n4. Open Cider and connect Lastfm in Settings again"
+        }
+      ]
+    },
+    {
+      "title": "Roles",
+      "description": "<@&843957888354615326> - Owner and creator\n<@&928845681517535323> - Not to be messed with\n<@&848363050205446165> - We make the majority of the changes/updates\n<@&875082121427955802> - We manage public relations and also moderate\n<@&843958025969991738> - We've done some contributions to the repository\n<@&932811694751768656> - We've donated or supported the project in some way\n<@&861269055225593876> - We've boosted the server\n<@&923351772532199445> - We've donated to the [OpenCollective](https://opencollective.com/ciderapp) (ping <@191621342473224192> with receipt)\n<@&921921932037857351> - We have made, or in the process of making, articles about <:stable:936789492218609674>\n<@&932784788115427348> - We are currently listening to something on <:stable:936789492218609674> (given magically by <@921475709694771252>)\n<@&932816700305469510> - We have used <:stable:936789492218609674> (given magically by <@921475709694771252>)\n<@&843958096887545896> - We have joined the server",
+      "color": 16725855
+    },
+    {
+      "color": 16725855,
+      "footer": {
+        "text": "Last Updated"
+      },
+      "timestamp": "2022-04-25T03:46:00.000Z"
+    }
+  ],
+  "username": "Cider Bot",
+  "attachments": []
+}
