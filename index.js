@@ -60,8 +60,6 @@ client.on('ready', () => {
     })
 });
 
-
-
 client.on('presenceUpdate', async (oldMember, newMember) => {
     //If role not found in guild, do nothing.
     try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
