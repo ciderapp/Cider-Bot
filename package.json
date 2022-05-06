@@ -19,6 +19,7 @@
     "mongodb": "^4.5.0",
     "mongoose": "^6.1.3",
     "ms": "^2.1.3",
+    "tsc": "^2.0.4",
     "typescript": "^4.6.4"
   },
   "devDependencies": {
