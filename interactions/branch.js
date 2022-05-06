@@ -48,7 +48,7 @@ module.exports = {
                 }
             }
             else{
-                await interaction.update({ content: `I have failed to retrieve any installers from the **${branch}** branch.`, ephemeral: !show, components:[] })
+                await interaction.update({ content: `The **${branch}** branch requires self-compilation check [Cider Docs - Self-Compiling](https://docs.cider.sh/compilation/) for more information.`, ephemeral: !show, components:[] })
             }
         }
         catch(e){
