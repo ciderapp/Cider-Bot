@@ -203,8 +203,8 @@ client.on('messageCreate', async message => {
                 .then(html => {
                     const $ = cheerio.load(html)
                     const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
-                    const description = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
-                    const image = $('meta[property="og:image"]').attr('content').replace("年年", "年") || $('meta[property="og:image:url"]').attr('content').replace("年年", "年")
+                    const description = $('meta[property="twitter:description"]').attr('content').replace("年年", "年") || $('meta[name="twitter:description"]').attr('content').replace("年年", "年")
+                    const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
                     const modlink = link[0].replace('https://', '')
                     const play_link = "https://cider.sh/p?" + modlink
                     const view_link = "https://cider.sh/o?" + modlink
