@@ -3,6 +3,8 @@
     "target": "ESNEXT",
     "module": "CommonJs",
     "outDir": "dist",
+    "allowJs": true,
+    "noImplicitAny": true,
     "rootDir": "src",
     "strict": true,
     "noFallthroughCasesInSwitch": true,
@@ -13,6 +15,13 @@
     "noUnusedParameters": true,
     "strictFunctionTypes": true,
     "skipLibCheck": true,
-    "lib": ["es5", "es6", "dom", "dom.iterable"]
-  }
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "typeRoots": [
+      "node_modules/musickit-typescript",
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*",
+  ]
 }

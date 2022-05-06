@@ -6,7 +6,6 @@ import {
 	SelectMenuInteraction,
 } from 'discord.js';
 import fetch from 'node-fetch';
-
 import { Mongo } from '../Integrations/Mongo';
 
 export const command: Command = {
@@ -55,7 +54,7 @@ export const command: Command = {
 				),
 			],
 			fetchReply: true,
-			ephemeral: ephemeral 
+			ephemeral: ephemeral,
 		});
 		let collector = interactionMessage.createMessageComponentCollector();
 

@@ -18,4 +18,5 @@ export const config: Config = {
 		failIfNotExists: false,
 		partials: ['CHANNEL'],
 	},
+	errorLogChannel: '972138658230579210', // Cider Server: 972138457893851176
 };

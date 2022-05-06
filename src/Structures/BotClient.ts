@@ -1,12 +1,12 @@
 const { Client, Collection } = require('discord.js');
 const consola = require('consola');
 import { Config } from '../Typings/Config.js';
-require('dotenv').config();
 import { Command } from '../Typings/Command.js';
 import { Event } from '../Typings/Event.js';
 import { promisify } from 'util';
 import glob from 'glob';
-
+import { AntiCrash } from './AntiCrash.js';
+let token = require('./local').token();
 export class Bot extends Client {
 	constructor(public config: Config) {
 		super(config.botOptions);
@@ -19,13 +19,15 @@ export class Bot extends Client {
 
 	async start() {
 		await this.loadOperations();
-		await this.login(process.env.TOKEN);
+		await this.login(token);
 
 		/* // Use this if you want Slash commands to be guild-only
 		const guild = this.guilds.cache.get(this.config.guildId);
 		await guild.commands.set(this.commands);
 		*/
 		await this.application.commands.set(this.commands); // Use this if you want the Slash commands to be global.
+
+		new AntiCrash(this).init();
 	}
 
 	async loadOperations() {

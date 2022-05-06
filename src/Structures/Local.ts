@@ -10,7 +10,7 @@ module.exports = {
 		if (isRailway()) {
 			return process.env.TOKEN;
 		} else {
-			return token;
+			return token.token;
 		}
 	},
 	mongo: function () {
