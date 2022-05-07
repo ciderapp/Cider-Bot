@@ -4,7 +4,7 @@ let auth = require('./local').token()
 let express = require('./integrations/express')
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
-const deploy = require('./deploy-commands.js');
+// const deploy = require('./deploy-commands.js');
 const { MessageEmbed } = require('discord.js');
 const mongo = require('./integrations/mongo');
 const client = new Discord.Client({
@@ -48,16 +48,19 @@ client.on('ready', () => {
     console.log(Date())
     mongo.init()
     const guild = client.guilds.cache.get(cider_guild)
-    mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    mongo.getActiveUsers().then(users => {
-        activeUsers = users;
-        mongo.getTotalUsers().then(users => {
-            totalUsers = users;
-            client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-            console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    if (guild) {
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                totalUsers = users;
+                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                console.log(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+            })
         })
-    })
+    }
+
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -156,8 +159,49 @@ client.on('messageCreate', async message => {
     const textRegex = new RegExp(/(test)/g);
     const faqupdateRegex = new RegExp(/(faqupdate)/g);
     if (message.author.bot) return
-
-    if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
+    /* Chenge Apple Music Link */
+    if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
+        const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
+        console.log("[Link] Creating redirect embed.")
+        try {
+            fetch(link).catch(e => console.log("[Link] Error creating redirect embed."))
+                .then(result => result.text()).catch(e => null)
+                .then(html => {
+                    const $ = cheerio.load(html)
+                    const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
+                    const metadescription = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
+                    const description = metadescription.replace(/年年/g, "年")
+                    const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
+                    const modlink = link[0].replace('https://', '')
+                    const play_link = "https://cider.sh/p?" + modlink
+                    const view_link = "https://cider.sh/o?" + modlink
+                    const embed = new Discord.MessageEmbed()
+                        .setColor('#fb003f')
+                        .setTitle(title)
+                        .setURL(link.toString())
+                        .setThumbnail(image)
+                        .setDescription(description)
+                        .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
+                        .setTimestamp()
+                    const interaction = new Discord.MessageActionRow()
+                        .addComponents(
+                            new Discord.MessageButton()
+                                .setLabel('Play In Cider')
+                                .setStyle('LINK')
+                                .setURL(play_link),
+                            new Discord.MessageButton()
+                                .setLabel('View In Cider')
+                                .setStyle('LINK')
+                                .setURL(view_link)
+                        )
+                    try {
+                        message.delete()
+                        return message.channel.send({ embeds: [embed], components: [interaction] });
+                    } catch (e) { console.log(e) }
+                }).catch(e => null)
+        } catch (e) { }
+        /* Auto Replies */
+    } else if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         for (reply of replies) {
             var regex = new RegExp(`\\b${reply.name}\\b`, "gi");
             if (regex.test(message.toString())) {
@@ -194,45 +238,6 @@ client.on('messageCreate', async message => {
                 }
             }
         }
-    } else if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
-        const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
-        console.log("[Link] Creating redirect embed.")
-        try {
-            fetch(link).catch(e => console.log("[Link] Error creating redirect embed."))
-                .then(result => result.text()).catch(e => null)
-                .then(html => {
-                    const $ = cheerio.load(html)
-                    const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
-                    const description = $('meta[property="twitter:description"]').attr('content').replace("年年", "年") || $('meta[name="twitter:description"]').attr('content').replace("年年", "年")
-                    const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
-                    const modlink = link[0].replace('https://', '')
-                    const play_link = "https://cider.sh/p?" + modlink
-                    const view_link = "https://cider.sh/o?" + modlink
-                    const embed = new Discord.MessageEmbed()
-                        .setColor('#fb003f')
-                        .setTitle(title)
-                        .setURL(link.toString())
-                        .setThumbnail(image)
-                        .setDescription(description)
-                        .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
-                        .setTimestamp()
-                    const interaction = new Discord.MessageActionRow()
-                        .addComponents(
-                            new Discord.MessageButton()
-                                .setLabel('Play In Cider')
-                                .setStyle('LINK')
-                                .setURL(play_link),
-                            new Discord.MessageButton()
-                                .setLabel('View In Cider')
-                                .setStyle('LINK')
-                                .setURL(view_link)
-                        )
-                    try {
-                        message.delete()
-                        return message.channel.send({ embeds: [embed], components: [interaction] });
-                    } catch (e) { }
-                }).catch(e => null)
-        } catch (e) { }
     }
 })
 
