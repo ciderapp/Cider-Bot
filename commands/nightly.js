@@ -11,6 +11,6 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(interaction) {
-        interaction.reply({ content: `${interaction.user}, the \`/nightly\` command has been depricated, pls use the branchbuilds command and select **main** to get the latest release`, ephemeral: !interaction.options.getBoolean('show') })
+        interaction.reply({ content: `${interaction.user}, the \`/nightly\` command has been deprecated, please use the branchbuilds command and select **main** to get the latest release`, ephemeral: !interaction.options.getBoolean('show') })
     },
 };
