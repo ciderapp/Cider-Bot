@@ -11,7 +11,7 @@ module.exports = {
             .setRequired(false)
         ),
     async execute(interaction) {
-        let branch = interaction.options.getString('branch') || 'develop';
+        let branch = interaction.options.getString('branch') || 'main';
         let show = interaction.options.getBoolean('show') || false
 
         let buttons = new Discord.MessageActionRow()
@@ -40,5 +40,6 @@ module.exports = {
         } else {
             await interaction.reply({ content: `What installer do you want from the **${branch}** branch?`, ephemeral: !show, components: [buttons] })
         }
+        interaction.followUp({ content: `${interaction.user}, the \`/nightly\` command has been depricated, pls use the branchbuilds command and select **main** to get the latest release`, ephemeral: !show })
     },
 };
