@@ -1,16 +1,17 @@
 const { MongoClient } = require('mongodb');
+const consola = require('consola');
 const mongo = new MongoClient(require('../local').mongo());
 const fetch = require('node-fetch')
 module.exports = {
     async init() {
         await mongo.connect()
-        console.log('[mongo] Connected!')
+        consola.success("\x1b[33m%s\x1b[0m", '[mongo]', 'Connected!')
     },
     async addDonation(transaction, userId) {
         try {
             mongo.db('connect').collection('users').updateOne({ _id: userId }, { $addToSet: { donations: transaction } }, { upsert: true })
         } catch (e) {
-            console.log("Mongo Not Available. \n" + e)
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
         return
     },
@@ -20,7 +21,7 @@ module.exports = {
                 .collection('analytics')
                 .updateOne({ name: `command-${command}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
         } catch (e) {
-            console.log("Mongo Not Available. \n" + e)
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
 
     },
@@ -31,7 +32,7 @@ module.exports = {
                 .collection('analytics')
                 .updateOne({ name: `autoreply-${reply}` }, { $set: { lastUsed: Date.now() }, $inc: { count: 1 } }, { upsert: true })
         } catch (e) {
-            console.log("Mongo Not Availible. \n" + e)
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
 
     },
@@ -42,7 +43,7 @@ module.exports = {
                 .collection('rp-data')
                 .updateOne({ song: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now() }, $inc: { count: 1 }, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
         } catch (e) {
-            console.log("Mongo Not Available. \n" + e)
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
 
     },
@@ -74,7 +75,7 @@ module.exports = {
                             }
                         }
                     }, { upsert: true });
-                console.log(`[mongo] Updated ${branch} details`)
+                consola.success("\x1b[33m%s\x1b[0m", '[mongo]', `Updated ${branch} details`)
                 // return release if not empty
                     return release
             }  
@@ -85,8 +86,8 @@ module.exports = {
     async getLatestRelease(branch) {
         let release = mongo.db('bot').collection('releases').find({ branch: `${branch}` })
         release = await release.toArray()
-        if (release.length == 0) { return null }
-        return release[0]
+        if (!release.length == 0) { consola.info("\x1b[33m%s\x1b[0m", '[mongo]', `Found ${branch} release`); return release[0] }
+        return null
     },
     // async funtion that gets count of currActiveUsers in analytics collection
 

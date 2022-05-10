@@ -27,7 +27,6 @@ module.exports = {
                 let component = {}
                 component["label"] = branch.name
                 component["value"] = branch.name + "|" + (interaction.options.getBoolean('show') || false) + "|" + ping;
-                console.log(component)
                 components.push(component)
             })
             let branchMenu = new MessageActionRow()

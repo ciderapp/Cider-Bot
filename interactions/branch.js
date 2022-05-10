@@ -1,12 +1,12 @@
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
+const consola = require('consola');
 const { syncReleaseData, syncReleaseLinks, getLatestRelease } = require('../integrations/mongo');
 module.exports = {
     data: { name: 'branch' },
     async execute(interaction) {
-        let timeStamp = new Date().toTimeString().split(' ')[0];
-        console.log(timeStamp + " - " + interaction.user.username + "#" + interaction.user.discriminator + " with UserID: " + interaction.user.id + " used branchbuild");
+        consola.info(interaction.user.username + "#" + interaction.user.discriminator + " with UserID: " + interaction.user.id + " used branchbuild");
         let branch = interaction.values[0].split('|')[0];
         let show = interaction.values[0].split('|')[1] == 'true' || false
         let user = interaction.values[0].split('|')[2] || "";
@@ -16,8 +16,8 @@ module.exports = {
         await syncReleaseData(branch).then(async() => { 
             await getLatestRelease(branch).then(branchrelease => {
                 release = branchrelease;
-            }).catch(err => { console.log(err) })
-        }).catch(async() => { console.log("Mongo Not Available. \n" + e) });
+            }).catch(err => { consola.error(err) })
+        }).catch(async() => { consola.error("Mongo Not Available. \n" + e) });
         try{
             if (release) {
                 buttons.addComponents(
@@ -52,7 +52,7 @@ module.exports = {
             }
         }
         catch(e){
-            console.log("Branch Interaction Failed ", e)
+            consola.error("Branch Interaction Failed ", e)
         }
         
     }
