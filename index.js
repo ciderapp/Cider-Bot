@@ -250,7 +250,7 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await client.interactions.get(interaction.customId).reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { description: 'Unhandled Rejection / Catch', fields: [{ name: 'Error',  value: codeBlock('js', inspect(error)) }, { name: 'Origin', value: codeBlock('js', inspect(origin)) }]}
+            errorEmbed = { description: 'Interaction Crash', fields: [{ name: 'Error',  value: codeBlock('js', inspect(error)) }, { name: 'Origin', value: codeBlock('js', inspect(origin)) }]}
             await interaction.member.guild.channels.cache.get("911395772803735612").send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
         }
     } else if (interaction.isCommand()) {
@@ -269,5 +269,13 @@ client.on('interactionCreate', async interaction => {
 });
 client.login(auth)
 
-process.on('unhandledRejection', consola.error)
-process.on('uncaughtException', consola.error)
+process.on('unhandledRejection', error => {
+    consola.error(error);
+    errorEmbed = { description: 'Unhandled Rejection / Catch', fields: [{ name: 'Error',  value: codeBlock('js', inspect(error)) }, { name: 'Origin', value: codeBlock('js', inspect(origin)) }]}
+    client.channels.cache.get("911395772803735612").send({ content: `There was an error`, embeds: [errorEmbed] })
+})
+process.on('uncaughtException', error => {
+    consola.error(error);
+    errorEmbed = { description: 'Uncaught Exception / Catch', fields: [{ name: 'Error',  value: codeBlock('js', inspect(error)) }, { name: 'Origin', value: codeBlock('js', inspect(origin)) }]}
+    client.channels.cache.get("911395772803735612").send({ content: `There was an error`, embeds: [errorEmbed] })
+})
