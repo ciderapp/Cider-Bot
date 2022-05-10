@@ -42,6 +42,7 @@ for (const file of replyFiles) {
 }
 
 let cider_guild = "843954443845238864"
+let errorChannel = "911395772803735612"
 let totalUsers, activeUsers;
 
 client.on('ready', () => {
@@ -250,8 +251,8 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await client.interactions.get(interaction.customId).reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { description: `${error.name}`, fields: [{ name: 'Message',  value: error.message }, { name: 'Origin', value: error.trace }]}
-            await interaction.member.guild.channels.cache.get("911395772803735612").send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
+            errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
+            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
         }
     } else if (interaction.isCommand()) {
         const command = client.commands.get(interaction.commandName);
@@ -261,9 +262,9 @@ client.on('interactionCreate', async interaction => {
             await command.execute(interaction);
         } catch (error) {
             consola.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { description: `${error.name}`, fields: [{ name: 'Message',  value: error.message }, { name: 'Origin', value: error.trace }]}
-            await interaction.member.guild.channels.cache.get("911395772803735612").send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
+            await interaction.reply({ title: "Error", content: 'There was an error while executing this command!', ephemeral: true });
+            errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
+            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
         }
     }
 });
@@ -271,11 +272,13 @@ client.login(auth)
 
 process.on('unhandledRejection', error => {
     consola.error(error);
-    errorEmbed = { description: `${error.name}`, fields: [{ name: 'Message',  value: error.message }, { name: 'Origin', value: error.trace }]}
-    client.channels.cache.get("911395772803735612").send({ content: `There was an error`, embeds: [errorEmbed] })
+    consola.error(error.stack);
+    errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
+    client.channels.cache.get(errorChannel).send({ content: `There was an error`, embeds: [errorEmbed] })
 })
 process.on('uncaughtException', error => {
     consola.error(error);
-    errorEmbed = { description: `${error.name}`, fields: [{ name: 'Message',  value: error.message }, { name: 'Origin', value: error.trace }]}
-    client.channels.cache.get("911395772803735612").send({ content: `There was an error`, embeds: [errorEmbed] })
+    consola.error(error.stack);
+    errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
+    client.channels.cache.get(errorChannel).send({ content: `There was an error`, embeds: [errorEmbed] })
 })
