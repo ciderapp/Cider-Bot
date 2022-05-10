@@ -42,7 +42,7 @@ for (const file of replyFiles) {
 }
 
 let cider_guild = "843954443845238864"
-let errorChannel = "911395772803735612"
+let errorChannel = "972138457893851176"
 let totalUsers, activeUsers;
 
 client.on('ready', () => {
