@@ -52,5 +52,12 @@ module.exports = {
         } else {
             return require('./tokens.json').ocKey;
         }
+    },
+    ghKey: function () {
+        if (isRailway()){
+            return process.env.ghKey
+        } else {
+            return require('./tokens.json').ghKey;
+        }
     }
 }
