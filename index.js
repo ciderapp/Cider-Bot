@@ -165,7 +165,7 @@ client.on('messageCreate', async message => {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         consola.info("[Link] Creating redirect embed.")
         try {
-            fetch(link).catch(e => console.log("[Link] Error creating redirect embed."))
+            fetch(link).catch(e => consola.error("[Link] Error creating redirect embed."))
                 .then(result => result.text()).catch(e => null)
                 .then(html => {
                     const $ = cheerio.load(html)
@@ -206,7 +206,7 @@ client.on('messageCreate', async message => {
         for (reply of replies) {
             var regex = new RegExp(`\\b${reply.name}\\b`, "gi");
             if (regex.test(message.toString())) {
-                console.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
+                consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                 mongo.replyCounter(reply.name)
                 message.react("✅")
                 const embed = new Discord.MessageEmbed()
@@ -223,7 +223,7 @@ client.on('messageCreate', async message => {
                 for (var i = 0; i < reply.aliases.length; i++) {
                     var regex = new RegExp(`\\b${reply.aliases[i]}\\b`, "gi");
                     if (regex.test(message.toString())) {
-                        console.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
+                        consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                         mongo.replyCounter(reply.name)
                         message.react("✅")
                         const embed = new Discord.MessageEmbed()

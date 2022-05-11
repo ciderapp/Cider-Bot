@@ -20,4 +20,4 @@ app.get('/release/:branch', async (request, response) => {
     response.json(release);
 });
 
-app.listen(port, () => console.log(`App listening at http://${url}`));
+app.listen(port, () => consola.info(`App listening at http://${url}`));
