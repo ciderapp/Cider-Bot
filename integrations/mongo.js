@@ -47,35 +47,35 @@ module.exports = {
         }
 
     },
-    async syncReleaseData(branch, releases) {
-        
+    async syncReleaseData(branch) {
+        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
+        releases = await releases.json()
         let macDmg = ""; let macPkg = "";
         if (branch == 'main') {
             macDmg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg"
             macPkg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.pkg"
         }
-        if (branch != 'develop') {
-            for (let release of releases) {
-                if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
-                    await mongo.db('bot').collection('releases').updateOne({ branch: `${branch}` }, {
-                        $set: {
-                            tag: `${release.tag_name}`,
-                            lastUpdated: `${release.published_at}`,
-                            jsDate: new Date(release.published_at).getTime(), //for timestamping
-                            releaseID: `${release.id}`,
-                            links: {
-                                AppImage: `${release.assets[0].browser_download_url}`,
-                                exe: `${release.assets[1].browser_download_url}`,
-                                winget: `${release.assets[3].browser_download_url}`,
-                                deb: `${release.assets[5].browser_download_url}`,
-                                snap: `${release.assets[6].browser_download_url}`,
-                                dmg: `${macDmg}`,
-                                pkg: `${macPkg}`,
-                            }
+        for (let release of releases) {
+            if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
+                await mongo.db('bot').collection('releases').updateOne({ branch: `${branch}` }, {
+                    $set: {
+                        tag: `${release.tag_name}`,
+                        lastUpdated: `${release.published_at}`,
+                        jsDate: new Date(release.published_at).getTime(), //for timestamping
+                        releaseID: `${release.id}`,
+                        links: {
+                            AppImage: `${release.assets[0].browser_download_url}`,
+                            exe: `${release.assets[1].browser_download_url}`,
+                            winget: `${release.assets[3].browser_download_url}`,
+                            deb: `${release.assets[5].browser_download_url}`,
+                            snap: `${release.assets[6].browser_download_url}`,
+                            dmg: `${macDmg}`,
+                            pkg: `${macPkg}`,
                         }
-                    }, { upsert: true })
-                    return;
-                }
+                    }
+                }, { upsert: true })
+                consola.success("\x1b[33m%s\x1b[0m", '[mongo]', `Synced ${branch} release data.`)
+                return;
             }
         }
     },

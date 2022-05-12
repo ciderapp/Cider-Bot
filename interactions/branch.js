@@ -13,9 +13,8 @@ module.exports = {
         let buttons = new Discord.MessageActionRow()
         let buttonsMac = new Discord.MessageActionRow()
         let release = null;
-        await getLatestRelease(branch).then(branchrelease => {
-            release = branchrelease;
-        }).catch(err => { consola.error(err) })
+        release = await getLatestRelease(branch)
+        consola.info("Release: ",release);
         try {
             if (release) {
                 buttons.addComponents(
