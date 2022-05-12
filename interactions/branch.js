@@ -2,7 +2,7 @@ const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
 const consola = require('consola');
-const { syncReleaseData, syncReleaseLinks, getLatestRelease } = require('../integrations/mongo');
+const { getLatestRelease } = require('../integrations/mongo')
 module.exports = {
     data: { name: 'branch' },
     async execute(interaction) {
@@ -13,12 +13,10 @@ module.exports = {
         let buttons = new Discord.MessageActionRow()
         let buttonsMac = new Discord.MessageActionRow()
         let release = null;
-        await syncReleaseData(branch).then(async() => { 
-            await getLatestRelease(branch).then(branchrelease => {
-                release = branchrelease;
-            }).catch(err => { consola.error(err) })
-        }).catch(async() => { consola.error("Mongo Not Available. \n" + e) });
-        try{
+        await getLatestRelease(branch).then(branchrelease => {
+            release = branchrelease;
+        }).catch(err => { consola.error(err) })
+        try {
             if (release) {
                 buttons.addComponents(
                     new Discord.MessageButton().setLabel("AppImage").setStyle('LINK').setURL(`${release.links.AppImage}`),
@@ -26,34 +24,34 @@ module.exports = {
                     new Discord.MessageButton().setLabel("deb").setStyle('LINK').setURL(`${release.links.deb}`),
                     new Discord.MessageButton().setLabel("snap").setStyle('LINK').setURL(`${release.links.snap}`)
                 )
-                if(branch == "develop") {
+                if (branch == 'main') {
                     buttonsMac.addComponents(
-                    new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
-                    new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
+                        new Discord.MessageButton().setLabel("macos-dmg").setStyle('LINK').setURL(`${release.links.dmg}`),
+                        new Discord.MessageButton().setLabel("macos-pkg").setStyle('LINK').setURL(`${release.links.pkg}`)
                     )
                 }
                 if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
-                    if(buttonsMac.components.length == 0) {
+                    if (buttonsMac.components.length == 0) {
                         await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons] })
                     } else {
-                        await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`,  components: [buttons, buttonsMac] })
+                        await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
                     }
                 }
                 else {
-                    if(buttonsMac.components.length == 0) {
+                    if (buttonsMac.components.length == 0) {
                         await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons] })
                     } else {
                         await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
                     }
                 }
             }
-            else{
-                await interaction.update({ content: `The **${branch}** branch requires self-compilation check [Cider Docs - Self-Compiling](https://docs.cider.sh/compilation/) for more information.`, ephemeral: !show, components:[] })
+            else {
+                await interaction.update({ content: `The **${branch}** branch requires self-compilation check [Cider Docs - Self-Compiling](https://docs.cider.sh/compilation/) for more information.`, ephemeral: !show, components: [] })
             }
         }
-        catch(e){
+        catch (e) {
             consola.error("Branch Interaction Failed ", e)
         }
-        
+
     }
 }

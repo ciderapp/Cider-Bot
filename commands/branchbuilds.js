@@ -2,7 +2,7 @@ const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/bu
 const { MessageActionRow, MessageSelectMenu } = require('discord.js');
 const Discord = require("discord.js");
 const fetch = require("node-fetch");
-// const { addDonation } = require('./mongo.js');
+const { syncReleaseData } = require('../integrations/mongo'); 
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -19,11 +19,15 @@ module.exports = {
     async execute(interaction) {
         let ping = interaction.options.getUser('ping')  || "";
         if(ping != ""){ ping = ping.toString() }
+        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
+        releases = await releases.json()
         await fetch('https://api.github.com/repos/ciderapp/cider/branches').then(async (branches) => {
             let show = interaction.options.getBoolean('show') || false
             branches = await branches.json()
+
             let components = []
             branches.forEach(branch => {
+                syncReleaseData(branch, releases)
                 let component = {}
                 component["label"] = branch.name
                 component["value"] = branch.name + "|" + (interaction.options.getBoolean('show') || false) + "|" + ping;

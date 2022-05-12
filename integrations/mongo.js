@@ -47,41 +47,36 @@ module.exports = {
         }
 
     },
-    async syncReleaseData(branch) {
-        let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
-        releases = await releases.json()
+    async syncReleaseData(branch, releases) {
+        
         let macDmg = ""; let macPkg = "";
-        if(branch == 'develop') {
+        if (branch == 'main') {
             macDmg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg"
             macPkg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.pkg"
         }
-        for (let release of releases) {
-            if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
-                mongo.db('bot')
-                    .collection('releases')
-                    .updateOne({ branch: `${branch}` }, { $set: {
+        if (branch != 'develop') {
+            for (let release of releases) {
+                if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
+                    await mongo.db('bot').collection('releases').updateOne({ branch: `${branch}` }, {
+                        $set: {
                             tag: `${release.tag_name}`,
                             lastUpdated: `${release.published_at}`,
                             jsDate: new Date(release.published_at).getTime(), //for timestamping
                             releaseID: `${release.id}`,
                             links: {
-                                AppImage:   `${release.assets[0].browser_download_url}`,
-                                exe:        `${release.assets[1].browser_download_url}`,
-                                winget:     `${release.assets[3].browser_download_url}`,
-                                deb:        `${release.assets[5].browser_download_url}`,
-                                snap:       `${release.assets[6].browser_download_url}`,
-                                dmg:       `${macDmg}`,
-                                pkg:       `${macPkg}`,
+                                AppImage: `${release.assets[1].browser_download_url}`,
+                                exe: `${release.assets[2].browser_download_url}`,
+                                winget: `${release.assets[4].browser_download_url}`,
+                                deb: `${release.assets[6].browser_download_url}`,
+                                snap: `${release.assets[7].browser_download_url}`,
+                                dmg: `${macDmg}`,
+                                pkg: `${macPkg}`,
                             }
                         }
-                    }, { upsert: true });
-                consola.success("\x1b[33m%s\x1b[0m", '[mongo]', `Updated ${branch} details`)
-                // return release if not empty
-                    return release
-            }  
+                    }, { upsert: true })
+                }
+            }
         }
-        // return null if no release found
-        return null
     },
     async getLatestRelease(branch) {
         let release = mongo.db('bot').collection('releases').find({ branch: `${branch}` })
@@ -97,7 +92,7 @@ module.exports = {
         if (activeUsers.length == 0) { return 0 }
         return activeUsers[0].count
     },
-    
+
     async incrementActiveUsers() {
         mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $inc: { count: 1 } }, { upsert: true })
     },
@@ -113,7 +108,7 @@ module.exports = {
         if (totalUsers.length == 0) { return 0 }
         return totalUsers[0].count
     },
-    async setActiveUsers(count){
+    async setActiveUsers(count) {
         mongo.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $set: { count: count } }, { upsert: true })
     },
     async setTotalUsers(count) {
