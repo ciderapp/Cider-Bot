@@ -21,6 +21,7 @@ module.exports = {
         let show = interaction.options.getBoolean('show') || false
         if (ping != "") { ping = ping.toString() }
         await syncReleaseData("main");
+        await syncReleaseData("develop");
         let branchMenu = new MessageActionRow()
             .addComponents(
                 new MessageSelectMenu()
