@@ -201,6 +201,50 @@ client.on('messageCreate', async message => {
                     } catch (e) { consola.error(e) }
                 }).catch(e => null)
         } catch (e) { }
+    } else if (message.content.match(/(open\.spotify\.com)([^\s]+)/gi)) {
+        const link = message.content.match(/(open\.spotify\.com)([^\s]+)/gi)
+        try {
+            fetch("https://api.song.link/v1-alpha.1/links?url=" + link + "&userCountry=US").catch(e => consola.error("[Link] Error creating Spotify redirect embed."))
+                .then(result => result.json()).catch(e => null)
+                .then(json => {
+                    const amlink = json.linksByPlatform.appleMusic.url
+                    fetch(amlink).catch(e => consola.error("[Link] Error creating redirect embed."))
+                        .then(result => result.text()).catch(e => null)
+                        .then(html => {
+                            const $ = cheerio.load(html)
+                            const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
+                            const metadescription = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
+                            const description = metadescription.replace(/年年/g, "年")
+                            const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
+                            const modlink = amlink.replace('https://', '')
+                            const play_link = "https://cider.sh/p?" + modlink
+                            const view_link = "https://cider.sh/o?" + modlink
+                            const embed = new Discord.MessageEmbed()
+                                .setColor('#fb003f')
+                                .setTitle(title)
+                                .setURL(amlink.toString())
+                                .setThumbnail(image)
+                                .setDescription(description)
+                                .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
+                                .setTimestamp()
+                            const interaction = new Discord.MessageActionRow()
+                                .addComponents(
+                                    new Discord.MessageButton()
+                                        .setLabel('Play In Cider')
+                                        .setStyle('LINK')
+                                        .setURL(play_link),
+                                    new Discord.MessageButton()
+                                        .setLabel('View In Cider')
+                                        .setStyle('LINK')
+                                        .setURL(view_link)
+                                )
+                            try {
+                                message.delete()
+                                return message.channel.send({ embeds: [embed], components: [interaction] });
+                            } catch (e) { consola.error(e) }
+                        }).catch(e => null)
+                })
+        } catch (e) { consola.error(e) }
         /* Auto Replies */
     } else if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
         for (reply of replies) {
