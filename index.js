@@ -160,7 +160,7 @@ client.on('messageCreate', async message => {
     const textRegex = new RegExp(/(test)/g);
     const faqupdateRegex = new RegExp(/(faqupdate)/g);
     if (message.author.bot) return
-    /* Chenge Apple Music Link */
+    /* Change Apple Music Link */
     if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
         const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
         consola.info("[Link] Creating redirect embed.")
