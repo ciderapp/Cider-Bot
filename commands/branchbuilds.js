@@ -30,11 +30,11 @@ module.exports = {
                     .addOptions([
                         {
 							label: 'main',
-							value: `main|${(interaction.options.getBoolean('show') || false)}|ping`,
+							value: `main|${show}|${ping}`,
 						},
 						{
 							label: 'develop',
-							value: `develop|${(interaction.options.getBoolean('show') || false)}|ping`,
+							value: `develop|${show}|${ping}`,
 						}
                     ])
             )
