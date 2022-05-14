@@ -1,0 +1,31 @@
+{
+    "devPerm": [
+        {
+            "id": "848363050205446165",
+            "type": "ROLE",
+            "permission": true
+        },
+        {
+            "id": "345021804210814976",
+            "type": "USER",
+            "permission": true
+        }
+    ],
+    "modPerm": [
+        {
+            "id": "848363050205446165",
+            "type": "ROLE",
+            "permission": true
+        },
+        {
+            "id": "875082121427955802",
+            "type": "ROLE",
+            "permission": true
+        },
+        {
+            "id": "345021804210814976",
+            "type": "USER",
+            "permission": true
+        }
+    ]
+}

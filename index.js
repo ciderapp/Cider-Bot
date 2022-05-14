@@ -5,7 +5,7 @@ let express = require('./integrations/express')
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const consola = require('consola');
-const deploy = require('./deploy-commands.js');
+// const deploy = require('./deploy-commands.js');
 const { MessageEmbed } = require('discord.js');
 const mongo = require('./integrations/mongo');
 const client = new Discord.Client({
@@ -61,7 +61,8 @@ client.on('ready', () => {
             })
         })
     }
-
+    guild.channels.cache.get(errorChannel).send({ embeds: [{ color:"#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() /1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}` }] })
+    
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -207,42 +208,46 @@ client.on('messageCreate', async message => {
             fetch("https://api.song.link/v1-alpha.1/links?url=" + link + "&userCountry=US").catch(e => consola.error("[Link] Error creating Spotify redirect embed."))
                 .then(result => result.json()).catch(e => null)
                 .then(json => {
-                    const amlink = json.linksByPlatform.appleMusic.url
-                    fetch(amlink).catch(e => consola.error("[Link] Error creating redirect embed."))
-                        .then(result => result.text()).catch(e => null)
-                        .then(html => {
-                            const $ = cheerio.load(html)
-                            const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
-                            const metadescription = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
-                            const description = metadescription.replace(/年年/g, "年")
-                            const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
-                            const modlink = amlink.replace('https://', '')
-                            const play_link = "https://cider.sh/p?" + modlink
-                            const view_link = "https://cider.sh/o?" + modlink
-                            const embed = new Discord.MessageEmbed()
-                                .setColor('#fb003f')
-                                .setTitle(title)
-                                .setURL(amlink.toString())
-                                .setThumbnail(image)
-                                .setDescription(description)
-                                .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
-                                .setTimestamp()
-                            const interaction = new Discord.MessageActionRow()
-                                .addComponents(
-                                    new Discord.MessageButton()
-                                        .setLabel('Play In Cider')
-                                        .setStyle('LINK')
-                                        .setURL(play_link),
-                                    new Discord.MessageButton()
-                                        .setLabel('View In Cider')
-                                        .setStyle('LINK')
-                                        .setURL(view_link)
-                                )
-                            try {
-                                message.delete()
-                                return message.channel.send({ embeds: [embed], components: [interaction] });
-                            } catch (e) { consola.error(e) }
-                        }).catch(e => null)
+                    if (json.linksByPlatform.appleMusic) {
+                        const amlink = json.linksByPlatform.appleMusic.url
+                        fetch(amlink).catch(e => consola.error("[Link] Error creating redirect embed."))
+                            .then(result => result.text()).catch(e => null)
+                            .then(html => {
+                                const $ = cheerio.load(html)
+                                const title = $('meta[property="og:title"]').attr('content') || $('title').text() || $('meta[name="title"]').attr('content')
+                                const metadescription = $('meta[property="twitter:description"]').attr('content') || $('meta[name="twitter:description"]').attr('content')
+                                const description = metadescription.replace(/年年/g, "年")
+                                const image = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content')
+                                const modlink = amlink.replace('https://', '')
+                                const play_link = "https://cider.sh/p?" + modlink
+                                const view_link = "https://cider.sh/o?" + modlink
+                                const embed = new Discord.MessageEmbed()
+                                    .setColor('#fb003f')
+                                    .setTitle(title)
+                                    .setURL(amlink.toString())
+                                    .setThumbnail(image)
+                                    .setDescription(description)
+                                    .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
+                                    .setTimestamp()
+                                const interaction = new Discord.MessageActionRow()
+                                    .addComponents(
+                                        new Discord.MessageButton()
+                                            .setLabel('Play In Cider')
+                                            .setStyle('LINK')
+                                            .setURL(play_link),
+                                        new Discord.MessageButton()
+                                            .setLabel('View In Cider')
+                                            .setStyle('LINK')
+                                            .setURL(view_link)
+                                    )
+                                try {
+                                    message.delete()
+                                    return message.channel.send({ embeds: [embed], components: [interaction] });
+                                } catch (e) { consola.error(e) }
+                            }).catch(e => null)
+                    } else {
+                        message.reply({ content: "Sorry, this song cannot be played in Cider." })
+                    }
                 })
         } catch (e) { consola.error(e) }
         /* Auto Replies */
@@ -295,8 +300,8 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await client.interactions.get(interaction.customId).reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
-            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
+            errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     } else if (interaction.isCommand()) {
         const command = client.commands.get(interaction.commandName);
@@ -307,8 +312,8 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await interaction.reply({ title: "Error", content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
-            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.name}`, embeds: [errorEmbed] })
+            errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     }
 });
@@ -317,12 +322,12 @@ client.login(auth)
 process.on('unhandledRejection', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
-    client.channels.cache.get(errorChannel).send({ content: `There was an error`, embeds: [errorEmbed] })
+    errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    client.channels.cache.get(errorChannel).send({ content: `Unhandled Rejection`, embeds: [errorEmbed] })
 })
 process.on('uncaughtException', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { title: "Error", description: `${error.name}`, fields: [{ name: 'Message',  value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }]}
-    client.channels.cache.get(errorChannel).send({ content: `There was an error`, embeds: [errorEmbed] })
+    errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    client.channels.cache.get(errorChannel).send({ content: `Uncaught Exception`, embeds: [errorEmbed] })
 })
