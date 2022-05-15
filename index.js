@@ -48,6 +48,7 @@ let totalUsers, activeUsers;
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
+    const Guilds = client.guilds.cache.map(guild => guild.name);
     const guild = client.guilds.cache.get(cider_guild)
     if (guild) {
         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
@@ -61,8 +62,7 @@ client.on('ready', () => {
             })
         })
     }
-    guild.channels.cache.get(errorChannel).send({ embeds: [{ color:"#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() /1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}` }] })
-    
+    guild.channels.cache.get(errorChannel).send({ embeds: [{ color:"#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() /1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields:[{name:"Server List",value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
