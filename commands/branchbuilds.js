@@ -30,10 +30,17 @@ module.exports = {
                     .addOptions([
                         {
 							label: 'main',
+                            value: 'Cider(Nightly) compiled from main branch',
 							value: `main|${show}|${ping}`,
 						},
 						{
+							label: 'stable',
+                            value: 'Cider compiled from stable branch (synced w/ MSFT store)',
+							value: `stable|${show}|${ping}`,
+						},
+                        {
 							label: 'develop',
+                            value: 'Deprecated, use main',
 							value: `develop|${show}|${ping}`,
 						}
                     ])
