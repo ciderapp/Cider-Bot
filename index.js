@@ -39,8 +39,8 @@ for (const file of replyFiles) {
     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
 }
 
-let cider_guild = "585180490202349578"
-let errorChannel = "972138658230579210"
+let cider_guild = "843954443845238864"
+let errorChannel = "972138457893851176"
 let totalUsers, activeUsers;
 
 client.on('ready', () => {
