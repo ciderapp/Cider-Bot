@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
-const { default: consolaGlobalInstance } = require('consola');
 
 module.exports = {
     data: new SlashCommandBuilder()
