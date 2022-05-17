@@ -38,10 +38,21 @@ module.exports = {
     },
     async logRPMetadata(listenerData) {
         try {
+            this.dropRPMetadata()
             mongo
                 .db('bot')
                 .collection('rp-data')
                 .updateOne({ song: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now() }, $inc: { count: 1 }, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
+        } catch (e) {
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
+        }
+
+    },
+    async dropRPMetadata() {
+        try {
+            mongo
+                .db('bot')
+                .dropCollection('rp-data')
         } catch (e) {
             consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
