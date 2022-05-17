@@ -4,7 +4,6 @@ const Discord = require("discord.js");
 module.exports = {
     data: new SlashCommandBuilder().setName('macos').setDescription('Shows available macOS builds (Signed for M1 and Intel Macs)').addBooleanOption(option => option.setName('show').setDescription('Show to everyone!').setRequired(false)),
     async execute(interaction) {
-        const Discord = require("discord.js");
         let buttons = new Discord.MessageActionRow()
         buttons.addComponents(
             new Discord.MessageButton()

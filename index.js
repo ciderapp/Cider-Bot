@@ -1,4 +1,4 @@
-const { Client, Collection, Intents } = require('discord.js');
+const { Collection } = require('discord.js');
 const Discord = require('discord.js');
 let auth = require('./local').token()
 let express = require('./integrations/express')
@@ -6,12 +6,10 @@ const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const consola = require('consola');
 const deploy = require('./deploy-commands.js');
-const { MessageEmbed } = require('discord.js');
 const mongo = require('./integrations/mongo');
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
-mongo.dropRPMetadata();
 client.commands = new Collection();
 client.interactions = new Collection();
 replies = [];
@@ -41,8 +39,8 @@ for (const file of replyFiles) {
     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
 }
 
-let cider_guild = "843954443845238864"
-let errorChannel = "972138457893851176"
+let cider_guild = "585180490202349578"
+let errorChannel = "972138658230579210"
 let totalUsers, activeUsers;
 
 client.on('ready', () => {

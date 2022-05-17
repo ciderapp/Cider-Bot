@@ -1,9 +1,8 @@
 const express = require('express');
 const port = require('../local').port();
 const url = require('../local').expressurl();
-const { clientId, clientSecret } = require('../local').auth;
+// const { clientId, clientSecret } = require('../local').auth;
 const mongo = require('./mongo')
-const fetch = require('node-fetch');
 
 const app = express();
 
