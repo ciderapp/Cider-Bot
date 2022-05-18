@@ -49,7 +49,7 @@ module.exports = {
                 }
             }
             else {
-                await interaction.update({ content: `The **${branch}** branch requires self-compilation check [Cider Docs - Self-Compiling](https://docs.cider.sh/compilation/) for more information.`, ephemeral: !show, components: [] })
+                await interaction.update({ content: `The **${branch}** branch requires self-compilation! Check [Cider Docs - Self-Compiling](https://docs.cider.sh/compilation/) for more information.`, ephemeral: !show, components: [] })
             }
         }
         catch (e) {
