@@ -44,7 +44,7 @@ module.exports = {
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
             let user = interaction.options.getUser('user');
-            if(user.moderatable) {
+            if(interaction.guild.members.cache.get(user.id).moderatable) {
                 if (interaction.options.getSubcommand() === 'kick') {
                     let reason = interaction.options.getString('reason');
                     interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
