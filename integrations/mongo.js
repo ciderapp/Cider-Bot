@@ -49,7 +49,7 @@ module.exports = {
 
     },
     async logSpotifyData(listener, activity){
-        mongo.db('bot').collection('spotify-data')
+        await mongo.db('bot').collection('spotify-data')
         .updateOne({ userid: listener.user.id }, {$set:{
             lastListened: Date.now(),
             isBanned: false,
@@ -61,13 +61,8 @@ module.exports = {
                 album: activity.assets.largeText,
             }}}, { upsert: true })
     },
-    async getSpotifyData(limit){
-        return await mongo.db('bot').collection('spotify-data')
-        // find data with tracks greater than or equal to limit
-        .find({
-            $where: `this.tracks.length >= ${limit}`
-        })
-        .toArray()
+    async getSpotifyData(limit, userid){ // Find user with userid and return data if tracks.length is >= limit
+        return await mongo.db('bot').collection('spotify-data').find({ userid: userid, $where: `this.tracks.length >= ${limit}`}).toArray()
     },
     async setUserIsBan(userid){
         mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })

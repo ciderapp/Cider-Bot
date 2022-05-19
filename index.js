@@ -79,37 +79,35 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
             mongo.logSpotifyData(newMember, activity).then(() => {
-                mongo.getSpotifyData(10).then(data => { // 10 is the tracks before user is bannable
-                    for (let user of data) {
-                        tracks = []
-                        lasttrack = {}
-                        if (!user.isBanned) {
-                            for (let track of user.tracks) {
-                                tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
-                                lasttrack = track
-                            }
-                            mongo.setUserIsBan(user.userid).then(() => {
-                                // send messege to bannable users chat
-                                guild.channels.cache.get("976812522713780295").send({
-                                    embeds: [{
-                                        color: "#3d256e",
-                                        title: "Spotify user w/o Cider Detected",
-                                        description: `${newMember.user.tag} has been kicked for not using Spotify and w/o using Cider.`,
-                                        fields: [
-                                            { name: "User", value: `<@${user.userid}>` },
-                                            { name: "Server", value: `${user.server}` },
-                                            { name: "Tracks", value: `${tracks.join("\n")}` },
-                                            { name: "isBanned", value: `${user.isBanned}` }
-                                        ]
-                                    }]
-                                })
-                                // reason = "Using Spotify and not using Cider"
-                                // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
-                                // newMember.kick(reason)
-                                // send messege to spotify-cringe chat
-                                guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
-                            })
+                mongo.getSpotifyData(10, newMember.user.id).then(user => { // 10 is the tracks before user is bannable
+                    tracks = []
+                    lasttrack = {}
+                    if (!user.isBanned) {
+                        for (let track of user.tracks) {
+                            tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
+                            lasttrack = track
                         }
+                        mongo.setUserIsBan(user.userid).then(() => {
+                            // send messege to bannable users chat
+                            guild.channels.cache.get("976812522713780295").send({
+                                embeds: [{
+                                    color: "#3d256e",
+                                    title: "Spotify user w/o Cider Detected",
+                                    description: `${newMember.user.tag} has been kicked for not using Spotify and w/o using Cider.`,
+                                    fields: [
+                                        { name: "User", value: `<@${user.userid}>` },
+                                        { name: "Server", value: `${user.server}` },
+                                        { name: "Tracks", value: `${tracks.join("\n")}` },
+                                        { name: "isBanned", value: `${user.isBanned}` }
+                                    ]
+                                }]
+                            })
+                            // reason = "Using Spotify and not using Cider"
+                            // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
+                            // newMember.kick(reason)
+                            // send messege to spotify-cringe chat
+                            guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
+                        })
                     }
                 })
             })
