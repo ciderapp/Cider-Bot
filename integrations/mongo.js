@@ -62,6 +62,14 @@ module.exports = {
                 timestamp: Date.now()
             }}}, { upsert: true })
     },
+    async getSpotifyData(limit){
+        return mongo.db('bot').collection('spotify-data')
+        // find data with tracks greater than or equal to limit
+        .find({
+            $where: `this.tracks.length >= ${limit}`
+        })
+        .toArray()
+    },
     async dropRPMetadata() {
         try {
             mongo

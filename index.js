@@ -79,16 +79,23 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         if(activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
             mongo.logSpotifyData(newMember, activity);
-            guild.channels.cache.get("976758339994255390").send({ embeds: [{
-                color: "#00aaaa",
-                title: "Spotify User Detected",
-                description: `Listening to: ${activity.details} by ${activity.state}`,
-                fields: [
-                    { name: "User", value: `${newMember} (${newMember.user.id})`},
-                    { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`},
-                    { name: "Server", value: `${newMember.guild.name}`}
-                ]
-            }]})
+            for(users of mongo.getSpotifyData(10)){
+                guild.channels.cache.get("976758339994255390").send({embeds: [{
+                    color: "#008888",
+                    title: `${users.userid}`,
+                    description: `${users.tracks}`
+                }]})
+            }
+            // guild.channels.cache.get("976758339994255390").send({ embeds: [{
+            //     color: "#00aaaa",
+            //     title: "Spotify User Detected",
+            //     description: `Listening to: ${activity.details} by ${activity.state}`,
+            //     fields: [
+            //         { name: "User", value: `${newMember} (${newMember.user.id})`},
+            //         { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`},
+            //         { name: "Server", value: `${newMember.guild.name}`}
+            //     ]
+            // }]})
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
