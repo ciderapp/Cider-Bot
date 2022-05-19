@@ -63,9 +63,9 @@ module.exports = {
     },
     async getSpotifyData(limit, userid){
         // SELECT * FROM spotify-data WHERE userid = userid AND tracks.length >= limit
-        let data = await mongo.db('bot').collection('spotify-data').findOne({ userid: userid })
+        let data = await mongo.db('bot').collection('spotify-data').findOne({ userid: userid }).toArray()
         if(!data) return null
-        return data.toArray()
+        return data
     },
     async setUserIsBan(userid){
         mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
