@@ -62,7 +62,7 @@ module.exports = {
             }}}, { upsert: true })
     },
     async getSpotifyData(limit, userid){ // Find user with userid and return data if tracks.length is >= limit
-        return await mongo.db('bot').collection('spotify-data').find({ userid: userid, $where: `this.tracks.length >= ${limit}`}).toArray()
+        return await mongo.db('bot').collection('spotify-data').find({ $where: `this.tracks.length >= ${limit} AND userid = ${userid}`}).toArray()
     },
     async setUserIsBan(userid){
         mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
