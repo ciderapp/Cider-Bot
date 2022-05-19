@@ -86,14 +86,19 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                         tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
                     }
                     consola.info(`Spotify Data Array: <@${user.userid}> \n${tracks.join("\n")}`)
-                    guild.channels.cache.get("976809770147270706").send({ embeds: [{
-                        color: "#00aaaa",
-                        title: `<@${user.userid}> has played ${user.tracks.length} tracks from Spotify without using Cider!`,
-                        description: `${tracks.join("\n")}`,
-                        fields: [{ name: "Server", value: `${newMember.guild.name}`}]
-                    }] })
-                }  
+                    if(!user.isBanned)
+                    {
+                        guild.channels.cache.get("976812522713780295").send({ embeds: [{
+                            color: "#00aaaa",
+                            title: `<@${user.userid}> has played ${user.tracks.length} tracks from Spotify without using Cider!`,
+                            description: `${tracks.join("\n")}`,
+                            fields: [{ name: "Server", value: `${newMember.guild.name}`}]
+                        }] })
+                    }
+                }
+                mongo.setUserIsBan(user.userid)  
             })
+            
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {

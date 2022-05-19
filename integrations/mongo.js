@@ -69,6 +69,9 @@ module.exports = {
         })
         .toArray()
     },
+    async setUserIsBan(userid){
+        mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
+    },
     async dropRPMetadata() {
         try {
             mongo
