@@ -5,7 +5,7 @@ const mongo = require('../integrations/mongo.js')
 const fetch = require('node-fetch');
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('verify-test')
+        .setName('verify')
         .setDescription('Verify you donation status (OpenCollective only)')
         .addStringOption(option => option.setName('email')
             .setDescription('Email used')
@@ -40,7 +40,11 @@ module.exports = {
             })
             if (interaction.guild.id === '843954443845238864'){
                 embed.setFooter('Your role should be given to you shortly')
-                interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445').add('932811694751768656')
+                try {
+                    interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445').add('932811694751768656')
+                } catch (error) {
+                    //console.log(error)
+                }
             }
             await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
