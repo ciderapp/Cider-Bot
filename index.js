@@ -43,13 +43,13 @@ for (const file of replyFiles) {
 
 let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
+const guild = client.guilds.cache.get(cider_guild)
 let totalUsers, activeUsers;
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
-    const guild = client.guilds.cache.get(cider_guild)
     if (guild) {
         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
         mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
@@ -76,15 +76,15 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-        if(activity && activity.name === "Spotify" && activity.type === "LISTENING") {
-            client.guilds.cache.get(cider_guild).channels.cache.get(errorChannel).send({ embeds: [{
+        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
+            guild.channels.cache.get(errorChannel).send({ embeds: [{
                 color: "#00aaaa",
                 title: "Spotify User Detected",
-                description: `Listening to: ${activity.details}`,
-                fields: [{
-                    name: "User",
-                    value: `${newMember.user.tag} (${newMember.user.id})`
-                }]
+                description: `Listening to: ${activity.details} by ${activity.state}`,
+                fields: [
+                    { name: "User", value: `${newMember.user.tag} (${newMember.user.id})`},
+                    { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`}
+                ]
             }]})
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
