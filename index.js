@@ -63,7 +63,7 @@ client.on('ready', () => {
             })
         })
     }
-    guild.channels.cache.get(errorChannel).send({ embeds: [{ color:"#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() /1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields:[{name:"Server List",value: `${Guilds.join('\n')}` }] }] })
+    guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -77,39 +77,41 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510") ) {
-            mongo.logSpotifyData(newMember, activity);
-            mongo.getSpotifyData(10).then(data => { // 10 is the tracks before user is bannable
-                for(let user of data){
-                    tracks = []
-                    lasttrack = {}
-                    for(let track of user.tracks){
-                        tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
-                        lasttrack = track
+        if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
+            mongo.logSpotifyData(newMember, activity).then(() => {
+                mongo.getSpotifyData(10).then(data => { // 10 is the tracks before user is bannable
+                    for (let user of data) {
+                        tracks = []
+                        lasttrack = {}
+                        if (!user.isBanned) {
+                            for (let track of user.tracks) {
+                                tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
+                                lasttrack = track
+                            }
+                            mongo.setUserIsBan(user.userid).then(() => {
+                                // send messege to bannable users chat
+                                guild.channels.cache.get("976812522713780295").send({
+                                    embeds: [{
+                                        color: "#3d256e",
+                                        title: "Spotify user w/o Cider Detected",
+                                        description: `${newMember.user.tag} has been kicked for not using Spotify and w/o using Cider.`,
+                                        fields: [
+                                            { name: "User", value: `<@${user.userid}>` },
+                                            { name: "Server", value: `${user.server}` },
+                                            { name: "Tracks", value: `${tracks.join("\n")}` },
+                                            { name: "isBanned", value: `${user.isBanned}` }
+                                        ]
+                                    }]
+                                })
+                                // reason = "Using Spotify and not using Cider"
+                                // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
+                                // newMember.kick(reason)
+                                // send messege to spotify-cringe chat
+                                guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
+                            })
+                        }
                     }
-                    if(!user.isBanned)
-                    {
-                        mongo.setUserIsBan(user.userid).then(() => {
-                            // send messege to bannable users chat
-                            guild.channels.cache.get("976812522713780295").send({ embeds: [{
-                                color: "#3d256e",
-                                title: "Spotify user w/o Cider Detected",
-                                description: `${newMember.user.tag} has been kicked for not using Spotify and w/o using Cider.`,
-                                fields: [
-                                    { name: "User", value: `<@${user.userid}>`},
-                                    { name: "Server", value: `${user.server}`},
-                                    { name: "Tracks", value: `${tracks.join("\n")}`}]
-                            }]})
-                            // reason = "Using Spotify and not using Cider"
-                            // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
-                            // newMember.kick(reason)
-                            // send messege to spotify-cringe chat
-                            guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
-                        })
-                       
-                    }
-                     
-                }
+                })
             })
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
@@ -335,7 +337,7 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await client.interactions.get(interaction.customId).reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            errorEmbed = { color: "#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     } else if (interaction.isCommand()) {
@@ -347,7 +349,7 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await interaction.reply({ title: "Error", content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            errorEmbed = { color: "#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     }
@@ -357,12 +359,12 @@ client.login(auth)
 process.on('unhandledRejection', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    errorEmbed = { color: "#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
     client.channels.cache.get(errorChannel).send({ content: `Unhandled Rejection`, embeds: [errorEmbed] })
 })
 process.on('uncaughtException', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { color:"#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    errorEmbed = { color: "#ff0000", title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
     client.channels.cache.get(errorChannel).send({ content: `Uncaught Exception`, embeds: [errorEmbed] })
 })
