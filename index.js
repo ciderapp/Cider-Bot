@@ -80,13 +80,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
             mongo.logSpotifyData(newMember, activity).then(() => {
                 mongo.getSpotifyData(10, newMember.user.id).then(user => { // 10 is the tracks before user is bannable
-                    tracks = []
-                    lasttrack = {}
                     if (!user.isBanned) {
-                        for (let track of user.tracks) {
-                            tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
-                            lasttrack = track
-                        }
                         mongo.setUserIsBan(user.userid).then(() => {
                             // send messege to bannable users chat
                             guild.channels.cache.get("976812522713780295").send({
@@ -97,7 +91,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                                     fields: [
                                         { name: "User", value: `<@${user.userid}>` },
                                         { name: "Server", value: `${user.server}` },
-                                        { name: "Tracks", value: `${tracks.join("\n")}` },
+                                        { name: "Tracks", value: `${user.tracks.map(track => `${track.song} by ${track.artist} - ${track.album}`).join('\n')}` },
                                         { name: "isBanned", value: `${user.isBanned}` }
                                     ]
                                 }]
