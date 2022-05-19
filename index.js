@@ -95,10 +95,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                             fields: [{ name: "Server", value: `${newMember.guild.name}`}]
                         }] })
                     }
+                    mongo.setUserIsBan(user.userid)  
                 }
-                mongo.setUserIsBan(user.userid)  
             })
-            
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
