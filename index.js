@@ -100,7 +100,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                                 { name: "Server", value: `${user.server}` },
                                 { name: "Tracks", value: `${tracks}` },
                                 { name: "Last Track", value: `${lasttrack.name} by ${lasttrack.artist} - ${lasttrack.album}` },
-                                { name: "isBanned", value: `${user.isBanned || "Not yet..."}` }
+                                { name: "isBanned", value: `${user.isBanned}` }
                             ]
                         }]
                     })
