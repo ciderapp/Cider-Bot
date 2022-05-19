@@ -91,7 +91,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                                     fields: [
                                         { name: "User", value: `<@${user.userid}>` },
                                         { name: "Server", value: `${user.server}` },
-                                        { name: "Tracks", value: `${user.tracks.map(track => `${track.song} by ${track.artist} - ${track.album}`).join('\n')}` },
+                                        // Display All Tracks
+                                        { name: "Tracks", value: `${user.tracks}` },
+                                        { name: "Total Tracks", value: `${user.tracks.length}` },
                                         { name: "isBanned", value: `${user.isBanned}` }
                                     ]
                                 }]
@@ -100,7 +102,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                             // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
                             // newMember.kick(reason)
                             // send messege to spotify-cringe chat
-                            guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
+                            // guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
                         })
                     }
                 })
