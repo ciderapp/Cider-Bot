@@ -77,7 +77,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" ) { //&& !newMember.member._roles.includes("932816700305469510")
+        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510") ) {
             mongo.logSpotifyData(newMember, activity);
             mongo.getSpotifyData(10).then(data => { // 10 is the tracks before user is bannable
                 for(let user of data){
