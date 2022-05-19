@@ -87,23 +87,24 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                         tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
                         lasttrack = track
                     }
-                    consola.info(`Spotify Data Array: <@${user.userid}> \n${tracks.join("\n")}`)
                     if(!user.isBanned)
                     {
                         mongo.setUserIsBan(user.userid).then(() => {
+                            // send messege to bannable users chat
                             guild.channels.cache.get("976812522713780295").send({ embeds: [{
                                 color: "#3d256e",
                                 title: "Spotify user w/o Cider Detected",
                                 description: `${newMember.user.tag} has been kicked for not using Spotify and w/o using Cider.`,
                                 fields: [
-                                    { name: "User", value: `<@${newMember.user.id}>`},
-                                    { name: "Server", value: `${newMember.guild.name}`},
+                                    { name: "User", value: `<@${user.userid}>`},
+                                    { name: "Server", value: `${user.server}`},
                                     { name: "Tracks", value: `${tracks.join("\n")}`}]
                             }]})
                             // reason = "Using Spotify and not using Cider"
                             // interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
                             // newMember.kick(reason)
-                            guild.channels.cache.get("976829177154138153").send(`Hi ${newMember.user}, instead of listening to ${lasttrack.song} on Spotify, try playing it on Cider!`)
+                            // send messege to spotify-cringe chat
+                            guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
                         })
                        
                     }
