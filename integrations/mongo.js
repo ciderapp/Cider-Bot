@@ -52,7 +52,6 @@ module.exports = {
         await mongo.db('bot').collection('spotify-data')
         .updateOne({ userid: listener.user.id }, {$set:{
             lastListened: Date.now(),
-            isBanned: false,
             server: listener.guild.name,
         }, $addToSet: { 
             tracks: {
@@ -68,8 +67,9 @@ module.exports = {
         return data
     },
     async setUserIsBan(userid){
-        mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
+        await mongo.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
     },
+
     async dropRPMetadata() {
         try {
             mongo
