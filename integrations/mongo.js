@@ -64,7 +64,7 @@ module.exports = {
     async getSpotifyData(limit, userid){
         // SELECT * FROM spotify-data WHERE userid = userid AND tracks.length >= limit
         let data = await mongo.db('bot').collection('spotify-data').findOne({ userid: userid })
-        if(!data) return null
+        if(!data || data.tracks.length < limit) return null
         return data
     },
     async setUserIsBan(userid){
