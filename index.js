@@ -83,8 +83,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 title: "Spotify User Detected",
                 description: `Listening to: ${activity.details} by ${activity.state}`,
                 fields: [
-                    { name: "User", value: `${newMember.user.tag} (${newMember.user.id})`},
-                    { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`}
+                    { name: "User", value: `${newMember.user} (${newMember.user.id})`},
+                    { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`},
+                    { name: "Activity Object", value: `${activity}`},
                 ]
             }]})
         }
