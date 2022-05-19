@@ -48,6 +48,20 @@ module.exports = {
         }
 
     },
+    async logSpotifyData(listener, activity){
+        mongo.db('bot').collection('spotify-data')
+        .updateOne({ userid: listener.user.id }, {$set:{
+            lastListened: Date.now(),
+            isBanned: false,
+            server: listener.guild.name,
+        }, $addToSet: { 
+            tracks: {
+                artist: activity.state,
+                song: activity.details,
+                album: activity.assets.largeText,
+                timestamp: Date.now()
+            }}}, { upsert: true })
+    },
     async dropRPMetadata() {
         try {
             mongo

@@ -4,6 +4,7 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('mod')
         .setDescription('Moderator commands')
+        // .setDefaultMemberPermissions([Permissions.FLAGS.KICK_MEMBERS])
         .addSubcommand(subcommand => subcommand
             .setName('kick')
             .setDescription('Kicks a user from the server')
