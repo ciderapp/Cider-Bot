@@ -77,7 +77,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
         if(activity && activity.name === "Spotify" && activity.type === "LISTENING") {
-            client.guild.channels.cache.get(errorChannel).send({ embeds: [{
+            client.guilds.cache.get(cider_guild).channels.cache.get(errorChannel).send({ embeds: [{
                 color: "#00aaaa",
                 title: "Spotify User Detected",
                 description: `Listening to: ${activity.details}`,
