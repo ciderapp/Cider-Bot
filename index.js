@@ -98,7 +98,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                             fields: [
                                 { name: "User", value: `<@!${user.userid}>` },
                                 { name: "Server", value: `${user.server}` },
-                                { name: "Tracks", value: `${tracks}` },
+                                { name: "Tracks", value: `${tracks.join('\n')}` },
                                 { name: "Last Track", value: `${lasttrack.name} by ${lasttrack.artist} - ${lasttrack.album}` },
                                 { name: "isBanned", value: `${user.isBanned}` }
                             ]
