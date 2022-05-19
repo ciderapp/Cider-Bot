@@ -76,6 +76,17 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
+        if(activity && activity.name === "Spotify" && activity.type === "LISTENING") {
+            client.guild.channels.cache.get(errorChannel).send({ embeds: [{
+                color: "#00aaaa",
+                title: "Spotify User Detected",
+                description: `Listening to: ${activity.details}`,
+                fields: [{
+                    name: "User",
+                    value: `${newMember.user.tag} (${newMember.user.id})`
+                }]
+            }]})
+        }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
                 userid: newMember.userId,
