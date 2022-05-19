@@ -83,11 +83,11 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 title: "Spotify User Detected",
                 description: `Listening to: ${activity.details} by ${activity.state}`,
                 fields: [
-                    { name: "User", value: `${newMember.user} (${newMember.user.id})`},
+                    { name: "User", value: `<@${newMember.user.id}> (${newMember.user.id})`},
                     { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`},
-                    { name: "Activity Object", value: `${activity}`},
                 ]
             }]})
+            consola.info("Activity Object:", activity)
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
