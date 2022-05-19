@@ -43,13 +43,14 @@ for (const file of replyFiles) {
 
 let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
-const guild = client.guilds.cache.get(cider_guild)
+let guild = null
 let totalUsers, activeUsers;
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
+    guild = client.guilds.cache.get(cider_guild)
     if (guild) {
         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
         mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
