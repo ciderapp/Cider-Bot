@@ -59,11 +59,10 @@ module.exports = {
                 artist: activity.state,
                 song: activity.details,
                 album: activity.assets.largeText,
-                timestamp: Date.now()
             }}}, { upsert: true })
     },
     async getSpotifyData(limit){
-        return mongo.db('bot').collection('spotify-data')
+        return await mongo.db('bot').collection('spotify-data')
         // find data with tracks greater than or equal to limit
         .find({
             $where: `this.tracks.length >= ${limit}`

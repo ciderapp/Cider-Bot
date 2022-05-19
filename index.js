@@ -77,25 +77,23 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
+        if(activity && activity.name === "Spotify" && activity.type === "LISTENING" ) { //&& !newMember.member._roles.includes("932816700305469510")
             mongo.logSpotifyData(newMember, activity);
-            for(users of mongo.getSpotifyData(10)){
-                guild.channels.cache.get("976758339994255390").send({embeds: [{
-                    color: "#008888",
-                    title: `${users.userid}`,
-                    description: `${users.tracks}`
-                }]})
-            }
-            // guild.channels.cache.get("976758339994255390").send({ embeds: [{
-            //     color: "#00aaaa",
-            //     title: "Spotify User Detected",
-            //     description: `Listening to: ${activity.details} by ${activity.state}`,
-            //     fields: [
-            //         { name: "User", value: `${newMember} (${newMember.user.id})`},
-            //         { name: "IsCiderUser" , value: `${newMember.member._roles.includes("932816700305469510")}`},
-            //         { name: "Server", value: `${newMember.guild.name}`}
-            //     ]
-            // }]})
+            mongo.getSpotifyData(10).then(data => { // 10 is the tracks before user is bannable
+                for(let user of data){
+                    tracks = []
+                    for(let track of user.tracks){
+                        tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
+                    }
+                    consola.info(`Spotify Data Array: <@${user.userid}> \n${tracks.join("\n")}`)
+                    guild.channels.cache.get("976809770147270706").send({ embeds: [{
+                        color: "#00aaaa",
+                        title: `<@${user.userid}> has played ${user.tracks.length} tracks from Spotify without using Cider!`,
+                        description: `${tracks.join("\n")}`,
+                        fields: [{ name: "Server", value: `${newMember.guild.name}`}]
+                    }] })
+                }  
+            })
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
