@@ -80,7 +80,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
             await mongo.logSpotifyData(newMember, activity)
             mongo.getSpotifyData(10, newMember.user.id).then(async (user) => { // 10 is the tracks before user is bannable
-                if (!user.isBanned) {
+                if (user && !user.isBanned) {
                     let tracks = []
                     let lasttrack = {}
                     for(let track of user.tracks) {
