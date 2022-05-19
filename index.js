@@ -85,7 +85,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     let lasttrack = {}
                     for(let track of user.tracks) {
                         // spread tracks to track string
-                        tracks.push(`${track.name} by ${track.artist} - ${track.album}`)
+                        tracks.push(`${track.song} by ${track.artist} - ${track.album}`)
                         lasttrack = track
                     }
                     await mongo.setUserIsBan(user.userid)
@@ -99,12 +99,11 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                                 { name: "User", value: `<@!${user.userid}>` },
                                 { name: "Server", value: `${user.server}` },
                                 { name: "Tracks", value: `${tracks.join('\n')}` },
-                                { name: "Last Track", value: `${lasttrack.name} by ${lasttrack.artist} - ${lasttrack.album}` },
                                 { name: "isBanned", value: `${user.isBanned}` }
                             ]
                         }]
                     })
-                    // guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song}\` on Spotify, try playing it on Cider!`)
+                    guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on Cider!`)
                 }
             })
 
