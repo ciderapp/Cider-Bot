@@ -61,7 +61,7 @@ module.exports = {
                 artist: activity.state,
                 song: activity.details,
                 album: activity.assets.largeText,
-                url: `https://cider.sh/p?https://music.apple.com/us/abum/${track.collectionId}?i=${track.trackId}`,
+                url: `https://cider.sh/p?${track.trackViewUrl}`,
             }}}, { upsert: true })
     },
     async getSpotifyData(limit, userid){
