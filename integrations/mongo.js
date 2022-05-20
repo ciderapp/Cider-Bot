@@ -51,7 +51,7 @@ module.exports = {
     async logSpotifyData(listener, activity){
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
         track = await track.json()
-        mongo.db('bot').collection('spotify-data')
+        await mongo.db('bot').collection('spotify-data')
         .updateOne({ userid: listener.user.id }, {$set:{
             lastListened: Date.now(),
             server: listener.guild.name,
