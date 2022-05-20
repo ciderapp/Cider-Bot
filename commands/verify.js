@@ -47,6 +47,7 @@ module.exports = {
                     //console.log(error)
                 }
             }
+            
             await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
     },
