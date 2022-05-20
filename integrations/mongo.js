@@ -61,7 +61,7 @@ module.exports = {
                 song: activity.details,
                 album: activity.assets.largeText,
                 url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
-            }}}, { upsert: true })
+            }}}, { upsert: true }).then(() => { return track.results[0].trackViewUrl })
     },
     async getSpotifyData(limit, userid){
         // SELECT * FROM spotify-data WHERE userid = userid AND tracks.length >= limit
