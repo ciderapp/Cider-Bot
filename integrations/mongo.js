@@ -51,7 +51,6 @@ module.exports = {
     async logSpotifyData(listener, activity){
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
         track = await track.json()
-        track = track.results[0]
         await mongo.db('bot').collection('spotify-data')
         .updateOne({ userid: listener.user.id }, {$set:{
             lastListened: Date.now(),
@@ -61,7 +60,7 @@ module.exports = {
                 artist: activity.state,
                 song: activity.details,
                 album: activity.assets.largeText,
-                url: `https://cider.sh/p?${track.trackViewUrl}`,
+                url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
             }}}, { upsert: true })
     },
     async getSpotifyData(limit, userid){
