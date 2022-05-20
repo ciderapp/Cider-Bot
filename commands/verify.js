@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('verify')
-        .setDescription('Verify you donation status (OpenCollective only)')
+        .setDescription('Verify you donation status (Open Collective only)')
         .addStringOption(option => option.setName('email')
             .setDescription('Email used')
             .setRequired(true)
@@ -47,7 +47,7 @@ module.exports = {
                     //console.log(error)
                 }
             }
-            
+
             await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
         }
     },
