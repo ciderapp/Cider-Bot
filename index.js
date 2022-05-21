@@ -77,14 +77,20 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
-            await mongo.logSpotifyData(newMember, activity)
+            await mongo.logSpotifyData(newMember, activity).catch(e =>
+                guild.channels.cache.get("972138457893851176").send({embeds: [{
+                    color: "#ff0000",
+                    title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
+                    description: `${e}`
+                }]})
+            )
             await mongo.getSpotifyData(10, newMember.user.id).then(async (user) => { // 10 is the tracks before user is bannable
                 if (user && !user.isBanned) {
                     let tracks = []
                     let lasttrack = {}
                     for (let track of user.tracks) {
                         // spread tracks to track string
-                        tracks.push(`${track.song} by ${track.artist} - ${track.album} (${track.url || ""})`)
+                        tracks.push(`[${track.song} by ${track.artist} - ${track.album}](${track.url || ""})`)
                         lasttrack = track
                     }
                     await mongo.setUserIsBan(user.userid)
