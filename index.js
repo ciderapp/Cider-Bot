@@ -98,12 +98,11 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     guild.channels.cache.get("976812522713780295").send({
                         embeds: [{
                             color: "#3d256e",
-                            title: "Spotify user w/o Cider Detected",
-                            description: `${newMember.user.tag} has been pinged for not using Spotify and w/o using Cider.`,
+                            title: `${newMember.user.tag} has been pinged for not using Spotify and w/o using Cider.`,
+                            description: `**Tracks:**\n${tracks.join('\n')}`,
                             fields: [
                                 { name: "User", value: `<@!${user.userid}>` },
                                 { name: "Server", value: `${user.server}` },
-                                { name: "Tracks", value: `${tracks.join('\n')}` },
                                 { name: "isBanned", value: `${user.isBanned}` }
                             ]
                         }]
