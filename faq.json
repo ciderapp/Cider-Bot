@@ -56,12 +56,12 @@
     },
     {
       "title": "I want a feature!",
-      "description": "[<:github:967957574525804624> Make a feature request](https://github.com/ciderapp/Cider/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=%5BEnhancement%5D)",
+      "description": "[<:github:967957574525804624> Make a feature request](https://github.com/ciderapp/Cider/discussions/new?labels=enhancement&category=feature_request)",
       "color": 16725855
     },
     {
       "title": "I found a bug!",
-      "description": "[<:github:967957574525804624> File a bug report](https://github.com/ciderapp/Cider/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBUG%5D+)",
+      "description": "[<:github:967957574525804624> File a bug report](https://github.com/ciderapp/Cider/issues/new?assignees=&labels=bug&template=bug_report.md&title=%5BBug%5D+)",
       "color": 16725855
     },
     {
