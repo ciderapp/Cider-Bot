@@ -10,7 +10,7 @@
         },
         {
           "name": "What is Cider?",
-          "value": "Cider is an open source and cross-platform Apple Music client. It's fast and beautiful. Apple Podcast support will be added soon too!"
+          "value": "Cider is an open source and cross-platform Apple Music client, with support for Apple Podcasts. It's fast and beautiful."
         }
       ]
     },
@@ -34,7 +34,7 @@
         },
         {
           "name": "How about Dolby Atmos and Spatial Audio?",
-          "value": "Unfortunately, Dolby Atmos and Spacial Audio stuff also works as stated in the question above. It's impossible for us to get them to work without Apple adding support. \nHowever You may want to Try `Cider Tuned Audio Spatialization` made by Maikiwi which sounds close to Atmos."
+          "value": "Unfortunately, Dolby Atmos and Spatial Audio stuff also works as stated in the question above. It's impossible for us to get them to work without Apple adding support. \nHowever You may want to try `Cider Tuned Audio Spatialization` made by Maikiwi which sounds close to Atmos."
         }
       ]
     },
@@ -44,7 +44,7 @@
       "fields": [
         {
           "name": "Donate",
-          "value": "- You can donate to our [OpenCollective](https://opencollective.com/ciderapp), via [Ko-Fi](https://ko-fi.com/cryptofyre) or via [Github Sponsors](https://github.com/sponsors/ciderapp)",
+          "value": "- You can donate to our [OpenCollective](https://opencollective.com/ciderapp), via [Ko-Fi](https://ko-fi.com/cryptofyre) or via [GitHub Sponsors](https://github.com/sponsors/ciderapp)",
           "inline": true
         },
         {
