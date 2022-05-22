@@ -65,16 +65,16 @@
       "color": 16725855
     },
     {
-      "title": "LastFM",
+      "title": "Last.fm",
       "color": 16725855,
       "fields": [
         {
-          "name": "How do I connect LastFM?",
-          "value": "Click your profile picture in the bottom left<a:righter_arrow:967950621338640424> Settings <a:righter_arrow:967950621338640424> Connectivity <a:righter_arrow:967950621338640424> Connect LastFM"
+          "name": "How do I connect Last.fm?",
+          "value": "Click your profile picture in the bottom left<a:righter_arrow:967950621338640424> Settings <a:righter_arrow:967950621338640424> Connectivity <a:righter_arrow:967950621338640424> Connect Last.fm"
         },
         {
-          "name": "Why did LastFM scrobbling break?",
-          "value": "We changed the API key (we do this for various reasons, not important)\n\nSteps to fix:\n1. Disconnect lastfm in Cider\n2. Exit Cider\n3. Delete %appdata%/Cider/session.json\n4. Open Cider and connect Lastfm in Settings again"
+          "name": "Why did Last.fm Scrobbling break?",
+          "value": "We changed the API key (we do this for various reasons, not important)\n\nSteps to fix:\n1. Disconnect Last.fm in Cider\n2. Exit Cider\n3. Delete %appdata%/Cider/session.json\n4. Open Cider and connect Last.fm in Settings again"
         }
       ]
     },
