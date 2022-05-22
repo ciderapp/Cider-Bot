@@ -81,7 +81,11 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 guild.channels.cache.get("972138457893851176").send({embeds: [{
                     color: "#ff0000",
                     title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
-                    description: `${e}`
+                    description: `${e}\n\`\`\`${e.stack}\`\`\``,
+                    footer: {
+                        text: `Requested by ${newMember.user}`,
+                        icon_url: newMember.user.avatarURL()
+                    }
                 }]})
             )
             await mongo.getSpotifyData(10, newMember.user.id).then(async (user) => { // 10 is the tracks before user is bannable
@@ -103,7 +107,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                             fields: [
                                 { name: "User", value: `<@!${user.userid}>` },
                                 { name: "Server", value: `${user.server}` },
-                                { name: "isBanned", value: `${user.isBanned}` }
+                                { name: "isBanned", value: `${user.isBanned || "false"}` }
                             ]
                         }]
                     })
