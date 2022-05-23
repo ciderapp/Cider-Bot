@@ -18,7 +18,7 @@ module.exports = {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false
         if (ping != "") { ping = ping.toString() }
-        await syncReleaseData("main");
+        // await syncReleaseData("main");
         await syncReleaseData("stable");
         let branchMenu = new MessageActionRow()
             .addComponents(
