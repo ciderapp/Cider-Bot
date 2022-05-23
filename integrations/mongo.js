@@ -50,13 +50,15 @@ module.exports = {
     },
     async logSpotifyData(listener, activity){
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
-        if(!track){
+        track = await track.json()
+        if(!track.results[0]){
             track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state.split(";")[0]}%20-%20${activity.assets.largeText}&country=US&entity=song`)
-            if(!track){
+            track = await track.json()
+            if(!track.results[0]){
                 track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}&country=US&entity=song`)
+                track = await track.json()
             }
         }
-        track = await track.json()
         await mongo.db('bot').collection('spotify-data')
         .updateOne({ userid: listener.user.id }, {$set:{
             lastListened: Date.now(),
