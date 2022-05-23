@@ -57,6 +57,10 @@ module.exports = {
             if(!track.results[0]){
                 track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}&country=US&entity=song`)
                 track = await track.json()
+                if(!track.results[0]){
+                    track = await fetch(`https://itunes.apple.com/search?term=${activity.details.split("(")[0]}%20by%20${activity.state}&country=US&entity=song`)
+                    track = await track.json()
+                }
             }
         }
         await mongo.db('bot').collection('spotify-data')
