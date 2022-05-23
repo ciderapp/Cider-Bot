@@ -74,6 +74,13 @@ module.exports = {
                 album: activity.assets.largeText,
                 url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
             }}}, { upsert: true })
+        
+        await mongo.db('connect').collection('users').updateOne({ id: listener.user.id }, { $set: { lastSpotifyTrack: {
+            artist: activity.state,
+            song: activity.details,
+            album: activity.assets.largeText,
+            url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
+        } } }, { upsert: true })
     },
     async getSpotifyData(limit, userid){
         // SELECT * FROM spotify-data WHERE userid = userid AND tracks.length >= limit
