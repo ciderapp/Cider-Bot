@@ -115,6 +115,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 }
             })
         }
+        
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
                 userid: newMember.userId,
