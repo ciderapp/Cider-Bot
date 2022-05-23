@@ -16,12 +16,12 @@
     },
     {
       "title": "How can I get Cider?",
-      "description": "If you want the **most stable** experience, you can get  <:canary:936787944843378709> Cider (Alpha) from: \n - [<:MicrosoftStore:967950621225394256> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))\n\nWe offer more releases in our GitHub, (also for other OS such as linux and macOS) you can access them using the `/branchbuilds` command and specify the branch you want to compile from.\n\n<:stable:936789492218609674> `stable` - This is compiled from the stable branch in GitHub, which is tested thoroughly and has minimal bugs.\n<:stable:936789492218609674> `main` - This is for people who live in the bleeding edge and want the latest features and fixes.\nAlternatively, you can get the **main** release, **<:nightly:936787944986017812> Cider Nightly** from:\n- Running `/nightly` in any channel.\n\n<:stable:936789492218609674> macOS builds of Cider are compiled by maintainers and can be accessed using the `/macos` command, it provides both a .dmg and .pkg file.\n\nIf you want to compile <:canary:936787944843378709> **Cider** for your system, you may do so, docs for compiling are listed below:\n- <a:processing:967950621338665000> [Cider Docs for Compiling](https://docs.cider.sh/compilation)",
+      "description": "If you want the **most stable** experience, you can get  <:canary:936787944843378709> Cider (Alpha) from: \n - [<:MicrosoftStore:967950621225394256> Microsoft Store](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) (All proceeds go directly to our [OpenCollective](https://opencollective.com/ciderapp/))\n\nWe offer more releases in our GitHub, (also for other OS such as linux and macOS) you can access them using the `/branchbuilds` command and specify the branch you want to compile from.\n\n<:stable:936789492218609674> `stable` - This is compiled from the stable branch in GitHub, which is tested thoroughly and has minimal bugs. These builds are kept in sync with Microsoft store builds.\n<:stable:936789492218609674> `main` - This is for people who live in the bleeding edge and want the latest features and fixes. Once features are ready for deployment, they are merged with this branch.\n\n<:stable:936789492218609674> [macOS builds](https://github.com/ciderapp/Cider/releases/tag/macos-beta) of Cider are compiled by maintainers and can be accessed using the `/macos` command, it provides both a .dmg and .pkg file.\n\nIf you want to compile <:canary:936787944843378709> **Cider** for your system, you may do so, docs for compiling are listed below:\n- <a:processing:967950621338665000> [Cider Docs for Compiling](https://docs.cider.sh/compilation)",
       "color": 16725855
     },
     {
       "title": "What's the difference between all of them?",
-      "description": "<:canary:936787944843378709> [**Cider** (Alpha)](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) is the Microsoft Store version which is updated weekly (usually) and is the most stable release.\n\n<:stable:936789492218609674> [**Cider Beta** (stable branch)](https://github.com/ciderapp/cider-releases/releases?q=main) is the second most stable release, this updates every time the main branch is stable enough to be merged.\n\n<:stable:936789492218609674> [**Cider Alpha** (main branch)](https://github.com/ciderapp/cider-releases/releases?q=main) this is the most bleeding edge and where most of the updates first happen. These releases are fairly unstable and are not intended for daily use. There is a new alpha build for every commit and PR, so it requires a little bit of manual updating.\n\n<a:processing:967950621338665000> Compiling your own version of Cider requires manually pulling and compiling per commit. \n**DO NOT USE IF YOU DO NOT KNOW WHAT YOU ARE DOING**",
+      "description": "<:canary:936787944843378709> [**Cider** (Alpha)](https://www.microsoft.com/en-us/p/cider-alpha/9p21xj9d9g66) is the Microsoft Store version which is updated weekly (usually) and is the most stable release.\n\n<:stable:936789492218609674> [**Cider** (stable branch)](https://github.com/ciderapp/cider-releases/releases?q=main) is the second most stable release, this updates every time the main branch is stable enough to be merged. These builds are kept in sync with Microsoft store builds.\n\n<:stable:936789492218609674> [**Cider Beta** (main branch)](https://github.com/ciderapp/cider-releases/releases?q=main) this is the most bleeding edge and where most of the updates first happen. These releases are fairly unstable and are not intended for daily use. There is a new alpha build for every commit and PR, so it requires a little bit of manual updating.\n\n<a:processing:967950621338665000> Compiling your own version of Cider requires manually pulling and compiling per commit. \n**DO NOT USE IF YOU DO NOT KNOW WHAT YOU ARE DOING**",
       "color": 16725855
     },
     {
@@ -84,11 +84,13 @@
       "color": 16725855
     },
     {
+      "title": "Useful Links",
+      "description": "[:page_facing_up: Cider Documentation](https://docs.cider.sh)\n[<:github:967957574525804624> Cider Github Repo](https://github.com/ciderapp/Cider)\n[<:stable:936789492218609674> Official Cider Website](https://cider.sh/)",
       "color": 16725855,
       "footer": {
         "text": "Last Updated"
       },
-      "timestamp": "2022-05-22T18:30:00.000Z"
+      "timestamp": "2022-05-23T01:26:00.000Z"
     }
   ],
   "username": "Cider Bot",
