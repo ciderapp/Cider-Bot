@@ -111,7 +111,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                             ]
                         }]
                     })
-                    guild.channels.cache.get("976834125719818300").send(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on [Cider](${lasttrack.url})`)
+                    let mentionEmbed = new Discord.MessageEmbed()
+                    .setDescription(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on [Cider](${lasttrack.url})`)
+                    guild.channels.cache.get("976834125719818300").send(mentionEmbed)
                 }
             })
         }
