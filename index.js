@@ -45,7 +45,7 @@ let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
 let guild = null
 let totalUsers, activeUsers;
-let leaguetrash = []
+let leaguetrash = ['326817321597403136', '199326137338429441']
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
@@ -121,8 +121,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
             })
         } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING" && activity.state === "In Game") {
             if (!leaguetrash.includes(newMember.user.id)) {
+                let marinrequest = await fetch('https://api.waifu.im/random/?selected_tags=marin-kitagawa')
+                let marin = await marinrequest.json()
                 let mentionEmbed = new Discord.MessageEmbed()
-                    .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](https://api.waifu.im/random/?selected_tags=marin-kitagawa)?`)
+                    .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](${marin.images[0].url})?`)
                 guild.channels.cache.get("843954444747669507").send({ embeds: [mentionEmbed] })
                 leaguetrash.push(newMember.user.id)
             }
