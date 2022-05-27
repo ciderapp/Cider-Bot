@@ -126,7 +126,6 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 guild.channels.cache.get("843954444747669507").send({ embeds: [mentionEmbed] })
                 leaguetrash.push(newMember.user.id)
             }
-
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
