@@ -45,6 +45,7 @@ let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
 let guild = null
 let totalUsers, activeUsers;
+let leaguetrash = []
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
@@ -78,15 +79,17 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
             await mongo.logSpotifyData(newMember, activity).catch(e =>
-                guild.channels.cache.get("972138457893851176").send({embeds: [{
-                    color: "#ff0000",
-                    title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
-                    description: `${e}\n\`\`\`${e.stack}\`\`\``,
-                    footer: {
-                        text: `Requested by ${newMember.user}`,
-                        icon_url: newMember.user.avatarURL()
-                    }
-                }]})
+                guild.channels.cache.get("972138457893851176").send({
+                    embeds: [{
+                        color: "#ff0000",
+                        title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
+                        description: `${e}\n\`\`\`${e.stack}\`\`\``,
+                        footer: {
+                            text: `Requested by ${newMember.user}`,
+                            icon_url: newMember.user.avatarURL()
+                        }
+                    }]
+                })
             )
             await mongo.getSpotifyData(10, newMember.user.id).then(async (user) => { // 10 is the tracks before user is bannable
                 if (user && !user.isBanned) {
@@ -112,14 +115,18 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                         }]
                     })
                     let mentionEmbed = new Discord.MessageEmbed()
-                    .setDescription(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on [Cider](${lasttrack.url})`)
-                    guild.channels.cache.get("976834125719818300").send({embeds: [mentionEmbed] })
+                        .setDescription(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on [Cider](${lasttrack.url})`)
+                    guild.channels.cache.get("976834125719818300").send({ embeds: [mentionEmbed] })
                 }
             })
-        } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING") {
-            let mentionEmbed = new Discord.MessageEmbed()
+        } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING" && activity.state === "In Game") {
+            if (!leaguetrash.includes(newMember.user.id)) {
+                let mentionEmbed = new Discord.MessageEmbed()
                     .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](https://api.waifu.im/random/?selected_tags=marin-kitagawa)?`)
-                    guild.channels.cache.get("932110086929780777").send({embeds: [mentionEmbed] })
+                guild.channels.cache.get("843954444747669507").send({ embeds: [mentionEmbed] })
+                leaguetrash.push(newMember.user.id)
+            }
+
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
