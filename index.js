@@ -116,6 +116,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     guild.channels.cache.get("976834125719818300").send({embeds: [mentionEmbed] })
                 }
             })
+        } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING") {
+            let mentionEmbed = new Discord.MessageEmbed()
+                    .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](https://api.waifu.im/random/?selected_tags=marin-kitagawa)?`)
+                    guild.channels.cache.get("932110086929780777").send({embeds: [mentionEmbed] })
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
