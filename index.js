@@ -48,6 +48,7 @@ let totalUsers, activeUsers;
 let leaguetrash = []
 async function importLeagueList() {
     leaguetrash = await mongo.getLeagueData()
+    consola.info(leaguetrash)
 }
 
 client.on('ready', () => {
@@ -55,20 +56,20 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     guild = client.guilds.cache.get(cider_guild)
-    if (guild) {
-        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        mongo.getActiveUsers().then(users => {
-            activeUsers = users;
-            mongo.getTotalUsers().then(users => {
-                totalUsers = users;
-                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-                consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-            })
-        })
-    }
+    // if (guild) {
+    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    //     mongo.getActiveUsers().then(users => {
+    //         activeUsers = users;
+    //         mongo.getTotalUsers().then(users => {
+    //             totalUsers = users;
+    //             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+    //             consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    //         })
+    //     })
+    // }
     importLeagueList()
-    guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
+    // guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -124,7 +125,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 }
             })
         } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING" && activity.state === "In Game") {
-            if (!leaguetrash.includes(newMember.user.id)) {
+            if (!leaguetrash.includes(`${newMember.user.id}`)) {
                 let marinrequest = await fetch('https://api.waifu.im/random/?selected_tags=marin-kitagawa')
                 let marin = await marinrequest.json()
                 let mentionEmbed = new Discord.MessageEmbed()
