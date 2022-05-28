@@ -66,9 +66,10 @@ client.on('ready', () => {
     }
 
     for(let userid of leaguetrash) {
-        await mongo.logLeagueData(userid);
+        mongo.logLeagueData(userid);
     }
     let leaguetrash = await mongo.getLeagueData();
+    consola.success("League Trash:", leaguetrash);
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
