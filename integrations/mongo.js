@@ -48,6 +48,27 @@ module.exports = {
         }
 
     },
+    async logLeagueData(userid){
+        try {
+            mongo
+                .db('bot')
+                .collection('analytics')
+                .updateOne( {name: "league-data"} , {$addToSet: { id:userid }}, { upsert: true })
+        } catch (e) {
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
+        }
+    },
+    async getLeagueData(){
+        try {
+            let toReturn =  await mongo
+                .db('bot')
+                .collection('analytics')
+                .findOne({name: "league-data"})
+            return toReturn.id
+        } catch (e) {
+            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
+        }
+    },
     async logSpotifyData(listener, activity){
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
         track = await track.json()
