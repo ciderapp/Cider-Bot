@@ -130,7 +130,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 let marin = await marinrequest.json()
                 let mentionEmbed = new Discord.MessageEmbed()
                     .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](${marin.images[0].url})?`)
-                guild.channels.cache.get("843954444747669507").send({ embeds: [mentionEmbed] })
+                guild.channels.cache.get("932110086929780777").send({ embeds: [mentionEmbed] })
                 leaguetrash.push(newMember.user.id)
                 await mongo.logLeagueData(newMember.user.id)
                 
