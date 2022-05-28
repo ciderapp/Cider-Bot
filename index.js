@@ -45,7 +45,10 @@ let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
 let guild = null
 let totalUsers, activeUsers;
-let leaguetrash = [326817321597403140, 199326137338429440, 467161034529046500, 195067938292629500, 348251966239014900, 505675713282572300, 276777598703370240, 529619315129974800, 421906416031236100, 288365648210296800, 918155782393041000, 172928201390161920, 184755655876411400, 262935519103680500, 289880855143383040, 201722328923504640, 176577250924298240, 196261479995932670, 180318502626918400, 121412682246127620, 683340527470641200, 211017771780145150, 309774743605739500, 180830063984508930, 339865470930780160, 279273635489906700, 301227546278756350, 132273036240879620, 224020791522492400, 321575557919670300, 229672627403227140, 252348305067999230, 257140877271498750, 474476235582341100, 201595924663894000, 272055891233079300, 118286616031657980, 79223732945559550, 361602964772880400, 609807206849970200, 221953785310740480, 387253752769282050, 158968136316485630, 109226727514845180, 168451320489967600, 269450752739639300, 305584487184597000, 93043948775305220, 182904736574472200, 233968088649957380, 263778974977490940, 498087319635755000, 187029557554053120, 93959777696104450, 106549796088606720, 186241062757466100, 228999921464901630, 170606440040366080, 104363294373978110, 258424206180483070, 760114583225499600, 333051069259317250, 233126133346861060, 799687462460719100, 355057764269293600, 382930842210664450, 251661394360008700, 385774263694655500, 418583937896677400]
+let leaguetrash = []
+async function importLeagueList() {
+    leaguetrash = await mongo.getLeagueData()
+}
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
@@ -64,12 +67,7 @@ client.on('ready', () => {
             })
         })
     }
-
-    for(let userid of leaguetrash) {
-        mongo.logLeagueData(userid);
-    }
-    let leaguetrash = await mongo.getLeagueData();
-    consola.success("League Trash:", leaguetrash);
+    importLeagueList()
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
@@ -132,8 +130,9 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                 let mentionEmbed = new Discord.MessageEmbed()
                     .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](${marin.images[0].url})?`)
                 guild.channels.cache.get("843954444747669507").send({ embeds: [mentionEmbed] })
-                await mongo.logLeagueData(newMember.user.id)
                 leaguetrash.push(newMember.user.id)
+                await mongo.logLeagueData(newMember.user.id)
+                
             }
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {

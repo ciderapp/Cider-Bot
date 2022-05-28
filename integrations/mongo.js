@@ -53,7 +53,7 @@ module.exports = {
             mongo
                 .db('bot')
                 .collection('analytics')
-                .updateOne( {name: "league-data"} , {$addToSet: { id:userid }}, { upsert: true })
+                .updateOne( {name: "league-data"} , {$addToSet: { id:`${userid}` }}, { upsert: true })
         } catch (e) {
             consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
         }
