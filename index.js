@@ -45,31 +45,25 @@ let cider_guild = "843954443845238864"
 let errorChannel = "972138457893851176"
 let guild = null
 let totalUsers, activeUsers;
-let leaguetrash = []
-async function importLeagueList() {
-    leaguetrash = await mongo.getLeagueData()
-    consola.info(leaguetrash)
-}
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     guild = client.guilds.cache.get(cider_guild)
-    // if (guild) {
-    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    //     mongo.getActiveUsers().then(users => {
-    //         activeUsers = users;
-    //         mongo.getTotalUsers().then(users => {
-    //             totalUsers = users;
-    //             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-    //             consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-    //         })
-    //     })
-    // }
-    importLeagueList()
-    // guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
+    if (guild) {
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                totalUsers = users;
+                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+            })
+        })
+    }
+    guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -82,9 +76,10 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
         // 886578863147192350 - Apple Music
-        if (activity && activity.name === "Spotify" && activity.type === "LISTENING" && !newMember.member._roles.includes("932816700305469510")) {
+        /* Continue last spotify song on Cider */
+        if (activity && activity.name === "Spotify" && activity.type === "LISTENING") {
             await mongo.logSpotifyData(newMember, activity).catch(e =>
-                guild.channels.cache.get("972138457893851176").send({
+                guild.channels.cache.get(errorChannel).send({
                     embeds: [{
                         color: "#ff0000",
                         title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
@@ -96,45 +91,6 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
                     }]
                 })
             )
-            await mongo.getSpotifyData(10, newMember.user.id).then(async (user) => { // 10 is the tracks before user is bannable
-                if (user && !user.isBanned) {
-                    let tracks = []
-                    let lasttrack = {}
-                    for (let track of user.tracks) {
-                        // spread tracks to track string
-                        tracks.push(`[${track.song} by ${track.artist} - ${track.album}](${track.url || ""})`)
-                        lasttrack = track
-                    }
-                    await mongo.setUserIsBan(user.userid)
-                    // send messege to bannable users chat
-                    guild.channels.cache.get("976812522713780295").send({
-                        embeds: [{
-                            color: "#3d256e",
-                            title: `${newMember.user.tag} has been pinged for not using Spotify and w/o using Cider.`,
-                            description: `**Tracks:**\n${tracks.join('\n')}`,
-                            fields: [
-                                { name: "User", value: `<@!${user.userid}>` },
-                                { name: "Server", value: `${user.server}` },
-                                { name: "isBanned", value: `${user.isBanned || "false"}` }
-                            ]
-                        }]
-                    })
-                    let mentionEmbed = new Discord.MessageEmbed()
-                        .setDescription(`Hi <@${user.userid}>, instead of listening to \`${lasttrack.song} by ${lasttrack.artist}\` on Spotify, try playing it on [Cider](${lasttrack.url})`)
-                    guild.channels.cache.get("976834125719818300").send({ embeds: [mentionEmbed] })
-                }
-            })
-        } else if (activity && activity.name === "League of Legends" && activity.type === "PLAYING" && activity.state === "In Game") {
-            if (!leaguetrash.includes(`${newMember.user.id}`)) {
-                let marinrequest = await fetch('https://api.waifu.im/random/?selected_tags=marin-kitagawa')
-                let marin = await marinrequest.json()
-                let mentionEmbed = new Discord.MessageEmbed()
-                    .setDescription(`Hi <@${newMember.user.id}>, instead of playing [league](https://www.merriam-webster.com/dictionary/trash) maybe you should go outside and get some [bitches](${marin.images[0].url})?`)
-                guild.channels.cache.get("932110086929780777").send({ embeds: [mentionEmbed] })
-                leaguetrash.push(newMember.user.id)
-                await mongo.logLeagueData(newMember.user.id)
-                
-            }
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {

@@ -36,39 +36,6 @@ module.exports = {
         }
 
     },
-    async logRPMetadata(listenerData) {
-        try {
-            this.dropRPMetadata()
-            mongo
-                .db('bot')
-                .collection('rp-data')
-                .updateOne({ song: `${listenerData.songName} - ${listenerData.artistName}` }, { $set: { lastListened: Date.now() }, $inc: { count: 1 }, $addToSet: { listeners: listenerData.userid } }, { upsert: true })
-        } catch (e) {
-            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
-        }
-
-    },
-    async logLeagueData(userid){
-        try {
-            mongo
-                .db('bot')
-                .collection('analytics')
-                .updateOne( {name: "league-data"} , {$addToSet: { id:`${userid}` }}, { upsert: true })
-        } catch (e) {
-            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
-        }
-    },
-    async getLeagueData(){
-        try {
-            let toReturn =  await mongo
-                .db('bot')
-                .collection('analytics')
-                .findOne({name: "league-data"})
-            return toReturn.id
-        } catch (e) {
-            consola.error("\x1b[33m%s\x1b[0m", '[mongo]', 'Not Available. \n' + e)
-        }
-    },
     async logSpotifyData(listener, activity){
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
         track = await track.json()
@@ -84,18 +51,6 @@ module.exports = {
                 }
             }
         }
-        await mongo.db('bot').collection('spotify-data')
-        .updateOne({ userid: listener.user.id }, {$set:{
-            lastListened: Date.now(),
-            server: listener.guild.name,
-        }, $addToSet: { 
-            tracks: {
-                artist: activity.state,
-                song: activity.details,
-                album: activity.assets.largeText,
-                url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
-            }}}, { upsert: true })
-        
         await mongo.db('connect').collection('users').updateOne({ id: listener.user.id }, { $set: { lastSpotifyTrack: {
             artist: activity.state,
             song: activity.details,
