@@ -7,7 +7,6 @@ const fetch = require('node-fetch');
 const consola = require('consola');
 const deploy = require('./deploy-commands.js');
 const mongo = require('./integrations/mongo');
-
 const client = new Discord.Client({
     intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_PRESENCES, Discord.Intents.FLAGS.GUILD_MEMBERS]
 });
