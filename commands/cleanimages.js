@@ -9,7 +9,7 @@ module.exports = {
         ),
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
-            let channel = interaction.optuions.getChannel('channel')
+            let channel = interaction.options.getChannel('channel')
             // select all messages in channel
             let messages = await channel.messages.fetch({ limit: 100 })
             // filter out all messages have images
