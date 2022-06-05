@@ -15,7 +15,7 @@ module.exports = {
             // filter out all messages have images
             let images = messages.filter(message => message.attachments.size > 0)
             //filter out messages that are older than a week
-            let old = images.filter(message => message.createdTimestamp < Date.now() - 604800000)
+            let old = images.filter(message => message.createdAt < Date.now() - 604800000)
             //filter out all messages that not pinned
             let notpinned = old.filter(message => !message.pinned)
 
@@ -24,7 +24,7 @@ module.exports = {
                 await message.delete()
             })
             //reply with how many images were deleted
-            await interaction.reply({ content: `Deleted ${images.size} images from ${channel}` })
+            await interaction.reply({ content: `Deleted ${notpinned.size} images from ${channel}` })
         } else {
             interaction.reply({ content: 'You do not have permission to use this command.'})
         }
