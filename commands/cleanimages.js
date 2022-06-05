@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('branchbuilds')
+        .setName('cleanimages')
         .setDescription('Gives you download links for the latest builds of a specified branch')
         .addChannelOption(option => option.setName('channel')
             .setDescription('Channel to purge images')
