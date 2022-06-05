@@ -5,7 +5,6 @@ let express = require('./integrations/express');
 const cheerio = require('cheerio');
 const fetch = require('node-fetch');
 const consola = require('consola');
-const deploy = require('./deploy-commands.js');
 const mongo = require('./integrations/mongo');
 
 const client = new Discord.Client({
@@ -78,19 +77,20 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         /* Continue last spotify song on Cider */
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING") {
-            await mongo.logSpotifyData(newMember, activity).catch(e =>
-                guild.channels.cache.get(errorChannel).send({
-                    embeds: [{
-                        color: "#ff0000",
-                        title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
-                        description: `${e}\n\`\`\`${e.stack}\`\`\``,
-                        footer: {
-                            text: `Requested by ${newMember.user}`,
-                            icon_url: newMember.user.avatarURL()
-                        }
-                    }]
-                })
-            )
+            await mongo.logSpotifyData(newMember, activity)
+            // .catch(e =>
+                // guild.channels.cache.get(errorChannel).send({
+                //     embeds: [{
+                //         color: "#ff0000",
+                //         title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
+                //         description: `${e}\n\`\`\`${e.stack}\`\`\``,
+                //         footer: {
+                //             text: `Requested by ${newMember.user}`,
+                //             icon_url: newMember.user.avatarURL()
+                //         }
+                //     }]
+                // })
+            // )
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
