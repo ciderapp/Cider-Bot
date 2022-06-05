@@ -14,8 +14,13 @@ module.exports = {
             let messages = await channel.messages.fetch({ limit: 100 })
             // filter out all messages have images
             let images = messages.filter(message => message.attachments.size > 0)
+            //filter out messages that are older than a week
+            let old = images.filter(message => message.createdTimestamp < Date.now() - 604800000)
+            //filter out all messages that not pinned
+            let notpinned = old.filter(message => !message.pinned)
+
             // delete all images
-            await images.forEach(async message => {
+            await notpinned.forEach(async message => {
                 await message.delete()
             })
             //reply with how many images were deleted
