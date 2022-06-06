@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { before } = require('cheerio/lib/api/manipulation');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('cleanimages')
@@ -8,23 +9,28 @@ module.exports = {
             .setRequired(true)
         ),
     async execute(interaction) {
-        if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802') || true) {
+        if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
             let channel = interaction.options.getChannel('channel')
+            let count = 0, countdel = 0
+            await interaction.reply({ content: `Deleting all images in this channel...` })
             // select all messages in channel
             let messages = await channel.messages.fetch({ limit: 100 })
-            // filter out all messages have images
-            let images = messages.filter(message => message.attachments.size > 0)
-            //filter out messages that are older than a week
-            let old = images.filter(message => Date.parse(message.createdAt) < Date.now() - 604800000)
-            //filter out all messages that not pinned
-            let notpinned = old.filter(message => !message.pinned)
-
-            // delete all images
-            await notpinned.forEach(async message => {
-                await message.delete()
-            })
-            //reply with how many images were deleted
-            await interaction.reply({ content: `Deleted ${notpinned.size} images from ${channel}` })
+            todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
+            await channel.bulkDelete(todelete)
+            countdel += todelete.size
+            count += messages.size
+            // while messages = 100
+            while (messages.last() != null) {
+                //delete all messages that have images, and is older than one week, and is not pinned
+                consola.info(messages.last().id)
+                messages = await channel.messages.fetch({ limit: 100, before: messages.last().id })
+                // consola.info(messages.size, messages.last().id)
+                todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
+                await channel.bulkDelete(todelete)
+                countdel += todelete.size
+                count += messages.size
+                await interaction.editReply({ content: `Deleted ${countdel}/${count} messages from ${channel}` })
+            }
         } else {
             interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true })
         }

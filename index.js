@@ -77,7 +77,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         /* Continue last spotify song on Cider */
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING") {
-            await mongo.logSpotifyData(newMember, activity)
+            await mongo.logSpotifyData(newMember, activity).catch()
             // .catch(e =>
                 // guild.channels.cache.get(errorChannel).send({
                 //     embeds: [{
