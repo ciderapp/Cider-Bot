@@ -22,7 +22,9 @@ module.exports = {
             let messages = await channel.messages.fetch({ limit: 1})
             messages = await channel.messages.fetch({ limit: 100, before: before ? before : messages.last().id })
             todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
-            await channel.bulkDelete(todelete)
+            todelete.forEach(message => {
+                message.delete()
+            })
             countdel += todelete.size
             count += messages.size
             while (messages.last() != null) {
@@ -31,7 +33,9 @@ module.exports = {
                 messages = await channel.messages.fetch({ limit: 100, before: messages.last().id })
                 // consola.info(messages.size, messages.last().id)
                 todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
-                await channel.bulkDelete(todelete)
+                todelete.forEach(message => {
+                    message.delete()
+                })
                 countdel += todelete.size
                 count += messages.size
                 await interaction.editReply({ content: `Deleted ${countdel}/${count} messages from ${channel}\nMessage Pointer: ${messages.last().id}` })
