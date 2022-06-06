@@ -9,7 +9,7 @@ module.exports = {
         )
         .addStringOption(option => option.setName('before')
             .setDescription('Message id to start purging from (optional)')
-            .setRequired(true)
+            .setRequired(false)
         ),
 
     async execute(interaction) {
