@@ -70,7 +70,6 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
     try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
     // or else it'll go BONK
     const role = newMember.guild.roles.cache.get("932784788115427348");
-
     let using_cider = false
     for (const activity of newMember.activities) {
         // 911790844204437504 - Cider
