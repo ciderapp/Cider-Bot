@@ -18,13 +18,9 @@ module.exports = {
             let count = 0, countdel = 0
             await interaction.reply({ content: `Deleting all images in this channel...` })
             // select all messages in channel
-            let messages = []
-            if(interaction.options.getString('before')) {
-                let before = interaction.options.getString('before')
-                messages = await channel.messages.fetch({ limit: 100, before })
-            } else{
-                await channel.messages.fetch({ limit: 100 })
-            }
+            let before = interaction.options.getString('before')
+            let messages = await channel.messages.fetch({ limit: 1})
+            messages = await channel.messages.fetch({ limit: 100, before: before ? before : messages.last().id })
             todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
             await channel.bulkDelete(todelete)
             countdel += todelete.size
