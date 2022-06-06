@@ -2,9 +2,9 @@ let auth = require('./local').token()
 const fs = require('node:fs');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const clientId = '903695940211318785';
+const clientId = '921475709694771252';
 
-const guildId = '585180490202349578'//'';843954443845238864
+const guildId = '843954443845238864'//'';843954443845238864
 
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
