@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-
+const { MessageEmbed } = require('discord.js');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("ping")
@@ -8,7 +8,7 @@ module.exports = {
     await interaction.reply({ content: 'Pinging...' });
     let embed = new MessageEmbed()
       .setColor("#0099ff")
-      .setDescription(`Web Socket: ${interaction.message.client.ws.ping}ms\nAPI: ${Date.now() - interaction.message.createdTimestamp}ms`);
+      .setDescription(`API: ${interaction.message.client.ws.ping}ms\nLatency: ${Date.now() - interaction.message.createdTimestamp}ms`);
 
     await interaction.editReply({ content: 'Pong!🏓', embed });
   },
