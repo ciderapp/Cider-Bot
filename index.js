@@ -39,8 +39,8 @@ for (const file of replyFiles) {
     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
 }
 
-let cider_guild = "585180490202349578"
-let errorChannel = "972138658230579210"
+let cider_guild = "843954443845238864"
+let errorChannel = "972138457893851176"
 let guild = null
 let totalUsers, activeUsers;
 
@@ -49,19 +49,19 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     guild = client.guilds.cache.get(cider_guild)
-    // if (guild) {
-    //      mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    //      mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    //      mongo.getActiveUsers().then(users => {
-    //          activeUsers = users;
-    //          mongo.getTotalUsers().then(users => {
-    //              totalUsers = users;
-    //              client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-    //              consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-    //          })
-    //      })
-    // }
-    // guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
+    if (guild) {
+         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+         mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+         mongo.getActiveUsers().then(users => {
+             activeUsers = users;
+             mongo.getTotalUsers().then(users => {
+                 totalUsers = users;
+                 client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                 consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+             })
+         })
+    }
+    guild.channels.cache.get(errorChannel).send({ embeds: [{ color: "#00ff00", title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => {
@@ -75,20 +75,7 @@ client.on('presenceUpdate', async (oldMember, newMember) => {
         // 886578863147192350 - Apple Music
         /* Continue last spotify song on Cider */
         if (activity && activity.name === "Spotify" && activity.type === "LISTENING") {
-            await mongo.logSpotifyData(newMember, activity).catch()
-            // .catch(e =>
-                // guild.channels.cache.get(errorChannel).send({
-                //     embeds: [{
-                //         color: "#ff0000",
-                //         title: `Error logging spotify data \`${activity.details} by ${activity.state} - ${activity.assets.largeText}\``,
-                //         description: `${e}\n\`\`\`${e.stack}\`\`\``,
-                //         footer: {
-                //             text: `Requested by ${newMember.user}`,
-                //             icon_url: newMember.user.avatarURL()
-                //         }
-                //     }]
-                // })
-            // )
+            await mongo.logSpotifyData(newMember, activity).catch(e =>{})
         }
         if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
             let listenerinfo = {
