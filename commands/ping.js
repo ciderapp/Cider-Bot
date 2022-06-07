@@ -5,6 +5,11 @@ module.exports = {
     .setName("ping")
     .setDescription("Get the bots latency!"),
   execute: async (interaction) => {
-    return interaction.reply({ content: `Pong \`${interaction.client.ws.ping}ms\` 🏓` });
+    await interaction.reply({ content: 'Pinging...' });
+    let embed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setDescription(`Web Socket: ${interaction.message.client.ws.ping}ms\nAPI: ${Date.now() - interaction.message.createdTimestamp}ms`);
+
+    await interaction.editReply({ content: 'Pong!🏓', embed });
   },
 };
