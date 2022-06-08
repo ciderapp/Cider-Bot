@@ -5,13 +5,13 @@ module.exports = {
     .setName("ping")
     .setDescription("Get the bots latency!"),
   execute: async (interaction) => {
+    let test = Date.now()
     await interaction.reply({ embeds:[{color: "#0099ff", description: "Pinging ..."}] })
-    consola.info(interaction)
     let embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Pong!🏓")
-      .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${Date.now() - interaction.createdTimestamp}ms\``);
-
+      .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${interaction.createdTimestamp - test}ms\``);
+    
     await interaction.editReply({ content: " ", embeds:[embed] });
   },
 };
