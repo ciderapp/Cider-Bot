@@ -167,13 +167,14 @@ client.on('messageCreate', async message => {
     const lRatio = (reaction, user) => {
         return reaction.emoji.name === "🇱"
     };
-    const collector = message.createReactionCollector({ lRatio, time: 30000 })
+    if(lRatio) {
+        const collector = message.createReactionCollector({ lRatio, time: 30000 })
 
-    collector.on('collect', (reaction, user) => {
-        message.reply({files:[{ 
-            content: `Posted because of: "${lRatio.emoji.name}"`,
-            attachment:'./assets/lRatio.mp4', name: 'lRatio.mp4'}] })
-    });
+        collector.on('collect', (reaction, user) => {
+            message.reply({files:[{ attachment:'./assets/lRatio.mp4', name: 'lRatio.mp4'}] })
+        });
+    }
+
     if (message.author.bot) return
     /* Change Apple Music Link */
     if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
