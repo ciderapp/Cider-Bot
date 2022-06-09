@@ -170,7 +170,9 @@ client.on('messageCreate', async message => {
     const collector = message.createReactionCollector({ lRatio, time: 30000 })
 
     collector.on('collect', (reaction, user) => {
-        message.reply({files:[{ attachment:'./assets/lRatio.mp4', name: 'lRatio.mp4'}] })
+        message.reply({files:[{ 
+            content: `Posted because of: "${lRatio.emoji.name}"`,
+            attachment:'./assets/lRatio.mp4', name: 'lRatio.mp4'}] })
     });
     if (message.author.bot) return
     /* Change Apple Music Link */
