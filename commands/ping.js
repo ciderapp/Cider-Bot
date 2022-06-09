@@ -10,7 +10,7 @@ module.exports = {
     let embed = new MessageEmbed()
       .setColor("#0099ff")
       .setTitle("Pong!🏓")
-      .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${interaction.createdTimestamp - test}ms\``);
+      .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${test - interaction.createdTimestamp}ms\``);
     
     await interaction.editReply({ content: " ", embeds:[embed] });
   },
