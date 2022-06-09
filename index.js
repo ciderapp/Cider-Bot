@@ -172,7 +172,7 @@ client.on('messageCreate', async message => {
     collector.on('collect', (reaction, user) => {
         //message.reply({files:[{ attachment:'./assets/lRatio.mp4', name: 'lRatio.mp4'}] })
         message.reply({
-            content: `${user.username} reacted with ${reaction.emoji.name}`,
+            content: `reacted with ${reaction.emoji.name}`,
         })
     });
     if (message.author.bot) return
