@@ -169,7 +169,7 @@ client.on('messageCreate', async message => {
     };
     const collector = message.createReactionCollector({ lRatio, time: 30000 })
 
-    collector.on('collect', (reaction, user) => {
+    collector.once('collect', (reaction, user) => {
         if (reaction.emoji.name === "🇱") {
             message.reply({ files: [{ attachment: './assets/lRatio.mp4', name: 'lRatio.mp4' }] })
         }
