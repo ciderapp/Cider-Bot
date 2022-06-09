@@ -179,7 +179,7 @@ client.on('messageCreate', async message => {
     if(!message.member._roles.includes("848363050205446165") || true) // if not dev team
     {
         if (message.content.match(profanityFilter)) {
-            message.channel.reply({ content: `${message.author} Hey, that's some spicy vocabulary you got there.  It has no place in this Christian family friendly server.  Try here instead: https://discord.gg/fNXzTB9FtW`})
+            message.reply({ content: `${message.author} Hey, that's some spicy vocabulary you got there.  It has no place in this Christian family friendly server.  Try here instead: https://discord.gg/fNXzTB9FtW`})
             //delete after 10 seconds
             // setTimeout(() => {
             //     message.delete()
