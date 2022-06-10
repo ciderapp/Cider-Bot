@@ -35,11 +35,6 @@ module.exports = {
 							label: 'stable',
                             description: 'Cider compiled from stable branch (synced w/ MSFT store)',
 							value: `stable|${show}|${ping}`,
-						},
-                        {
-							label: 'develop',
-                            description: 'Deprecated, use main',
-							value: `develop|${show}|${ping}`,
 						}
                     ])
             )
