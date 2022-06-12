@@ -1,4 +1,4 @@
-const cider_guild = require('./local').guildId();
+const cider_guild = require('../local').guildId();
 const starboardChannel = require('../local').starboardChannel();
 const { MessageEmbed } = require("discord.js");
 
