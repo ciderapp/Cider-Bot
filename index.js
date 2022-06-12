@@ -82,7 +82,7 @@ client.on('ready', () => {
 client.login(auth);
 
 /* Event Handlers */
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
+client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers) });
 
 client.on('messageCreate', async (message) => { client.events.find(event => event.name === "messageCreate").execute(message) });
 

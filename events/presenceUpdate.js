@@ -3,7 +3,7 @@ const cider_guild = require('../local').guildId();
 module.exports = {
     name: 'presenceUpdate',
 
-    async execute(oldMember, newMember) {
+    async execute(oldMember, newMember, activeUsers, totalUsers) {
         //If role not found in guild, do nothing.
         try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
         // or else it'll go BONK
