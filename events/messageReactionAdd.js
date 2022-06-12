@@ -20,6 +20,7 @@ module.exports = {
                     description: `${reaction.message.content}`,
                     fields: [{ name: "Source", value: `[Jump!](${reaction.message.url})` }],
                     timestamp: reaction.message.createdAt,
+                    image: {url: `${reaction.message.attachments.first() ? reaction.message.attachments.first().url : ""}`},
                     footer: { text: `${reaction.message.id}` }
                 }]
                 if (starboard)
