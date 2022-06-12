@@ -11,7 +11,7 @@ module.exports = {
     },
     mongo: function () {
         if (isRailway()) {
-            return `mongodb://${process.env.MONGOUSER}:${ process.env.MONGOPASSWORD }@${ process.env.MONGOHOST }:${ process.env.MONGOPORT }`;
+            return `mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`;
         } else {
             return require('./tokens.json').mongo;
         }
@@ -46,15 +46,36 @@ module.exports = {
             }
         },
     },
+    errorChannel: function () {
+        if (isRailway()) {
+            return process.env.errorChannel;
+        } else {
+            return require('./tokens.json').channelIds.error;
+        }
+    },
+    starboardChannel: function () {
+        if (isRailway()) {
+            return process.env.starboardChannel;
+        } else {
+            return require('./tokens.json').channelIds.starboard;
+        }
+    },
+    guildId: function () {
+        if (isRailway()) {
+            return process.env.guildId;
+        } else {
+            return require('./tokens.json').guildId;
+        }
+    },
     ocKey: function () {
-        if (isRailway()){
+        if (isRailway()) {
             return process.env.ocKey
         } else {
             return require('./tokens.json').ocKey;
         }
     },
     ghKey: function () {
-        if (isRailway()){
+        if (isRailway()) {
             return process.env.ghKey
         } else {
             return require('./tokens.json').ghKey;
