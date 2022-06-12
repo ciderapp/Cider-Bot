@@ -1,5 +1,7 @@
 const { MessageActionRow, MessageEmbed, MessageButton } = require("discord.js");
 const mongo = require('../integrations/mongo');
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
 
 module.exports = {
     name: 'messageCreate',
@@ -68,7 +70,7 @@ module.exports = {
                             message.delete()
                             return message.channel.send({ embeds: [embed], components: [interaction] });
                         } catch (e) { consola.error(e) }
-                    }).catch(e => null)
+                    }).catch(e => consola.error("[Link] Error creating redirect embed.", e))
             } catch (e) { }
         } else if (message.content.match(/(open\.spotify\.com)([^\s]+)/gi)) {
             const link = message.content.match(/(open\.spotify\.com)([^\s]+)/gi)

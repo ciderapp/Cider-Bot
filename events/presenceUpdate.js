@@ -1,4 +1,5 @@
 const mongo = require('../integrations/mongo');
+const cider_guild = require('../local').guildId();
 module.exports = {
     name: 'presenceUpdate',
 
@@ -8,7 +9,10 @@ module.exports = {
         // or else it'll go BONK
         const role = newMember.guild.roles.cache.get("932784788115427348");
         let using_cider = false
+        let client = newMember.client
+        
         for (const activity of newMember.activities) {
+            
             // 911790844204437504 - Cider
             // 886578863147192350 - Apple Music
             /* Continue last spotify song on Cider */
