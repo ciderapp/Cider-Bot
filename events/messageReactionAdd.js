@@ -5,6 +5,7 @@ const { MessageEmbed } = require("discord.js");
 module.exports = {
     name: 'messageReactionAdd',
     async execute(reaction, user) {
+        if (reaction.message.guild.id !== cider_guild) return;
         consola.info("\x1b[33m%s\x1b[0m", '[messageReactionAdd]', `${user.tag} reacted with ${reaction.emoji.name} `, user);
         const dev_channel = "848224563673694250";
         const handleStarboard = async () => {
