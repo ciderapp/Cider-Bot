@@ -1,10 +1,11 @@
 import { mongo } from '../integrations/mongo.js';
 import { guildId as cider_guild } from '../local.js';
+import { ActivityType } from 'discord.js';
 
 export const event = {
     name: 'presenceUpdate',
 
-    async execute(oldMember, newMember, activeUsers, totalUsers) {
+    async execute(oldMember, newMember, activeUsers, totalUsers, client) {
         //If role not found in guild, do nothing.
         try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
         // or else it'll go BONK
@@ -37,7 +38,7 @@ export const event = {
                         mongo.incrementActiveUsers().then(() => {
                             mongo.getActiveUsers().then(users => {
                                 activeUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {
@@ -57,7 +58,7 @@ export const event = {
                         mongo.incrementTotalUsers().then(() => {
                             mongo.getTotalUsers().then(users => {
                                 totalUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {

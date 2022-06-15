@@ -1,14 +1,4 @@
-// const { Client, GatewayIntentBits, Collection, ActionRowBuilder, EmbedBuilder, MessageButton } = require("discord.js"); // Define Client, Intents, and Collection.
-// let auth = require('./local').token()
-// let express = require('./integrations/express');
-// const cheerio = require('cheerio');
-// const fetch = require('node-fetch');
-// const consola = require('consola');
-// const mongo = require('./integrations/mongo');
-
-
-
-import { Client, GatewayIntentBits, Partials, Collection } from "discord.js"; // Define Client, Intents, and Collection
+import { Client, GatewayIntentBits, Partials, Collection, ActivityType } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
 // import express from './integrations/express.js';
 import { mongo } from './integrations/mongo.js';
@@ -68,24 +58,24 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(guildId);
-    // if (guild) {
-    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    //     mongo.getActiveUsers().then(users => {
-    //         activeUsers = users;
-    //         mongo.getTotalUsers().then(users => {
-    //             totalUsers = users;
-    //             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
-    //             consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-    //         })
-    //     })
-    // }
+    if (guild) {
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                totalUsers = users;
+                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+            })
+        })
+    }
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 client.login(token);
 
 /* Event Handlers */
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers) });
+client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers, client) });
 
 client.on('messageCreate', async (message) => {
     // consola.info(client.replies);
