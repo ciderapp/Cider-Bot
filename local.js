@@ -1,6 +1,8 @@
 
 import isRailway from 'is-railway';
-import environment from './tokens.json' assert { type: 'json'};
+if (isRailway()) {
+    var environment = await import ('./tokens.json', { assert: { type: 'json'} });
+}
 
 export const token = isRailway() ? process.env.TOKEN : environment.token;
 export const mongo = isRailway() ? `mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}` : environment.mongo;
