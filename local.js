@@ -1,6 +1,6 @@
 
 import isRailway from 'is-railway';
-if (isRailway()) {
+if (!isRailway()) {
     var environment = await import ('./tokens.json', { assert: { type: 'json'} });
 }
 
