@@ -1,10 +1,11 @@
-const { Octokit } = require("@octokit/core");
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
-const gh_token = require('../local.js').ghKey()
-module.exports = {
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { Octokit } from '@octokit/core';
+import { EmbedBuilder } from 'discord.js';
+import { ghKey as gh_token } from '../local.js';
+
+export const command = {
     data: new SlashCommandBuilder().setName('newstable').setDescription('Creates a pull request on Github (main -> stable)')
-    .addStringOption(title => title.setName('title').setDescription('Title of the pull request').setRequired(true)),
+        .addStringOption(title => title.setName('title').setDescription('Title of the pull request').setRequired(true)),
 
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165')) {
@@ -17,7 +18,7 @@ module.exports = {
                 head: 'main',
                 base: 'stable'
             })
-            const pullEmbed = new MessageEmbed()
+            const pullEmbed = new EmbedBuilder()
                 .setColor('#00ff00')
                 .setTitle(`${pull.data.title}`)
                 .setURL(`${pull.data.html_url}`)
@@ -26,7 +27,7 @@ module.exports = {
             consola.info(pull)
             await interaction.reply({ content: `Successfully made the pull request`, embeds: [pullEmbed] })
         } else {
-            interaction.reply({ content: 'You do not have permission to use this command.'})
+            interaction.reply({ content: 'You do not have permission to use this command.' })
         }
     }
 }

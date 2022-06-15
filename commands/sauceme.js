@@ -1,29 +1,29 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const fetch = require("node-fetch");
-const Discord = require("discord.js");
+import { SlashCommandBuilder } from '@discordjs/builders';
+import fetch from 'node-fetch';
+import { ButtonBuilder, ActionRowBuilder, EmbedBuilder } from 'discord.js';
 
-module.exports = {
+export const command = {
     data: new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
     async execute(interaction) {
         let saucerequest = await fetch('https://api.waifu.im/random/?selected_tags=hentai')
         let sauce = await saucerequest.json()
-        let buttons = new Discord.MessageActionRow()
+        let buttons = new ActionRowBuilder()
         let saucecontent = await sauce.images[0].url;
         let sauceart = await sauce.images[0].source;
         let saucecolor = await sauce.images[0].dominant_color;
         buttons.addComponents(
-            new Discord.MessageButton()
+            new ButtonBuilder()
                 .setLabel("Open in Browser")
                 .setStyle('LINK')
                 .setURL(saucecontent.toString())
         )
         buttons.addComponents(
-            new Discord.MessageButton()
+            new ButtonBuilder()
                 .setLabel("Open Artist/Source in Browser")
                 .setStyle('LINK')
                 .setURL(sauceart.toString())
         )
-        let embed = new Discord.MessageEmbed()
+        let embed = new EmbedBuilder()
             .setColor(saucecolor.toString())
             .setTitle("Sauce Randomizer")
             .setURL(saucecontent.toString())

@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, SlashCommandStringOption } = require('@discordjs/builders');
+import { SlashCommandBuilder } from '@discordjs/builders';
 
-module.exports = {
+export const command = {
     data: new SlashCommandBuilder()
         .setName('mod')
         .setDescription('Moderator commands')
@@ -46,7 +46,7 @@ module.exports = {
         let adminchannel = "932110086929780777";
         if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
             let user = interaction.options.getUser('user');
-            if(interaction.guild.members.cache.get(user.id).moderatable) {
+            if (interaction.guild.members.cache.get(user.id).moderatable) {
                 if (interaction.options.getSubcommand() === 'kick') {
                     let reason = interaction.options.getString('reason');
                     interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
@@ -72,7 +72,7 @@ module.exports = {
                     interaction.guild.members.cache.get(user.id).send(`You have been unmuted`);
                     interaction.reply({ content: `${user} has been unmuted.` });
                 }
-            } else{
+            } else {
                 interaction.reply({ content: `${user.username} is too powerful.` });
             }
         } else {

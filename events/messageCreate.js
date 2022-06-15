@@ -1,12 +1,12 @@
-const { MessageActionRow, MessageEmbed, MessageButton } = require("discord.js");
-const mongo = require('../integrations/mongo');
-const fetch = require('node-fetch');
-const cheerio = require('cheerio');
+import { ActionRowBuilder, EmbedBuilder, ButtonBuilder } from "discord.js";
+import { mongo } from '../integrations/mongo.js';
+import fetch from 'node-fetch';
+import cheerio from 'cheerio';
 
-module.exports = {
+export const event = {
     name: 'messageCreate',
 
-    async execute(message) {
+    async execute(message, replies) {
         const overrideRegex = new RegExp(/^\!/g);
         const profanityFilter = new RegExp(/(fuck|shit|piss|cunt|tits|cock|bitch)/g)
         const lRatio = (reaction, user) => {
@@ -47,7 +47,7 @@ module.exports = {
                         const modlink = link[0].replace('https://', '')
                         const play_link = "https://cider.sh/p?" + modlink
                         const view_link = "https://cider.sh/o?" + modlink
-                        const embed = new MessageEmbed()
+                        const embed = new EmbedBuilder()
                             .setColor('#fb003f')
                             .setTitle(title)
                             .setURL(link.toString())
@@ -55,13 +55,13 @@ module.exports = {
                             .setDescription(description)
                             .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
                             .setTimestamp()
-                        const interaction = new MessageActionRow()
+                        const interaction = new ActionRowBuilder()
                             .addComponents(
-                                new MessageButton()
+                                new ButtonBuilder()
                                     .setLabel('Play In Cider')
                                     .setStyle('LINK')
                                     .setURL(play_link),
-                                new MessageButton()
+                                new ButtonBuilder()
                                     .setLabel('View In Cider')
                                     .setStyle('LINK')
                                     .setURL(view_link)
@@ -91,7 +91,7 @@ module.exports = {
                                     const modlink = amlink.replace('https://', '')
                                     const play_link = "https://cider.sh/p?" + modlink
                                     const view_link = "https://cider.sh/o?" + modlink
-                                    const embed = new MessageEmbed()
+                                    const embed = new EmbedBuilder()
                                         .setColor('#fb003f')
                                         .setTitle(title)
                                         .setURL(amlink.toString())
@@ -99,13 +99,13 @@ module.exports = {
                                         .setDescription(description)
                                         .setFooter({ text: "Shared by " + message.author.username, iconURL: message.author.avatarURL() })
                                         .setTimestamp()
-                                    const interaction = new MessageActionRow()
+                                    const interaction = new ActionRowBuilder()
                                         .addComponents(
-                                            new MessageButton()
+                                            new ButtonBuilder()
                                                 .setLabel('Play In Cider')
                                                 .setStyle('LINK')
                                                 .setURL(play_link),
-                                            new MessageButton()
+                                            new ButtonBuilder()
                                                 .setLabel('View In Cider')
                                                 .setStyle('LINK')
                                                 .setURL(view_link)
@@ -122,13 +122,13 @@ module.exports = {
             } catch (e) { consola.error(e) }
             /* Auto Replies */
         } else if ((!message.member._roles.includes("848363050205446165") && !message.member._roles.includes("932811694751768656") && !message.member.id.includes("345021804210814976")) || overrideRegex.test(message.toString())) { // exclude dev team and donators
-            for (reply of replies) {
+            for (let reply of replies) {
                 var regex = new RegExp(`\\b${reply.name}\\b`, "gi");
                 if (regex.test(message.toString())) {
                     consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                     mongo.replyCounter(reply.name)
                     message.react("✅")
-                    const embed = new MessageEmbed()
+                    const embed = new EmbedBuilder()
                         .setColor(reply.color)
                         .setTitle(`${reply.title}`)
                         .setDescription(`${reply.description}`)
@@ -145,7 +145,7 @@ module.exports = {
                             consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                             mongo.replyCounter(reply.name)
                             message.react("✅")
-                            const embed = new MessageEmbed()
+                            const embed = new EmbedBuilder()
                                 .setColor(reply.color)
                                 .setTitle(`${reply.title}`)
                                 .setDescription(`${reply.description}`)

@@ -1,9 +1,9 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const Discord = require("discord.js");
-const oc_token = require('../local.js').ocKey()
-const mongo = require('../integrations/mongo.js')
-const fetch = require('node-fetch');
-module.exports = {
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { ocKey as oc_token } from '../local.js';
+import { mongo } from '../integrations/mongo.js';
+import fetch from 'node-fetch';
+
+export const command = {
     data: new SlashCommandBuilder()
         .setName('verify')
         .setDescription('Verify you donation status (Open Collective only)')
@@ -24,21 +24,21 @@ module.exports = {
             donations.push(transaction)
         })
         if (donations.length === 0) {
-            await interaction.reply({content: 'You have not donated to CiderApp', ephemeral: true})
+            await interaction.reply({ content: 'You have not donated to CiderApp', ephemeral: true })
         } else {
-            let embed = new Discord.MessageEmbed()
+            let embed = new ActionRowBuilderEmbedBuilder()
             embed.setTitle('Your donations')
             embed.setColor('#0099ff')
             embed.setDescription('')
             donations.forEach(donation => {
-                embed.addField( donation.createdAt, `
+                embed.addField(donation.createdAt, `
                 Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
                 Payment Processor Fee: \`${donation.paymentProcessorFeeInHostCurrency / 100}\` ${donation.hostCurrency}
                 Received Amount: \`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}
                 `)
                 mongo.addDonation(donation, interaction.member.id)
             })
-            if (interaction.guild.id === '843954443845238864'){
+            if (interaction.guild.id === '843954443845238864') {
                 embed.setFooter('Your role should be given to you shortly')
                 try {
                     interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445')
@@ -48,7 +48,7 @@ module.exports = {
                 }
             }
 
-            await interaction.reply({content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true})
+            await interaction.reply({ content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true })
         }
     },
 };

@@ -1,8 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageActionRow, MessageSelectMenu } = require('discord.js');
-const { syncReleaseData } = require('../integrations/mongo');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
+import { mongo } from '../integrations/mongo.js';
 
-module.exports = {
+export const command = {
     data: new SlashCommandBuilder()
         .setName('branchbuilds')
         .setDescription('Gives you download links for the latest builds of a specified branch')
@@ -18,24 +18,24 @@ module.exports = {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false
         if (ping != "") { ping = ping.toString() }
-        await syncReleaseData("main");
-        await syncReleaseData("stable");
-        let branchMenu = new MessageActionRow()
+        await mongo.syncReleaseData("main");
+        await mongo.syncReleaseData("stable");
+        let branchMenu = new ActionRowBuilder()
             .addComponents(
-                new MessageSelectMenu()
+                new SelectMenuBuilder()
                     .setCustomId('branch')
                     .setPlaceholder('Select a branch')
                     .addOptions([
                         {
-							label: 'main',
+                            label: 'main',
                             description: 'Cider(Nightly) compiled from main branch',
-							value: `main|${show}|${ping}`,
-						},
-						{
-							label: 'stable',
+                            value: `main|${show}|${ping}`,
+                        },
+                        {
+                            label: 'stable',
                             description: 'Cider compiled from stable branch (synced w/ MSFT store)',
-							value: `stable|${show}|${ping}`,
-						}
+                            value: `stable|${show}|${ping}`,
+                        }
                     ])
             )
         if (ping != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {

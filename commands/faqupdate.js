@@ -1,6 +1,8 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const faqEmbed = require('../faq.json');
-module.exports = {
+import { SlashCommandBuilder } from '@discordjs/builders';
+import faqEmbed from '../faq.json' assert { type: 'json'};
+
+
+export const command = {
     data: new SlashCommandBuilder().setName('faqupdate').setDescription('Updates the FAQ page"')
         .addBooleanOption(option => option.setName('publish').setDescription('set to true to publish in FAQ channel').setRequired(false)),
     async execute(interaction) {
@@ -12,7 +14,7 @@ module.exports = {
             }
             else { interaction.reply({ content: `To publish, set publish to \`true\``, embeds: faqEmbed.embeds }) }
         } else {
-            interaction.reply({ content: 'You do not have permission to use this command.'})
+            interaction.reply({ content: 'You do not have permission to use this command.' })
         }
 
 

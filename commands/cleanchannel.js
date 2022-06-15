@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-module.exports = {
+import { SlashCommandBuilder } from '@discordjs/builders';
+
+export const command = {
     data: new SlashCommandBuilder()
         .setName('cleanchannel')
         .setDescription('Purge all messages containing images/videos in a channel that are about a week old')
@@ -19,7 +20,7 @@ module.exports = {
             await interaction.reply({ content: `Deleting all images in this channel...` })
             // select all messages in channel
             let before = interaction.options.getString('before')
-            let messages = await channel.messages.fetch({ limit: 1})
+            let messages = await channel.messages.fetch({ limit: 1 })
             messages = await channel.messages.fetch({ limit: 100, before: before ? before : messages.last().id })
             todelete = messages.filter(message => message.attachments.size > 0 && message.createdTimestamp < Date.now() - 604800000 && !message.pinned)
             todelete.forEach(message => {

@@ -1,10 +1,8 @@
-const express = require('express');
-const port = require('../local').port();
-const url = require('../local').expressurl();
-// const { clientId, clientSecret } = require('../local').auth;
-const mongo = require('./mongo')
+import express from 'express';
+import { port, expressurl } from '../local.js';
+// import { mongo } from './mongo.js';
 
-const app = express();
+export const app = express();
 
 app.get('/', async (request, response) => {
     response.redirect('https://cdn.cryptofyre.org/Videos/lagtrain.mp4');
@@ -19,4 +17,4 @@ app.get('/release/:branch', async (request, response) => {
     response.json(release);
 });
 
-app.listen(port, () => consola.info(`App listening at http://${url}`));
+app.listen(port, () => consola.info(`App listening at http://${expressurl}`));

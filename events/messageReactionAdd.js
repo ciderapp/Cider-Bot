@@ -1,8 +1,7 @@
-const cider_guild = require('../local').guildId();
-const starboardChannel = require('../local').starboardChannel();
-const { MessageEmbed } = require("discord.js");
+import { guildId as cider_guild }  from '../local.js';
+import { starboardChannel } from '../local.js';
 
-module.exports = {
+export const event = {
     name: 'messageReactionAdd',
     async execute(reaction, user) {
         if (reaction.message.guild.id !== cider_guild) return;

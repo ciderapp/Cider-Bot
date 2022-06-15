@@ -1,6 +1,7 @@
-const mongo = require('../integrations/mongo');
-const cider_guild = require('../local').guildId();
-module.exports = {
+import { mongo } from '../integrations/mongo.js';
+import { guildId as cider_guild } from '../local.js';
+
+export const event = {
     name: 'presenceUpdate',
 
     async execute(oldMember, newMember, activeUsers, totalUsers) {
