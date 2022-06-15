@@ -75,7 +75,7 @@ client.on('ready', () => {
 client.login(token);
 
 /* Event Handlers */
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers, client) });
+client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers) });
 
 client.on('messageCreate', async (message) => {
     // consola.info(client.replies);
