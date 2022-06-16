@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Partials, Collection, ActivityType } from "discord.js"; // Define Client, Intents, and Collection
+import { Client, GatewayIntentBits, Partials, Collection, ActivityType, resolveColor } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
 // import express from './integrations/express.js';
 import { mongo } from './integrations/mongo.js';
@@ -58,18 +58,18 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(guildId);
-    if (guild) {
-        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        mongo.getActiveUsers().then(users => {
-            activeUsers = users;
-            mongo.getTotalUsers().then(users => {
-                totalUsers = users;
-                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
-                consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
-            })
-        })
-    }
+    // if (guild) {
+    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    //     mongo.getActiveUsers().then(users => {
+    //         activeUsers = users;
+    //         mongo.getTotalUsers().then(users => {
+    //             totalUsers = users;
+    //             client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+    //             consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+    //         })
+    //     })
+    // }
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 client.login(token);
@@ -93,7 +93,7 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { color: 0xff0000, title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     } else if (interaction.isChatInputCommand()) {
@@ -105,7 +105,7 @@ client.on('interactionCreate', async interaction => {
         } catch (error) {
             consola.error(error);
             await interaction.reply({ title: "Error", content: 'There was an error while executing this command!', ephemeral: true });
-            errorEmbed = { color: 0xff0000, title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
     }
@@ -114,12 +114,12 @@ client.on('interactionCreate', async interaction => {
 process.on('unhandledRejection', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { color: 0xff0000, title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
     client.channels.cache.get(errorChannel).send({ content: `Unhandled Rejection`, embeds: [errorEmbed] })
 })
 process.on('uncaughtException', error => {
     consola.error(error);
     consola.error(error.stack);
-    errorEmbed = { color: 0xff0000, title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+    let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
     client.channels.cache.get(errorChannel).send({ content: `Uncaught Exception`, embeds: [errorEmbed] })
 })

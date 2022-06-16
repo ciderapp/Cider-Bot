@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import fetch from 'node-fetch';
-import { ButtonBuilder, ActionRowBuilder, EmbedBuilder } from 'discord.js';
+import { ButtonBuilder, ActionRowBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
@@ -14,13 +14,13 @@ export const command = {
         buttons.addComponents(
             new ButtonBuilder()
                 .setLabel("Open in Browser")
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
                 .setURL(saucecontent.toString())
         )
         buttons.addComponents(
             new ButtonBuilder()
                 .setLabel("Open Artist/Source in Browser")
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
                 .setURL(sauceart.toString())
         )
         let embed = new EmbedBuilder()

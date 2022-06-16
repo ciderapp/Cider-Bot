@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import fetch from 'node-fetch';
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),
@@ -14,13 +14,13 @@ export const command = {
         buttons.addComponents(
             new ButtonBuilder()
                 .setLabel("Open in Browser")
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
                 .setURL(marincontent.toString())
         )
         buttons.addComponents(
             new ButtonBuilder()
                 .setLabel("Open Artist/Source in Browser")
-                .setStyle('LINK')
+                .setStyle(ButtonStyle.Link)
                 .setURL(marinart.toString())
         )
         let embed = new EmbedBuilder()

@@ -19,7 +19,7 @@ export const command = {
                 base: 'stable'
             })
             const pullEmbed = new EmbedBuilder()
-                .setColor('#00ff00')
+                .setColor('Random')
                 .setTitle(`${pull.data.title}`)
                 .setURL(`${pull.data.html_url}`)
                 .setDescription(`Commits: ${pull.data.commits} | Additions: ${pull.data.additions} | Deletions: ${pull.data.deletions} | Changed Files: ${pull.data.changed_files}`)

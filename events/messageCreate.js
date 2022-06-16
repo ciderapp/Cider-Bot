@@ -1,4 +1,4 @@
-import { ActionRowBuilder, EmbedBuilder, ButtonBuilder } from "discord.js";
+import { ActionRowBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
 import { mongo } from '../integrations/mongo.js';
 import fetch from 'node-fetch';
 import cheerio from 'cheerio';
@@ -59,11 +59,11 @@ export const event = {
                             .addComponents(
                                 new ButtonBuilder()
                                     .setLabel('Play In Cider')
-                                    .setStyle('LINK')
+                                    .setStyle(ButtonStyle.Link)
                                     .setURL(play_link),
                                 new ButtonBuilder()
                                     .setLabel('View In Cider')
-                                    .setStyle('LINK')
+                                    .setStyle(ButtonStyle.Link)
                                     .setURL(view_link)
                             )
                         try {
@@ -103,11 +103,11 @@ export const event = {
                                         .addComponents(
                                             new ButtonBuilder()
                                                 .setLabel('Play In Cider')
-                                                .setStyle('LINK')
+                                                .setStyle(ButtonStyle.Link)
                                                 .setURL(play_link),
                                             new ButtonBuilder()
                                                 .setLabel('View In Cider')
-                                                .setStyle('LINK')
+                                                .setStyle(ButtonStyle.Link)
                                                 .setURL(view_link)
                                         )
                                     try {

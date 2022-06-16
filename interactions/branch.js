@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import { mongo } from '../integrations/mongo.js'
 import consola from 'consola';
 
@@ -18,10 +18,10 @@ export const interaction = {
         try {
             if (release) {
                 buttons.addComponents(
-                    new ButtonBuilder().setLabel("AppImage").setStyle(5).setURL(`${release.links.AppImage}`),
-                    new ButtonBuilder().setLabel("exe").setStyle(5).setURL(`${release.links.exe}`),
-                    new ButtonBuilder().setLabel("deb").setStyle(5).setURL(`${release.links.deb}`),
-                    new ButtonBuilder().setLabel("snap").setStyle(5).setURL(`${release.links.snap}`)
+                    new ButtonBuilder().setLabel("AppImage").setStyle(ButtonStyle.Link).setURL(`${release.links.AppImage}`),
+                    new ButtonBuilder().setLabel("exe").setStyle(ButtonStyle.Link).setURL(`${release.links.exe}`),
+                    new ButtonBuilder().setLabel("deb").setStyle(ButtonStyle.Link).setURL(`${release.links.deb}`),
+                    new ButtonBuilder().setLabel("snap").setStyle(ButtonStyle.Link).setURL(`${release.links.snap}`)
                 )
                 if (branch == 'main') {
                     buttonsMac.addComponents(

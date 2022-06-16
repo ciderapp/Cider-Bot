@@ -9,7 +9,7 @@ export const command = {
     let test = Date.now()
     // await interaction.reply({ embeds:[{color: "#0099ff", description: "Pinging ..."}] })
     let embed = new EmbedBuilder()
-      .setColor("#0099ff")
+      .setColor('Random')
       .setTitle("Pong!🏓")
       .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${test - interaction.createdTimestamp}ms\``);
 

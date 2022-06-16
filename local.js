@@ -1,7 +1,7 @@
 
 import isRailway from 'is-railway';
 if (!isRailway()) {
-    var environment = await import ('./tokens.json', { assert: { type: 'json'} });
+    var { default: environment } = await import ('./tokens.json', { assert: { type: 'json'} });
 }
 
 export const token = isRailway() ? process.env.TOKEN : environment.token;

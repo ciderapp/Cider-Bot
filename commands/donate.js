@@ -1,25 +1,26 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { EmbedBuilder, ActionRowBuilder } from 'discord.js';
+import { EmbedBuilder, ActionRowBuilder, ButtonStyle } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
     async execute(interaction) {
         let embed = new EmbedBuilder()
+            .setColor('Random')
             .setTitle("Donate")
             .setDescription(`You can donate via our Open Collective Organization (<@&923351772532199445>) or via Ko-Fi (<@&905457688211783690>, <@&905457957486067843>). Whichever is most convenient for your country/payment method and both are eligible for a <@&932811694751768656> role.\n\n Some of us also have individual donation links, if you would rather support one person.\n\n  **Note: the payment processor might take a percentage of your donation before the rest reaches to us!**`)
             .setTimestamp()
         let user = interaction.options.getUser('user') || null
         let oc = new MessageButton()
             .setLabel(`OpenCollective`)
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
             .setURL(`https://opencollective.com/ciderapp`)
         let kofi = new MessageButton()
             .setLabel(`Ko-fi`)
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
             .setURL(`https://ko-fi.com/cryptofyre`)
         let ghSponsors = new MessageButton()
             .setLabel(`Github Sponsors`)
-            .setStyle('LINK')
+            .setStyle(ButtonStyle.Link)
             .setURL(`https://github.com/sponsors/ciderapp`)
 
         if (user) {

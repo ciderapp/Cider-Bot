@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import { ocKey as oc_token } from '../local.js';
 import { mongo } from '../integrations/mongo.js';
 import fetch from 'node-fetch';
+import { EmbedBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -26,10 +27,10 @@ export const command = {
         if (donations.length === 0) {
             await interaction.reply({ content: 'You have not donated to CiderApp', ephemeral: true })
         } else {
-            let embed = new ActionRowBuilderEmbedBuilder()
-            embed.setTitle('Your donations')
-            embed.setColor('#0099ff')
-            embed.setDescription('')
+            let embed = new EmbedBuilder()
+            .setTitle('Your donations')
+            .setColor('Random')
+            .setDescription('')
             donations.forEach(donation => {
                 embed.addField(donation.createdAt, `
                 Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
