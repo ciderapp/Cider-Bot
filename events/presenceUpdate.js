@@ -87,7 +87,7 @@ export const event = {
                         mongo.decrementActiveUsers().then(() => {
                             mongo.getActiveUsers().then(users => {
                                 activeUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: 'WATCHING' });
+                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {
