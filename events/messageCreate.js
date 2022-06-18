@@ -159,6 +159,16 @@ export const event = {
                 }
             }
         }
+        if(message.author.id === "728847567806267405" || true){ // if keefe
+            await message.react("🇸")
+            await message.react("🇵")
+            await message.react("🇴")
+            await message.react("🇹")
+            await message.react("🇮")
+            await message.react("🇫")
+            await message.react("🇾")
+            await message.react("🤡")
+        } 
     }
 
 }

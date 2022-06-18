@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('restrictions').setDescription('Responds to \"Why is my Cider skipping songs\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),

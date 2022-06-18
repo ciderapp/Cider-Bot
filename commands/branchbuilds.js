@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
+import { SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
 import { mongo } from '../integrations/mongo.js';
 
 export const command = {

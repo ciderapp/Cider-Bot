@@ -1,5 +1,4 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
-import { EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('discordrpc').setDescription('Responds to \"why discord no work????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),

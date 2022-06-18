@@ -1,6 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { Octokit } from '@octokit/core';
-import { EmbedBuilder } from 'discord.js';
 import { ghKey as gh_token } from '../local.js';
 
 export const command = {

@@ -1,6 +1,5 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 import fetch from 'node-fetch';
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),

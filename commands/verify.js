@@ -1,8 +1,7 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { ocKey as oc_token } from '../local.js';
 import { mongo } from '../integrations/mongo.js';
 import fetch from 'node-fetch';
-import { EmbedBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder()
