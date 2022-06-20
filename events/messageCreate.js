@@ -159,16 +159,16 @@ export const event = {
                 }
             }
         }
-        if(message.author.id === "728847567806267405"){ // if keefe
-            await message.react("🇸")
-            await message.react("🇵")
-            await message.react("🇴")
-            await message.react("🇹")
-            await message.react("🇮")
-            await message.react("🇫")
-            await message.react("🇾")
-            await message.react("🤡")
-        } 
+//         if(message.author.id === "728847567806267405"){ // if keefe
+//             await message.react("🇸")
+//             await message.react("🇵")
+//             await message.react("🇴")
+//             await message.react("🇹")
+//             await message.react("🇮")
+//             await message.react("🇫")
+//             await message.react("🇾")
+//             await message.react("🤡")
+//         } 
     }
 
 }
