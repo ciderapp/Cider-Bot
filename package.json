@@ -25,7 +25,7 @@
     "cheerio": "^1.0.0-rc.10",
     "consola": "^2.15.3",
     "discord-api-types": "^0.34.0",
-    "discord.js": "^14.0.0-dev.1655770161-94f7ca9",
+    "discord.js": "^14.0.0-dev.1655640259-358c3f4",
     "express": "^4.18.1",
     "is-railway": "^1.1.3",
     "mongodb": "^4.7.0",
