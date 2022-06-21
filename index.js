@@ -20,6 +20,8 @@ client.commands = new Collection();
 client.interactions = new Collection();
 client.events = [];
 client.replies = [];
+client.canPingKeefe = true;
+export { client };
 
 import { readdirSync } from 'fs';
 // Import Command Files
