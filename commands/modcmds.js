@@ -69,7 +69,7 @@ export const command = {
                         .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user}?\nYou have a minute to respond.`)
                     )
                     if (approval.approve) {
-                        await user.timeout(0);
+                        await user.timeout(null);
                     }
                 }
             } else {
