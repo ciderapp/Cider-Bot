@@ -1,131 +1,76 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, Formatters, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 export const command = {
-    data: new SlashCommandBuilder()
-        .setName('mod')
-        .setDescription('Moderator commands')
+    data: new SlashCommandBuilder().setName('mod').setDescription('Moderator commands')
         // .setDefaultMemberPermissions([Permissions.FLAGS.KICK_MEMBERS])
         .addSubcommand(subcommand => subcommand
             .setName('kick')
             .setDescription('Kicks a user from the server')
-            .addUserOption(option => option.setName('user')
-                .setDescription('User to kick')
-                .setRequired(true))
-            .addStringOption(option => option.setName('reason')
-                .setDescription('Reason for kicking')
-                .setRequired(true)))
+            .addUserOption(option => option.setName('user').setDescription('User to kick').setRequired(true))
+            .addStringOption(option => option.setName('reason').setDescription('Reason for kicking').setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName('ban')
             .setDescription('Bans a user from the server')
-            .addUserOption(option => option.setName('user')
-                .setDescription('User to ban')
-                .setRequired(true))
-            .addStringOption(option => option.setName('reason')
-                .setDescription('Reason for banning')
-                .setRequired(true)))
+            .addUserOption(option => option.setName('user').setDescription('User to ban').setRequired(true))
+            .addStringOption(option => option.setName('reason').setDescription('Reason for banning').setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName('mute')
             .setDescription('Mutes a user from the server')
-            .addUserOption(option => option.setName('user')
-                .setDescription('User to mute')
-                .setRequired(true))
-            .addStringOption(option => option.setName('reason')
-                .setDescription('Reason for muting')
-                .setRequired(true))
-            .addNumberOption(option => option.setName('time')
-                .setDescription('Time in minutes for the mute')
-                .setRequired(true)))
+            .addUserOption(option => option.setName('user').setDescription('User to mute').setRequired(true))
+            .addStringOption(option => option.setName('reason').setDescription('Reason for muting').setRequired(true))
+            .addNumberOption(option => option.setName('time').setDescription('Time in minutes for the mute').setRequired(true)))
         .addSubcommand(subcommand => subcommand
             .setName('unmute')
             .setDescription('Unmutes a user from the server')
-            .addUserOption(option => option.setName('user')
-                .setDescription('User to unmute')
-                .setRequired(true))),
+            .addUserOption(option => option.setName('user').setDescription('User to unmute').setRequired(true))),
 
     async execute(interaction) {
-        let adminchannel = "932110086929780777";
-        if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802') || true) {
-            let user = interaction.options.getUser('user');
+        if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
+            let user = interaction.options.getMember('user');
+            let reason = interaction.options?.getString('reason');
+            let time = interaction.options?.getNumber('time');
             if (interaction.guild.members.cache.get(user.id).moderatable) {
+                if (user.id === interaction.user.id) return interaction.reply({
+                    embeds: [new EmbedBuilder().setColor('Red').setDescription(`You cannot ${interaction.options.getSubcommand()} yourself, you retarded piece of sh*t`)]
+                })
                 if (interaction.options.getSubcommand() === 'kick') {
-                    let reason = interaction.options.getString('reason');
-                    //interaction.guild.members.cache.get(user.id).send(`You have been kicked from **${interaction.guild.name}** for: *${reason}*`);
-                    //interaction.guild.members.cache.get(user.id).kick(reason);
-                    //interaction.reply({ content: `${user} has been kicked.` });
-
-                    // if (!user.kickable) return interaction.reply({
-                    //     embeds: [new EmbedBuilder().setColor('Red').setDescription(`I cannot kick ${user}`)]
-                    // })
-
-                    if (user.id === interaction.user.id) return interaction.reply({
-                        embeds: [new EmbedBuilder().setColor('Red').setDescription(`You cannot kick yourself, you ratrted piece of sh*t`)]
-                    })
-
+                    const approval = await approvalFunction(interaction, new EmbedBuilder()
+                        .setColor('Random')
+                        .setTitle('Waiting for Approval')
+                        .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user} for ${reason}?\nYou have a minute to respond.`)
+                    )
+                    if (approval.approve) {
+                        await user.kick({ reason });
+                    }
+                } else if (interaction.options.getSubcommand() === 'ban') {
+                    const approval = await approvalFunction(interaction, new EmbedBuilder()
+                        .setColor('Random')
+                        .setTitle('Waiting for Approval')
+                        .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user} for ${reason}?\nYou have a minute to respond.`)
+                    )
+                    if (approval.approve) {
+                        await user.ban({ reason });
+                    }
+                } else if (interaction.options.getSubcommand() === 'mute') {
                     const approval = await approvalFunction(
                         interaction,
                         new EmbedBuilder()
                             .setColor('Random')
                             .setTitle('Waiting for Approval')
-                            .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user} for ${reason}?\nYou have a minute to respond.`)
+                            .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user} for ${reason} till ${Formatters.time(Math.floor(Date.now() / 1000) + (time * 60), 'f')}?\nYou have a minute to respond.`)
                     )
-
                     if (approval.approve) {
-                        const embed = new EmbedBuilder()
-                            .setColor('Green')
-                            .setTitle('Approved')
-                            .setDescription(`${user} was kicked for ${reason}.`);
-
-                            try {
-                                await user.send({
-                                    embeds: [
-                                        new EmbedBuilder()
-                                            .setColor('Red')
-                                            .setTitle('You have been kicked')
-                                            .setDescription(`You have been kicked from ${interaction.guild.name} for ${reason} on ${time(new Date(), 'F')}`)
-                                    ]
-                                });
-                            }catch(e) {
-                                embed.setFooter(`${user} could not be notified.`)
-                            }
-
-                            await interaction.followUp({
-                                embeds: [embed]
-                            })
-
-                            await user.kick({ reason: reason }); // The problem is either here or here actually
+                        await user.timeout(time * 60000, reason);
                     }
-
-                    const embed = new EmbedBuilder()
-                        .setColor('Red')
-                        .setTitle('Cancelled')
-                        .setDescription(`${user} was not kicked.`)
-
-                    if (approval.reason) embed.setFooter({ text: approval.reason })
-
-                    await interaction.followUp({
-                        embeds: [embed]
-                    })
-
-
-                }
-                else if (interaction.options.getSubcommand() === 'ban') {
-                    let reason = interaction.options.getString('reason');
-                    await interaction.guild.members.cache.get(user.id).timeout(86400000 * 28, reason);
-                    interaction.member.guild.channels.cache.get(adminchannel).send({ content: `<@191621342473224192>, A Mod has requested a ban for ${user}\nReason: ${reason}\nRequested by: ${interaction.user}` })
-                    interaction.guild.members.cache.get(user.id).send(`You have are muted and have been screened to a ban from **${interaction.guild.name}** with the reason of: *${reason}*`);
-                    interaction.reply({ content: `${user} has been screened for a ban.` });
-                }
-                else if (interaction.options.getSubcommand() === 'mute') {
-                    let reason = interaction.options.getString('reason');
-                    let time = interaction.options.getNumber('time');
-                    await interaction.guild.members.cache.get(user.id).timeout(time * 60 * 1000, reason);
-                    interaction.guild.members.cache.get(user.id).send(`You have been muted for **${time}** minutes for the following reason: *${reason}*`);
-                    interaction.reply({ content: `${user} has been muted for ${time} minutes.` });
-                }
-                else if (interaction.options.getSubcommand() === 'unmute') {
-                    await interaction.guild.members.cache.get(user.id).timeout(0);
-                    interaction.guild.members.cache.get(user.id).send(`You have been unmuted`);
-                    interaction.reply({ content: `${user} has been unmuted.` });
+                } else if (interaction.options.getSubcommand() === 'unmute') {
+                    const approval = await approvalFunction(interaction, new EmbedBuilder()
+                        .setColor('Random')
+                        .setTitle('Waiting for Approval')
+                        .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user}?\nYou have a minute to respond.`)
+                    )
+                    if (approval.approve) {
+                        await user.timeout(0);
+                    }
                 }
             } else {
                 interaction.reply({ content: `${user.username} is too powerful.` });
@@ -136,7 +81,18 @@ export const command = {
     }
 }
 
-const approvalFunction = async (interaction, embed) => { //yes
+const approvalFunction = async (interaction, embed) => {
+    let user = interaction.options.getMember('user');
+    let reason = interaction.options?.getString('reason');
+    let time = interaction.options?.getNumber('time');
+    let past = interaction.options.getSubcommand();
+    switch (past) {
+        case 'kick': past = 'kicked'; break;
+        case 'ban': past = 'banned'; break;
+        case 'mute': past = 'muted'; break;
+        case 'unmute': past = 'unmuted'; break;
+    }
+
     const interactionMessage = await interaction.reply({
         embeds: [embed],
         components: [
@@ -147,17 +103,15 @@ const approvalFunction = async (interaction, embed) => { //yes
         ],
         fetchReply: true
     });
-
-    const interactionEvent = await interactionMessage.awaitMessageComponent({ time: 60000, filter: i => i.user.id === interaction.user.id}).catch(() => null);
-
-    if (!interactionEvent) return {
-        approve: false,
-        reason: 'Reason: Timeout',
-    }; 
-
+    
+    const collector = interactionMessage.createMessageComponentCollector({ time: 60_000, filter: (i) => i.user.id !== interaction.user.id });
+    collector.on('collect', (i) => {
+        i.reply({ content: `${i.user} You are not allowed to respond to this request.`, ephemeral: true });
+    });
+    const interactionEvent = await interactionMessage.awaitMessageComponent({ time: 60_000, filter: (i) => i.user.id === interaction.user.id }).catch((e) => { });
     if (interactionEvent.customId === 'approve') {
         interactionEvent.deferUpdate();
-        interaction.editReply({
+        await interaction.editReply({
             components: [
                 new ActionRowBuilder().addComponents(
                     new ButtonBuilder().setLabel('Approve').setStyle(ButtonStyle.Success).setCustomId('approve').setDisabled(true),
@@ -165,10 +119,35 @@ const approvalFunction = async (interaction, embed) => { //yes
                 )
             ]
         })
-        return {
-            approve: true,
+        const dmEmbed = new EmbedBuilder()
+            .setColor('Red')
+            .setTitle(`You have been ${past}`)
+        const embed = new EmbedBuilder()
+            .setColor('Green')
+            .setTitle('Approved')
+        switch (past) {
+            case 'muted':
+                dmEmbed.setDescription(`You have been muted from ${interaction.guild.name} for ${reason} on ${Formatters.time(new Date(), 'F')}\nYou'll be unmuted in ${Formatters.time(Math.floor(Date.now() / 1000) + (time * 60), 'R')}`);
+                embed.setDescription(`${user} was muted for ${reason}.\nThey'll be unmuted in ${Formatters.time(Math.floor(Date.now() / 1000) + (time * 60), 'R')}`);
+                break;
+            case 'unmuted':
+                dmEmbed.setColor('Green')
+                dmEmbed.setDescription(`You have been unmuted from ${interaction.guild.name}`);
+                embed.setDescription(`${user} is now ${past} `)
+                break;
+            default:
+                dmEmbed.setDescription(`You have been ${past} from ${interaction.guild.name} for ${reason} on ${Formatters.time(new Date(), 'F')}`);
+                embed.setDescription(`${user} was ${past} for \`${reason}.\``)
+                break;
         }
-    } else if (interactionEvent.customId === 'cancel') {
+        const dmMessage = await user.send({ embeds: [dmEmbed] });
+        const serverMessage = await interaction.followUp({ embeds: [embed] });
+        setTimeout(() => {
+            dmMessage.delete();
+            serverMessage.delete();
+        }, time * 60000);
+        return { approve: true }
+    } else if (interactionEvent.customId === 'cancel' || !interactionEvent) {
         interactionEvent.deferUpdate();
         interaction.editReply({
             components: [
@@ -178,8 +157,8 @@ const approvalFunction = async (interaction, embed) => { //yes
                 )
             ]
         })
-        return {
-            approve: false,
-        }
+        const embed = new EmbedBuilder().setColor('Red').setTitle('Cancelled').setDescription(`${user.username} was not ${past}`)
+        if (!interactionEvent) embed.setFooter({ text: 'Reason: Timeout' })
+        await interaction.followUp({ embeds: [embed] })
     }
-} 
+}

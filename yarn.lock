@@ -548,10 +548,10 @@ discord-api-types@^0.34.0:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.34.0.tgz#62d6a3bfc9c8199b47fd4ef58dc9fd4bc108c697"
   integrity sha512-xwlhwiLZ11+8+ou1JlPOLJkwpu8qklm+aUm9JF06YC59fSo4CD7gQqsbUBxqevqheLx+WhRgJOHjDbjI0Q+Ecw==
 
-discord.js@^14.0.0-dev.1655511041-2681929:
-  version "14.0.0-dev.1655511041-2681929"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1655511041-2681929.tgz#6d5e693901034ec0fd659e86cb0cc548933171e5"
-  integrity sha512-/2xEdzxaUPH7DTSZQb5H2d0YRk1ZGcmw4adkMNib0MUh/agoM9sh//w7+5/l/Fyxe8xNFwlwyIqBYA3pTTDsmQ==
+discord.js@^14.0.0-dev.1655770161-94f7ca9:
+  version "14.0.0-dev.1655770161-94f7ca9"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1655770161-94f7ca9.tgz#0f812c1f0019f2427c7f6b6e926243f6b7e1579c"
+  integrity sha512-OMh5DscGqjjJ1y4uYti13XT2yboVprUc+vsJq8QK6WsA959lYOkMshPqqulpU4eYM/uWZeyjkh1ff+4mpzzhQQ==
   dependencies:
     "@discordjs/builders" "^0.16.0-dev"
     "@discordjs/collection" "^0.8.0-dev"
@@ -562,7 +562,7 @@ discord.js@^14.0.0-dev.1655511041-2681929:
     fast-deep-equal "^3.1.3"
     lodash.snakecase "^4.1.1"
     tslib "^2.4.0"
-    undici "^5.4.0"
+    undici "^5.5.1"
     ws "^8.8.0"
 
 dom-serializer@^2.0.0:
@@ -1571,7 +1571,7 @@ undefsafe@^2.0.5:
   resolved "https://registry.npmjs.org/undefsafe/-/undefsafe-2.0.5.tgz"
   integrity sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==
 
-undici@^5.4.0:
+undici@^5.4.0, undici@^5.5.1:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.5.1.tgz#baaf25844a99eaa0b22e1ef8d205bffe587c8f43"
   integrity sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==
