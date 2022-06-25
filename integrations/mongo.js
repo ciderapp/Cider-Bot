@@ -83,6 +83,7 @@ export const mongo = {
     async syncReleaseData(branch) {
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
         releases = await releases.json()
+        releases.sort ((a, b) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
         let macDmg = ""; let macPkg = "";
         if (branch == 'main') {
             macDmg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg"
