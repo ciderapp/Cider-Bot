@@ -5,14 +5,13 @@ import { ActivityType } from 'discord.js';
 export const event = {
     name: 'presenceUpdate',
 
-    async execute(oldMember, newMember, activeUsers, totalUsers) {
+    async execute(oldMember, newMember) {
         //If role not found in guild, do nothing.
         try { if (oldMember.guild.id !== cider_guild || newMember.guild.id !== cider_guild) return } catch (e) { return }
         // or else it'll go BONK
         const role = newMember.guild.roles.cache.get("932784788115427348");
-        let using_cider = false
-        let client = newMember.client
-        
+        let using_cider = false;
+        let { client } = await import('../index.js');
         for (const activity of newMember.activities) {
             
             // 911790844204437504 - Cider
@@ -37,8 +36,8 @@ export const event = {
                     try {
                         mongo.incrementActiveUsers().then(() => {
                             mongo.getActiveUsers().then(users => {
-                                activeUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                                client.activeUsers = users;
+                                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {
@@ -57,8 +56,8 @@ export const event = {
                         newMember.member.roles.add("932816700305469510")
                         mongo.incrementTotalUsers().then(() => {
                             mongo.getTotalUsers().then(users => {
-                                totalUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                                client.totalUsers = users;
+                                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {
@@ -86,8 +85,8 @@ export const event = {
                     try {
                         mongo.decrementActiveUsers().then(() => {
                             mongo.getActiveUsers().then(users => {
-                                activeUsers = users;
-                                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                                client.activeUsers = users;
+                                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                             })
                         })
                     } catch (e) {

@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, Partials, Collection, ActivityType, resolveColor } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
-// import express from './integrations/express.js';
+import { app } from './integrations/express.js';
 import { mongo } from './integrations/mongo.js';
 import { guildId, errorChannel, token } from './local.js';
 
@@ -18,8 +18,11 @@ const client = new Client({
 
 client.commands = new Collection();
 client.interactions = new Collection();
+client.category = new Collection();
 client.events = [];
 client.replies = [];
+client.totalUsers = 0;
+client.activeUsers = 0;
 client.canPingKeefe = true;
 export { client };
 
@@ -29,7 +32,7 @@ const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js
 for (const file of commandFiles) {
     const { command } = await import(`./commands/${file}`);
     client.commands.set(command.data.name, command);
-    consola.info("\x1b[32m%s\x1b[0m", "Registered Command:", command.data.name);
+    consola.info("\x1b[32m%s\x1b[0m", "Registered Command:", command.data.name, command?.category);
 }
 // Inport Interaction files
 const interactionFiles = readdirSync('./interactions').filter(file => file.endsWith('.js'));
@@ -53,7 +56,6 @@ for (const file of eventFiles) {
     consola.info("\x1b[32m%s\x1b[0m", "Registered Event:", event.name);
 }
 
-let totalUsers, activeUsers;
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
@@ -64,11 +66,11 @@ client.on('ready', () => {
         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
         mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
         mongo.getActiveUsers().then(users => {
-            activeUsers = users;
+            client.activeUsers = users;
             mongo.getTotalUsers().then(users => {
-                totalUsers = users;
-                client.user.setActivity(`${activeUsers} / ${totalUsers} Active Cider Users`, { type: ActivityType.Watching });
-                consola.info(`Total Users: ${totalUsers} | Active Users: ${activeUsers}`)
+                client.totalUsers = users;
+                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
             })
         })
     }
@@ -77,7 +79,7 @@ client.on('ready', () => {
 client.login(token);
 
 /* Event Handlers */
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember, activeUsers, totalUsers) });
+client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
 
 client.on('messageCreate', async (message) => {
     // consola.info(client.replies);
