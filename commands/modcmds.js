@@ -49,7 +49,7 @@ export const command = {
                         .setDescription(`Are you sure you want to ${interaction.options.getSubcommand()} ${user} for ${reason}?\nYou have a minute to respond.`)
                     )
                     if (approval.approve) {
-                        await user.ban({ reason });
+                        await user.ban({ reason, deleteMessageDays: 7 });
                     }
                 } else if (interaction.options.getSubcommand() === 'mute') {
                     const approval = await approvalFunction(
