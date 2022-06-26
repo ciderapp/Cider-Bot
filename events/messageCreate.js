@@ -161,7 +161,7 @@ export const event = {
         }
         if(message.channel.id === '952324765807439883') { // marin channel
             if(message.content != 'marin') {
-                await message.author.send({ content: 'This is a marin chain channel, You are only allowed to send messages with the word \`marin\`.', ephemeral: true })
+                await message.reply({ content: 'This is a marin chain channel, You are only allowed to send messages with the word \`marin\`.', ephemeral: true })
                 await message.delete()
             }
         }
