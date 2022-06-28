@@ -8,6 +8,7 @@ export const command = {
             .setDescription('Show invite to everyone!')
             .setRequired(false)
         ),
+    category: 'General',
     async execute(interaction) {
         let show = interaction.options.getBoolean('show') || true
         await interaction.reply({ content: `:detective: Join the Cider: After Dark Server! \nhttps://discord.gg/fNXzTB9FtW`, ephemeral: !show });

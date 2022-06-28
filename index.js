@@ -34,7 +34,7 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Command:", command.data.name, command?.category);
 }
-// Inport Interaction files
+// Import Interaction files
 const interactionFiles = readdirSync('./interactions').filter(file => file.endsWith('.js'));
 for (const file of interactionFiles) {
     const { interaction } = await import(`./interactions/${file}`);

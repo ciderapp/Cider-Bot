@@ -4,6 +4,7 @@ export const command = {
   data: new SlashCommandBuilder()
     .setName("ping")
     .setDescription("Get the bots latency!"),
+  category: 'General',
   execute: async (interaction) => {
     let test = Date.now()
     // await interaction.reply({ embeds:[{color: "#0099ff", description: "Pinging ..."}] })

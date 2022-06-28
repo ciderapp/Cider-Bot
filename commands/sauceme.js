@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 
 export const command = {
     data: new SlashCommandBuilder().setName('sauceme').setDescription('Gives you a random extra saucy image (18+)'),
+    category: 'Image',
     async execute(interaction) {
         let saucerequest = await fetch('https://api.waifu.im/random/?selected_tags=hentai')
         let sauce = await saucerequest.json()

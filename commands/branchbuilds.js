@@ -12,7 +12,8 @@ export const command = {
         .addUserOption(option => option.setName('ping')
             .setDescription('User to respond to (for use by Dev Team and Moderators only)')
             .setRequired(false)
-        ),
+    ),
+    category: 'General',
     async execute(interaction) {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false

@@ -10,7 +10,8 @@ export const command = {
         .addStringOption(option => option.setName('email')
             .setDescription('Email used')
             .setRequired(true)
-        ),
+    ),
+    category: 'Donation',
     async execute(interaction) {
         //await interaction.reply({content: 'Not implemented yet', ephemeral: true})
         let email = interaction.options.getString('email');
