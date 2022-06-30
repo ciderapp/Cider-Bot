@@ -353,10 +353,10 @@ cheerio-select@^2.1.0:
     domhandler "^5.0.3"
     domutils "^3.0.1"
 
-cheerio@^1.0.0-rc.10:
-  version "1.0.0-rc.11"
-  resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.11.tgz#1be84be1a126958366bcc57a11648cd9b30a60c2"
-  integrity sha512-bQwNaDIBKID5ts/DsdhxrjqFXYfLw4ste+wMKqWA8DyKcS4qwsPP4Bk8ZNaTJjvpiX/qW3BT4sU7d6Bh5i+dag==
+cheerio@^1.0.0-rc.12:
+  version "1.0.0-rc.12"
+  resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.12.tgz#788bf7466506b1c6bf5fae51d24a2c4d62e47683"
+  integrity sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==
   dependencies:
     cheerio-select "^2.1.0"
     dom-serializer "^2.0.0"
@@ -365,7 +365,6 @@ cheerio@^1.0.0-rc.10:
     htmlparser2 "^8.0.1"
     parse5 "^7.0.0"
     parse5-htmlparser2-tree-adapter "^7.0.0"
-    tslib "^2.4.0"
 
 chokidar@^3.5.2:
   version "3.5.3"
@@ -537,15 +536,15 @@ discord-api-types@^0.33.3, discord-api-types@^0.33.5:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.33.5.tgz#6548b70520f7b944c60984dca4ab58654d664a12"
   integrity sha512-dvO5M52v7m7Dy96+XUnzXNsQ/0npsYpU6dL205kAtEDueswoz3aU3bh1UMoK4cQmcGtB1YRyLKqp+DXi05lzFg==
 
-discord-api-types@^0.35.0:
-  version "0.35.0"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.35.0.tgz#85c6ea95f27580ad13b7a08444b16cb31d41e5e2"
-  integrity sha512-aaIbVgPk7OA3y/HdG00tRM2nB8B3sSPH6KXgamBLRrcAJEQ8XZJNNKeRr0WVzw/lprdpKHKuTNX1DNrYnD5cOw==
+discord-api-types@^0.36.0:
+  version "0.36.0"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.36.0.tgz#73a60804e2d62c5dd07954dc055a846e57aaf34d"
+  integrity sha512-bazR7FWko6JY4xwoa4Ds4SCRTKGvbzq2ivAuZxiR79RJipU+IXYNvy4tiUt8ixcs2bI04JOQwgHvz491lruBaw==
 
-discord.js@^14.0.0-dev.1656158629-c4653f9:
-  version "14.0.0-dev.1656158629-c4653f9"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1656158629-c4653f9.tgz#1d78ff80fd6edc95aedd586bc1c4af63504e0cb5"
-  integrity sha512-lgHs1LGbAdlpBY5te+8iXMEAoA5FFB9wzFLqfzTedLCDM5IKuadXVUxwLktUmQk/jjeAzGD4+lQ+eEVfWTvWXQ==
+discord.js@^14.0.0-dev.1656590649-525bf03:
+  version "14.0.0-dev.1656590649-525bf03"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1656590649-525bf03.tgz#96f6b71ea668ea4ccbc00e3ac7ede35a16d70c0b"
+  integrity sha512-kcKhxdke/KB1SXEALcQopRUrmITLkCGW3mQfCUw3F5hctREWC9BXJTH6a0m9rquyVR/Yqv20BD/4o3voXTIrHQ==
   dependencies:
     "@discordjs/builders" "^0.16.0-dev"
     "@discordjs/collection" "^0.8.0-dev"

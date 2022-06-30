@@ -161,7 +161,7 @@ export const event = {
         }
         if(message.channel.id === '952324765807439883') { // marin channel
             if(message.content != 'marin') {
-                reply = await message.send({ content: `${message.user}, This is a marin chain channel, You are only allowed to send messages with the word \`marin\`.`, ephemeral: true })
+                reply = await message.channel.send({ content: `${message.user}, This is a marin chain channel, You are only allowed to send messages with the word \`marin\`.`, ephemeral: true })
                 await message.delete()
                 setTimeout(() => reply.delete(), 10000) // delete message after 10 seconds
             }
