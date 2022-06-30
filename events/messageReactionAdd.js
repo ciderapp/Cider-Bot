@@ -1,5 +1,5 @@
-import { guildId as cider_guild }  from '../local.js';
-import { starboardChannel } from '../local.js';
+import { guildId as cider_guild, starboardChannel }  from '../local.js';
+import { resolveColor } from 'discord.js';
 
 export const event = {
     name: 'messageReactionAdd',
@@ -16,7 +16,7 @@ export const event = {
             if (existingMsg) existingMsg.edit(`⭐ **${reaction.count}** ${reaction.message.channel}`);
             else {
                 const embeds = [{
-                    color: "#ffff00",
+                    color: resolveColor('RANDOM'),
                     author: { name: reaction.message.author.username, icon_url: reaction.message.author.avatarURL() },
                     description: `${reaction.message.content}`,
                     fields: [{ name: "Source", value: `[Jump!](${reaction.message.url})` }],
