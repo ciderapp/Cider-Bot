@@ -16,7 +16,7 @@ export const event = {
             if (existingMsg) existingMsg.edit(`⭐ **${reaction.count}** ${reaction.message.channel}`);
             else {
                 const embeds = [{
-                    color: resolveColor('RANDOM'),
+                    color: resolveColor('Random'),
                     author: { name: reaction.message.author.username, icon_url: reaction.message.author.avatarURL() },
                     description: `${reaction.message.content}`,
                     fields: [{ name: "Source", value: `[Jump!](${reaction.message.url})` }],

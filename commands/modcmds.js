@@ -158,7 +158,7 @@ const approvalFunction = async (interaction, embed) => {
                 )
             ]
         })
-        const embed = new EmbedBuilder().setColor('Red').setTitle('Cancelled').setDescription(`${user.username} was not ${past}`)
+        const embed = new EmbedBuilder().setColor('Red').setTitle('Cancelled').setDescription(`${user.tag} was not ${past}`)
         if (!interactionEvent) embed.setFooter({ text: 'Reason: Timeout' })
         await interaction.followUp({ embeds: [embed] })
     }
