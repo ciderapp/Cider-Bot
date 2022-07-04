@@ -43,7 +43,7 @@ export const interaction = {
                         if (buttonsMac.components.length == 0) {
                             await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons] })
                         } else {
-                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast replyd: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
+                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
                         }
                     }
                 }
