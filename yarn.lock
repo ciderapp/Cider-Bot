@@ -47,41 +47,41 @@
     tslib "^2.4.0"
     undici "^5.5.1"
 
-"@octokit/auth-token@^2.4.4":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@octokit/auth-token/-/auth-token-2.5.0.tgz#27c37ea26c205f28443402477ffd261311f21e36"
-  integrity sha512-r5FVUJCOLl19AxiuZD2VRZ/ORjp/4IN98Of6YJoJOkY75CIBuYfmiNHGrDwXr+aLGG55igl9QrxX3hbiXlLb+g==
+"@octokit/auth-token@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/auth-token/-/auth-token-3.0.0.tgz#6f22c5fc56445c496628488ba6810131558fa4a9"
+  integrity sha512-MDNFUBcJIptB9At7HiV7VCvU3NcL4GnfCQaP8C5lrxWrRPMJBnemYtehaKSOlaM7AYxeRyj9etenu8LVpSpVaQ==
   dependencies:
     "@octokit/types" "^6.0.3"
 
-"@octokit/core@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-3.6.0.tgz#3376cb9f3008d9b3d110370d90e0a1fcd5fe6085"
-  integrity sha512-7RKRKuA4xTjMhY+eG3jthb3hlZCsOwg3rztWh75Xc+ShDWOfDDATWbeZpAHBNRpm4Tv9WgBMOy1zEJYXG6NJ7Q==
+"@octokit/core@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@octokit/core/-/core-4.0.4.tgz#335d9b377691e3264ce57a9e5a1f6cda783e5838"
+  integrity sha512-sUpR/hc4Gc7K34o60bWC7WUH6Q7T6ftZ2dUmepSyJr9PRF76/qqkWjE2SOEzCqLA5W83SaISymwKtxks+96hPQ==
   dependencies:
-    "@octokit/auth-token" "^2.4.4"
-    "@octokit/graphql" "^4.5.8"
-    "@octokit/request" "^5.6.3"
-    "@octokit/request-error" "^2.0.5"
+    "@octokit/auth-token" "^3.0.0"
+    "@octokit/graphql" "^5.0.0"
+    "@octokit/request" "^6.0.0"
+    "@octokit/request-error" "^3.0.0"
     "@octokit/types" "^6.0.3"
     before-after-hook "^2.2.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/endpoint@^6.0.1":
-  version "6.0.12"
-  resolved "https://registry.yarnpkg.com/@octokit/endpoint/-/endpoint-6.0.12.tgz#3b4d47a4b0e79b1027fb8d75d4221928b2d05658"
-  integrity sha512-lF3puPwkQWGfkMClXb4k/eUT/nZKQfxinRWJrdZaJO85Dqwo/G0yOC434Jr2ojwafWJMYqFGFa5ms4jJUgujdA==
+"@octokit/endpoint@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/endpoint/-/endpoint-7.0.0.tgz#be758a1236d68d6bbb505e686dd50881c327a519"
+  integrity sha512-Kz/mIkOTjs9rV50hf/JK9pIDl4aGwAtT8pry6Rpy+hVXkAPhXanNQRxMoq6AeRgDCZR6t/A1zKniY2V1YhrzlQ==
   dependencies:
     "@octokit/types" "^6.0.3"
     is-plain-object "^5.0.0"
     universal-user-agent "^6.0.0"
 
-"@octokit/graphql@^4.5.8":
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-4.8.0.tgz#664d9b11c0e12112cbf78e10f49a05959aa22cc3"
-  integrity sha512-0gv+qLSBLKF0z8TKaSKTsS39scVKF9dbMxJpj3U0vC7wjNWFuIpL/z76Qe2fiuCbDRcJSavkXsVtMS6/dtQQsg==
+"@octokit/graphql@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/graphql/-/graphql-5.0.0.tgz#2cc6eb3bf8e0278656df1a7d0ca0d7591599e3b3"
+  integrity sha512-1ZZ8tX4lUEcLPvHagfIVu5S2xpHYXAmgN0+95eAOPoaVPzCfUXJtA5vASafcpWcO86ze0Pzn30TAx72aB2aguQ==
   dependencies:
-    "@octokit/request" "^5.6.0"
+    "@octokit/request" "^6.0.0"
     "@octokit/types" "^6.0.3"
     universal-user-agent "^6.0.0"
 
@@ -90,22 +90,22 @@
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-12.4.0.tgz#fd8bf5db72bd566c5ba2cb76754512a9ebe66e71"
   integrity sha512-Npcb7Pv30b33U04jvcD7l75yLU0mxhuX2Xqrn51YyZ5WTkF04bpbxLaZ6GcaTqu03WZQHoO/Gbfp95NGRueDUA==
 
-"@octokit/request-error@^2.0.5", "@octokit/request-error@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@octokit/request-error/-/request-error-2.1.0.tgz#9e150357831bfc788d13a4fd4b1913d60c74d677"
-  integrity sha512-1VIvgXxs9WHSjicsRwq8PlR2LR2x6DwsJAaFgzdi0JfJoGSO8mYI/cHJQ+9FbN21aa+DrgNLnwObmyeSC8Rmpg==
+"@octokit/request-error@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@octokit/request-error/-/request-error-3.0.0.tgz#f527d178f115a3b62d76ce4804dd5bdbc0270a81"
+  integrity sha512-WBtpzm9lR8z4IHIMtOqr6XwfkGvMOOILNLxsWvDwtzm/n7f5AWuqJTXQXdDtOvPfTDrH4TPhEvW2qMlR4JFA2w==
   dependencies:
     "@octokit/types" "^6.0.3"
     deprecation "^2.0.0"
     once "^1.4.0"
 
-"@octokit/request@^5.6.0", "@octokit/request@^5.6.3":
-  version "5.6.3"
-  resolved "https://registry.yarnpkg.com/@octokit/request/-/request-5.6.3.tgz#19a022515a5bba965ac06c9d1334514eb50c48b0"
-  integrity sha512-bFJl0I1KVc9jYTe9tdGGpAMPy32dLBXXo1dS/YwSCTL/2nd9XeHsY616RE3HPXDVk+a+dBuzyz5YdlXwcDTr2A==
+"@octokit/request@^6.0.0":
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/@octokit/request/-/request-6.0.2.tgz#c27fff8b001692014a21d96dc38ace74d3cb3958"
+  integrity sha512-WPMcm8nUET2v6P5AbTIhNzEorMLFPbFnzfP/VMAaRFwNzaqHmVvS+YLvqtWyKq0vnZ6a9ImQuCHNb3L4oNovRw==
   dependencies:
-    "@octokit/endpoint" "^6.0.1"
-    "@octokit/request-error" "^2.1.0"
+    "@octokit/endpoint" "^7.0.0"
+    "@octokit/request-error" "^3.0.0"
     "@octokit/types" "^6.16.1"
     is-plain-object "^5.0.0"
     node-fetch "^2.6.7"
@@ -541,21 +541,21 @@ discord-api-types@^0.36.1:
   resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.36.1.tgz#f6df24c090535bf2e5aea577f906f9aa4a9fe63b"
   integrity sha512-PTDinUU574hXA9Ko9wrftL1iww1raNiRVKjuPIWQ5Li1g7vQPArpZWw9x01kh/IXLPdzSAJ6H8T0eAYzxzFzIg==
 
-discord.js@^14.0.0-dev.1657066252-68c3d87:
-  version "14.0.0-dev.1657066252-68c3d87"
-  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657066252-68c3d87.tgz#4fc367aabaa9a82e0c7ecb0756506c8828158b2b"
-  integrity sha512-26IpNv7HzeMjycePpvkMsehQpGhpOi8eMkdKml5V3XJMLcZ7FAl382I+J9tfk2V/xm7fOdFbGumb2y9XPBZw0w==
+discord.js@^14.0.0-dev.1657411900-f0b68d5:
+  version "14.0.0-dev.1657411900-f0b68d5"
+  resolved "https://registry.yarnpkg.com/discord.js/-/discord.js-14.0.0-dev.1657411900-f0b68d5.tgz#aedca6c41fc64aacfd9f9d9ddd4b7ee57926eec0"
+  integrity sha512-mPeIaxthGZEc4qKi6HzWnMIbHOh63qJHr37qFWMoDZpYOPht7Q1V2w3eGh7e30kCoh1BNrLGaeYqwRxpYENjsg==
   dependencies:
     "@discordjs/builders" "^0.16.0-dev"
     "@discordjs/collection" "^0.8.0-dev"
     "@discordjs/rest" "^0.6.0-dev"
     "@sapphire/snowflake" "^3.2.2"
     "@types/ws" "^8.5.3"
-    discord-api-types "^0.33.5"
+    discord-api-types "^0.36.1"
     fast-deep-equal "^3.1.3"
     lodash.snakecase "^4.1.1"
     tslib "^2.4.0"
-    undici "^5.5.1"
+    undici "^5.6.0"
     ws "^8.8.0"
 
 dom-serializer@^2.0.0:
@@ -1580,6 +1580,11 @@ undici@^5.4.0, undici@^5.5.1:
   version "5.5.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.5.1.tgz#baaf25844a99eaa0b22e1ef8d205bffe587c8f43"
   integrity sha512-MEvryPLf18HvlCbLSzCW0U00IMftKGI5udnjrQbC5D4P0Hodwffhv+iGfWuJwg16Y/TK11ZFK8i+BPVW2z/eAw==
+
+undici@^5.6.0:
+  version "5.6.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.6.1.tgz#7e5c56d15032d06738358dea433f98130e2a0561"
+  integrity sha512-yYVqywdCbNb99f/w045wqmv++WExXDjY0FEvLSB7QUZZH6izxrVkF4dJn1aimcvN0+WAhv75Gg7v6VJoqmRtJQ==
 
 unique-string@^2.0.0:
   version "2.0.0"

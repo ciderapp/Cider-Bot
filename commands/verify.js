@@ -13,7 +13,7 @@ export const command = {
     ),
     category: 'Donation',
     async execute(interaction) {
-        //await interaction.reply({content: 'Not implemented yet', ephemeral: true})
+        await interaction.reply({content: 'Verifying your Donation/s from OpenCollective...', ephemeral: true})
         let email = interaction.options.getString('email');
         let ocResult = await fetch(`https://api.opencollective.com/v1/collectives/ciderapp/transactions/?apiKey=` + oc_token)
         ocResult = await ocResult.json();
@@ -25,17 +25,18 @@ export const command = {
             donations.push(transaction)
         })
         if (donations.length === 0) {
-            await interaction.reply({ content: 'You have not donated to CiderApp', ephemeral: true })
+            await interaction.editReply({ content: 'You have not donated to CiderApp', ephemeral: true })
         } else {
             let embed = new EmbedBuilder()
             .setTitle('Your donations')
             .setColor('Random')
             donations.forEach(donation => {
-                embed.addField(donation.createdAt, `
-                Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
+                embed.addFields({ 
+                    name: donation.createdAt, 
+                    value: `Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
                 Payment Processor Fee: \`${donation.paymentProcessorFeeInHostCurrency / 100}\` ${donation.hostCurrency}
                 Received Amount: \`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}
-                `)
+                `})
                 mongo.addDonation(donation, interaction.member.id)
             })
             if (interaction.guild.id === '843954443845238864') {
@@ -48,7 +49,7 @@ export const command = {
                 }
             }
 
-            await interaction.reply({ content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true })
+            await interaction.editReply({ content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true })
         }
     },
 };
