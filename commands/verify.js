@@ -30,7 +30,6 @@ export const command = {
             let embed = new EmbedBuilder()
             .setTitle('Your donations')
             .setColor('Random')
-            .setDescription('')
             donations.forEach(donation => {
                 embed.addField(donation.createdAt, `
                 Initial Donation: \`${donation.amount / 100}\` ${donation.hostCurrency}
