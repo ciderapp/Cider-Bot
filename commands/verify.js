@@ -40,7 +40,7 @@ export const command = {
                 mongo.addDonation(donation, interaction.member.id)
             })
             if (interaction.guild.id === '843954443845238864') {
-                embed.setFooter('Your role should be given to you shortly')
+                embed.setFooter({text: 'Your role should be given to you shortly'})
                 try {
                     interaction.guild.members.cache.get(interaction.member.id).roles.add('923351772532199445')
                     interaction.guild.members.cache.get(interaction.member.id).roles.add('932811694751768656')
