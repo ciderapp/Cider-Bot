@@ -1,0 +1,675 @@
+{
+    "admin": true,
+    "banner_url": null,
+    "country": "PH",
+    "guild": {
+        "allow_join": false,
+        "icon": "c0705871f1a7689b24ab23825094537f",
+        "id": "940857077604167701",
+        "invite_leaderboard": false,
+        "leaderboard_url": "https://mee6.xyz/leaderboard/940857077604167701",
+        "name": "After Dark",
+        "premium": false
+    },
+    "is_member": true,
+    "page": 0,
+    "player": {
+        "avatar": "f28db14f038a914d52f9e08e58aeefb5",
+        "detailed_xp": [
+            1541,
+            1780,
+            11586
+        ],
+        "discriminator": "3213",
+        "guild_id": "940857077604167701",
+        "id": "325495275454070786",
+        "level": 14,
+        "message_count": 580,
+        "rank": 1,
+        "username": "Shawwwn",
+        "xp": 11586
+    },
+    "players": [
+        {
+            "avatar": "f28db14f038a914d52f9e08e58aeefb5",
+            "detailed_xp": [
+                1541,
+                1780,
+                11586
+            ],
+            "discriminator": "3213",
+            "guild_id": "940857077604167701",
+            "id": "325495275454070786",
+            "level": 14,
+            "message_count": 580,
+            "username": "Shawwwn",
+            "xp": 11586
+        },
+        {
+            "avatar": "b2154dbb4c8aa0c82cf63a2e936f60aa",
+            "detailed_xp": [
+                383,
+                1780,
+                10428
+            ],
+            "discriminator": "0002",
+            "guild_id": "940857077604167701",
+            "id": "500315184510795819",
+            "level": 14,
+            "message_count": 522,
+            "username": "Monochromish",
+            "xp": 10428
+        },
+        {
+            "avatar": "a7311219fffe06e8157aabbb3c0cd3a0",
+            "detailed_xp": [
+                706,
+                955,
+                4426
+            ],
+            "discriminator": "0246",
+            "guild_id": "940857077604167701",
+            "id": "470057716459765760",
+            "level": 9,
+            "message_count": 222,
+            "username": "GamingLiamStudios",
+            "xp": 4426
+        },
+        {
+            "avatar": "304b12f9b914d1c74e017b6ce21e5f05",
+            "detailed_xp": [
+                388,
+                820,
+                3288
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "191621342473224192",
+            "level": 8,
+            "message_count": 163,
+            "username": "cryptofyre",
+            "xp": 3288
+        },
+        {
+            "avatar": "cfe8173269c7643934ae95c5776c4de4",
+            "detailed_xp": [
+                27,
+                820,
+                2927
+            ],
+            "discriminator": "7139",
+            "guild_id": "940857077604167701",
+            "id": "130226501047025664",
+            "level": 8,
+            "message_count": 145,
+            "username": "booploops",
+            "xp": 2927
+        },
+        {
+            "avatar": "fe987f0c87b5a4e376411b2b27eee8d9",
+            "detailed_xp": [
+                117,
+                580,
+                1742
+            ],
+            "discriminator": "7780",
+            "guild_id": "940857077604167701",
+            "id": "371764280254660621",
+            "level": 6,
+            "message_count": 88,
+            "username": "KillerParticles",
+            "xp": 1742
+        },
+        {
+            "avatar": "678df3b4dba78c403b4ddc318ec02d25",
+            "detailed_xp": [
+                88,
+                580,
+                1713
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "266001128318042113",
+            "level": 6,
+            "message_count": 85,
+            "username": "Maikiwi",
+            "xp": 1713
+        },
+        {
+            "avatar": "a8c8aa954539ee19e747974f175e8d90",
+            "detailed_xp": [
+                319,
+                380,
+                1089
+            ],
+            "discriminator": "9037",
+            "guild_id": "940857077604167701",
+            "id": "345021804210814976",
+            "level": 4,
+            "message_count": 54,
+            "username": "freejackz",
+            "xp": 1089
+        },
+        {
+            "avatar": "639844d00031b4d6ede3fa8478141010",
+            "detailed_xp": [
+                271,
+                380,
+                1041
+            ],
+            "discriminator": "1337",
+            "guild_id": "940857077604167701",
+            "id": "295808050416320513",
+            "level": 4,
+            "message_count": 51,
+            "username": "FluffySnowman",
+            "xp": 1041
+        },
+        {
+            "avatar": "a_ed1508437b1d214bb3ac780240f7fc49",
+            "detailed_xp": [
+                169,
+                380,
+                939
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "569910296303632414",
+            "level": 4,
+            "message_count": 48,
+            "username": "Quacksire",
+            "xp": 939
+        },
+        {
+            "avatar": "d29f88280e9f1b8a5674c701e033a3aa",
+            "detailed_xp": [
+                143,
+                380,
+                913
+            ],
+            "discriminator": "4910",
+            "guild_id": "940857077604167701",
+            "id": "451861000535277568",
+            "level": 4,
+            "message_count": 47,
+            "username": "crypticplank",
+            "xp": 913
+        },
+        {
+            "avatar": "b85e2d27598b9aba2c46376277f27e4f",
+            "detailed_xp": [
+                71,
+                380,
+                841
+            ],
+            "discriminator": "2282",
+            "guild_id": "940857077604167701",
+            "id": "804106749186539541",
+            "level": 4,
+            "message_count": 42,
+            "username": "Mattscreative",
+            "xp": 841
+        },
+        {
+            "avatar": "ec55633202da04d53373314d9856b113",
+            "detailed_xp": [
+                82,
+                295,
+                557
+            ],
+            "discriminator": "6936",
+            "guild_id": "940857077604167701",
+            "id": "467439327056756742",
+            "level": 3,
+            "message_count": 28,
+            "username": "mrwhosethesus",
+            "xp": 557
+        },
+        {
+            "avatar": "81c82f063053d348e59a407328c24de4",
+            "detailed_xp": [
+                24,
+                295,
+                499
+            ],
+            "discriminator": "5814",
+            "guild_id": "940857077604167701",
+            "id": "728847567806267405",
+            "level": 3,
+            "message_count": 26,
+            "username": "keefe",
+            "xp": 499
+        },
+        {
+            "avatar": "a_f7d0de92c2e4adad80f4f17a8c7f2551",
+            "detailed_xp": [
+                199,
+                220,
+                454
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "204039588988059649",
+            "level": 2,
+            "message_count": 23,
+            "username": "Revod",
+            "xp": 454
+        },
+        {
+            "avatar": "6962811b396d599a5ff84cf9d4d88499",
+            "detailed_xp": [
+                131,
+                220,
+                386
+            ],
+            "discriminator": "1337",
+            "guild_id": "940857077604167701",
+            "id": "370195417360629770",
+            "level": 2,
+            "message_count": 18,
+            "username": "DeadFrost.",
+            "xp": 386
+        },
+        {
+            "avatar": "a_e795c57a179902d97f23e295331d933e",
+            "detailed_xp": [
+                40,
+                220,
+                295
+            ],
+            "discriminator": "1000",
+            "guild_id": "940857077604167701",
+            "id": "546426958465073163",
+            "level": 2,
+            "message_count": 15,
+            "username": "Core",
+            "xp": 295
+        },
+        {
+            "avatar": "06f82246e39d150546a0483dead33481",
+            "detailed_xp": [
+                3,
+                220,
+                258
+            ],
+            "discriminator": "8224",
+            "guild_id": "940857077604167701",
+            "id": "228077081324421121",
+            "level": 2,
+            "message_count": 13,
+            "username": "SoNothing",
+            "xp": 258
+        },
+        {
+            "avatar": "8ccbdb13e293960ec56f13f756a3c27d",
+            "detailed_xp": [
+                140,
+                155,
+                240
+            ],
+            "discriminator": "4708",
+            "guild_id": "940857077604167701",
+            "id": "742613872220962887",
+            "level": 1,
+            "message_count": 11,
+            "username": "astro",
+            "xp": 240
+        },
+        {
+            "avatar": "a_c3bbbcabba1eff76497c6c10f51bf70c",
+            "detailed_xp": [
+                131,
+                155,
+                231
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "885494451647176744",
+            "level": 1,
+            "message_count": 11,
+            "username": "pando",
+            "xp": 231
+        },
+        {
+            "avatar": "6ff84156b72d25ff5a26120e81af660f",
+            "detailed_xp": [
+                88,
+                155,
+                188
+            ],
+            "discriminator": "4387",
+            "guild_id": "940857077604167701",
+            "id": "408699124842758151",
+            "level": 1,
+            "message_count": 9,
+            "username": "duwub",
+            "xp": 188
+        },
+        {
+            "avatar": "31367d4b074887caae742d2e64656799",
+            "detailed_xp": [
+                83,
+                155,
+                183
+            ],
+            "discriminator": "2291",
+            "guild_id": "940857077604167701",
+            "id": "152963830350217217",
+            "level": 1,
+            "message_count": 10,
+            "username": "DBJ",
+            "xp": 183
+        },
+        {
+            "avatar": "f6a70de3896372d3312013b2c16a0c39",
+            "detailed_xp": [
+                21,
+                155,
+                121
+            ],
+            "discriminator": "3533",
+            "guild_id": "940857077604167701",
+            "id": "977335633020321833",
+            "level": 1,
+            "message_count": 6,
+            "username": "SPAMTON G SPAMTON",
+            "xp": 121
+        },
+        {
+            "avatar": "ee6a657d1d0bd352fce9282934db1c95",
+            "detailed_xp": [
+                0,
+                155,
+                100
+            ],
+            "discriminator": "2431",
+            "guild_id": "940857077604167701",
+            "id": "320963704449531934",
+            "level": 1,
+            "message_count": 5,
+            "username": "brotherelric",
+            "xp": 100
+        },
+        {
+            "avatar": "",
+            "detailed_xp": [
+                97,
+                100,
+                97
+            ],
+            "discriminator": "6760",
+            "guild_id": "940857077604167701",
+            "id": "705908502027042929",
+            "level": 0,
+            "message_count": 5,
+            "username": "Thiago /Tottenham Hotspur 33/34",
+            "xp": 97
+        },
+        {
+            "avatar": "250cf9a8f8bba8df094a057a866e9ca5",
+            "detailed_xp": [
+                91,
+                100,
+                91
+            ],
+            "discriminator": "0989",
+            "guild_id": "940857077604167701",
+            "id": "418447370498473995",
+            "level": 0,
+            "message_count": 5,
+            "username": "Amaru",
+            "xp": 91
+        },
+        {
+            "avatar": "a_7e4319dc0392df2bd1cc616e7caba445",
+            "detailed_xp": [
+                91,
+                100,
+                91
+            ],
+            "discriminator": "0101",
+            "guild_id": "940857077604167701",
+            "id": "966124000294088755",
+            "level": 0,
+            "message_count": 5,
+            "username": "Raz",
+            "xp": 91
+        },
+        {
+            "avatar": "a6ca936b16a78e378fbdf1c53387e043",
+            "detailed_xp": [
+                69,
+                100,
+                69
+            ],
+            "discriminator": "0001",
+            "guild_id": "940857077604167701",
+            "id": "477660562533384213",
+            "level": 0,
+            "message_count": 3,
+            "username": "brenden",
+            "xp": 69
+        },
+        {
+            "avatar": "db9e22d7c545a4bc2678d5f5484d6c64",
+            "detailed_xp": [
+                65,
+                100,
+                65
+            ],
+            "discriminator": "2993",
+            "guild_id": "940857077604167701",
+            "id": "161109109276409856",
+            "level": 0,
+            "message_count": 3,
+            "username": "amsyar zero",
+            "xp": 65
+        },
+        {
+            "avatar": "a_fe66ff7ef3767b0d10d664bf96ced81d",
+            "detailed_xp": [
+                45,
+                100,
+                45
+            ],
+            "discriminator": "0013",
+            "guild_id": "940857077604167701",
+            "id": "196498508784730113",
+            "level": 0,
+            "message_count": 2,
+            "username": "Rath.",
+            "xp": 45
+        },
+        {
+            "avatar": "ce5932deeb637bb4b8645306aba96ef2",
+            "detailed_xp": [
+                42,
+                100,
+                42
+            ],
+            "discriminator": "2993",
+            "guild_id": "940857077604167701",
+            "id": "619593625059196948",
+            "level": 0,
+            "message_count": 2,
+            "username": "mob_status",
+            "xp": 42
+        },
+        {
+            "avatar": "e221ee8edaf54336f45d60b1ab14436f",
+            "detailed_xp": [
+                41,
+                100,
+                41
+            ],
+            "discriminator": "8406",
+            "guild_id": "940857077604167701",
+            "id": "516728265583493141",
+            "level": 0,
+            "message_count": 2,
+            "username": "Axperty",
+            "xp": 41
+        },
+        {
+            "avatar": "68d95664e1ee33ac4c2666de5004f793",
+            "detailed_xp": [
+                41,
+                100,
+                41
+            ],
+            "discriminator": "5009",
+            "guild_id": "940857077604167701",
+            "id": "538814368541048832",
+            "level": 0,
+            "message_count": 2,
+            "username": "JordanWantsHugs",
+            "xp": 41
+        },
+        {
+            "avatar": "8449d390637775688cd82dba8c9dbbda",
+            "detailed_xp": [
+                37,
+                100,
+                37
+            ],
+            "discriminator": "2454",
+            "guild_id": "940857077604167701",
+            "id": "464114186805313556",
+            "level": 0,
+            "message_count": 2,
+            "username": "Staz",
+            "xp": 37
+        },
+        {
+            "avatar": "8698ac91d23443505887c1c1a7ec325e",
+            "detailed_xp": [
+                24,
+                100,
+                24
+            ],
+            "discriminator": "7167",
+            "guild_id": "940857077604167701",
+            "id": "118902290324127745",
+            "level": 0,
+            "message_count": 1,
+            "username": "Scorpio",
+            "xp": 24
+        },
+        {
+            "avatar": "c7a43da59163c02268421e59bac5d107",
+            "detailed_xp": [
+                20,
+                100,
+                20
+            ],
+            "discriminator": "9972",
+            "guild_id": "940857077604167701",
+            "id": "417935134147477504",
+            "level": 0,
+            "message_count": 1,
+            "username": "sussyriiix",
+            "xp": 20
+        },
+        {
+            "avatar": "2908da56f963e37ce760a988fd44bfac",
+            "detailed_xp": [
+                19,
+                100,
+                19
+            ],
+            "discriminator": "6942",
+            "guild_id": "940857077604167701",
+            "id": "249638347306303499",
+            "level": 0,
+            "message_count": 1,
+            "username": "sab",
+            "xp": 19
+        },
+        {
+            "avatar": "3ea6bf551b4ffb7b7c9acd320c18e9b2",
+            "detailed_xp": [
+                19,
+                100,
+                19
+            ],
+            "discriminator": "5939",
+            "guild_id": "940857077604167701",
+            "id": "715853604325687326",
+            "level": 0,
+            "message_count": 1,
+            "username": "Matelli",
+            "xp": 19
+        },
+        {
+            "avatar": "f3968f6bf8703b1383a598df8080c0f2",
+            "detailed_xp": [
+                18,
+                100,
+                18
+            ],
+            "discriminator": "0342",
+            "guild_id": "940857077604167701",
+            "id": "564589835218845725",
+            "level": 0,
+            "message_count": 1,
+            "username": "Mefsaal",
+            "xp": 18
+        },
+        {
+            "avatar": "a_37efd5d1e1abb421e9ddbb9f99d0bb2d",
+            "detailed_xp": [
+                17,
+                100,
+                17
+            ],
+            "discriminator": "9999",
+            "guild_id": "940857077604167701",
+            "id": "107466525471944704",
+            "level": 0,
+            "message_count": 1,
+            "username": "ankimo",
+            "xp": 17
+        },
+        {
+            "avatar": "eb7e347a1e8592dc031a0864e287490a",
+            "detailed_xp": [
+                17,
+                100,
+                17
+            ],
+            "discriminator": "6745",
+            "guild_id": "940857077604167701",
+            "id": "448775783952154624",
+            "level": 0,
+            "message_count": 1,
+            "username": "QuickGunnMurugun",
+            "xp": 17
+        },
+        {
+            "avatar": "a_be1695b2a4837c8ade0f705eb5bcbc94",
+            "detailed_xp": [
+                16,
+                100,
+                16
+            ],
+            "discriminator": "3821",
+            "guild_id": "940857077604167701",
+            "id": "258424206180483082",
+            "level": 0,
+            "message_count": 1,
+            "username": "Minimunch57",
+            "xp": 16
+        }
+    ],
+    "role_rewards": [],
+    "user_guild_settings": {
+        "guild_id": "940857077604167701",
+        "use_default_rank_card": true,
+        "user_id": "325495275454070786"
+    },
+    "xp_per_message": [
+        15,
+        25
+    ],
+    "xp_rate": 1.0
+}
