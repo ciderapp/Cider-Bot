@@ -8,7 +8,6 @@ export const event = {
 
     async execute(message, replies) {
         const overrideRegex = new RegExp(/^\!/g);
-        const profanityFilter = new RegExp(/fuck|shitty|bullshit|piss|cunt|tits|cock|bitch/gi)
         const lRatio = (reaction, user) => {
             return reaction.emoji.name === "🇱"
         };
@@ -20,17 +19,7 @@ export const event = {
             }
         });
         if (message.author.bot) return
-
-        if (message.member.guild.id == "843954443845238864" && !message.member._roles.includes("848363050205446165")) // if not dev team
-        {
-            if (message.content.match(profanityFilter)) {
-                message.reply({ content: `${message.author} Hey, that's some spicy vocabulary you got there.  It has no place in this Christian family friendly server.  Try here instead: https://discord.gg/fNXzTB9FtW` })
-                // delete after 10 seconds
-                // setTimeout(() => {
-                //     message.delete()
-                // }, 10000);
-            }
-        }
+        
         /* Change Apple Music Link */
         if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
             const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
@@ -78,7 +67,7 @@ export const event = {
                 fetch("https://api.song.link/v1-alpha.1/links?url=" + link + "&userCountry=US").catch(e => consola.error("[Link] Error creating Spotify redirect embed."))
                     .then(result => result.json()).catch(e => null)
                     .then(json => {
-                        if (json.linksByPlatform.appleMusic) {
+                        if (json.statusCode !== 400 && json.linksByPlatform.appleMusic) {
                             const amlink = json.linksByPlatform.appleMusic.url
                             fetch(amlink).catch(e => consola.error("[Link] Error creating redirect embed."))
                                 .then(result => result.text()).catch(e => null)
@@ -116,7 +105,7 @@ export const event = {
                                     } catch (e) { consola.error(e) }
                                 }).catch(e => null)
                         } else {
-                            message.reply({ content: "Sorry, this song cannot be played in Cider." })
+                            message.reply({ content: "Sorry, this song cannot be played in Cider. / Spotify Playlists are not currently supported yet" })
                         }
                     })
             } catch (e) { consola.error(e) }
