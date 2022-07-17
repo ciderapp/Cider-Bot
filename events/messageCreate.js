@@ -19,6 +19,8 @@ export const event = {
             }
         });
         if (message.author.bot) return
+        if(message.mentions.users.has(message.client.id) {
+            await message.reply ({ files: [{ attachment: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1', name: 'whyping.png' }] })
         
         /* Change Apple Music Link */
         if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
