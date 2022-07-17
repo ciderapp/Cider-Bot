@@ -18,10 +18,8 @@ export const event = {
                 message.reply({ files: [{ attachment: 'https://github.com/ciderapp/Cider-Bot/blob/main/assets/lRatio.mp4?raw=true', name: 'lRatio.mp4' }] })
             }
         });
-        if (message.author.bot) return
-        if(message.mentions.users.has(message.client.id) {
-            await message.reply ({ files: [{ attachment: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1', name: 'whyping.png' }] })
-        }
+        if (message.author.bot) return;
+        
         /* Change Apple Music Link */
         if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
             const link = message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)
@@ -156,6 +154,9 @@ export const event = {
                 let reply = await message.channel.send({ content: `${message.author}, This is a marin chain channel, You are only allowed to send messages with the word \`marin\`.` })
                 setTimeout(() => reply.delete(), 10000) // delete message after 10 seconds
             }
+        }
+        if(message.mentions.users.has(message.client.id) {
+            await message.reply ({ files: [{ attachment: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1', name: 'whyping.png' }] })
         }
     }
 
