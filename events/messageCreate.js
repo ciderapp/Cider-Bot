@@ -156,7 +156,7 @@ export const event = {
             }
         }
         if(message.mentions.has(message.client.user)) {
-            await message.reply ({ files: [{ attachment: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1', name: 'whyping.png' }] })
+            await message.reply ({ content: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1' })
         }
     }
 
