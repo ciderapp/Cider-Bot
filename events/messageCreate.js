@@ -155,7 +155,7 @@ export const event = {
                 setTimeout(() => reply.delete(), 10000) // delete message after 10 seconds
             }
         }
-        if(message.mentions.users.has(message.client.id)) {
+        if(message.mentions.has(message.client.user)) {
             await message.reply ({ files: [{ attachment: 'https://mobile.twitter.com/teir32/status/1548577183303491584/photo/1', name: 'whyping.png' }] })
         }
     }
