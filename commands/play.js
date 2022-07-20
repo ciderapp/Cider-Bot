@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { AudioFilters } from 'musicord';
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -13,6 +12,7 @@ export const command = {
     execute: async (interaction) => {
         let { client } = await import('../index.js');
         const musicordPlayer = client.musicordPlayer;
+        const AudioFilters = client.AudioFilters;
         const msgArgs = interaction.options.get('query').value;
         console.log(msgArgs);
         if (!msgArgs) return interaction.reply('Argument required');

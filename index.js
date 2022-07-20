@@ -3,7 +3,7 @@ import consola from 'consola';
 import { app } from './integrations/express.js';
 import { mongo } from './integrations/mongo.js';
 import { guildId, errorChannel, token } from './local.js';
-import { Musicord } from 'musicord';
+import { Musicord, AudioFilters } from 'musicord';
 
 const client = new Client({
     intents: [
@@ -27,6 +27,7 @@ client.totalUsers = 0;
 client.activeUsers = 0;
 client.canPingKeefe = true;
 client.musicordPlayer = new Musicord();
+client.AudioFilters = AudioFilters;
 export { client };
 
 import { readdirSync } from 'fs';
