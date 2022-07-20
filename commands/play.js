@@ -12,7 +12,7 @@ export const command = {
     execute: async (interaction) => {
         let { client } = await import('../index.js');
         const musicordPlayer = client.musicordPlayer;
-        const AudioFilters = client.AudioFilters;
+        // const AudioFilters = client.AudioFilters;
         const msgArgs = interaction.options.get('query').value;
         console.log(msgArgs);
         if (!msgArgs) return interaction.reply('Argument required');
@@ -30,18 +30,18 @@ export const command = {
                 });
                 if (queue) {
                     interaction.deferReply();
-                    queue.setFilter(AudioFilters.customEqualizer({
-                        band1: 99, // 20
-                        band2: 45, // 50
-                        band3: 54, // 94.82
-                        band4: 53, // 200
-                        band5: 52, // 500
-                        band6: 51, // 1000
-                        band7: 50, // 2000
-                        band8: 49, // 5000
-                        band9: 48, // 10000
-                        band10: 47, // 20000
-                     }));
+                    // queue.setFilter(AudioFilters.customEqualizer({
+                    //    band1: 99, // 20
+                    //    band2: 45, // 50
+                    //    band3: 54, // 94.82
+                    //    band4: 53, // 200
+                    //    band5: 52, // 500
+                    //    band6: 51, // 1000
+                    //    band7: 50, // 2000
+                    //    band8: 49, // 5000
+                    //    band9: 48, // 10000
+                    //    band10: 47, // 20000
+                    // }));
                     await queue.play(msgArgs, msgMember.voice.channel)
                 }
                 const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
