@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-
+import fetch from 'node-fetch';
 export const command = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -12,9 +12,27 @@ export const command = {
     execute: async (interaction) => {
         let { client } = await import('../index.js');
         const musicordPlayer = client.musicordPlayer;
-        // const AudioFilters = client.AudioFilters;
-        const msgArgs = interaction.options.get('query').value;
+        const SongSearcher = client.SongSearcher;
+        let msgArgs = interaction.options.get('query').value;
+        if(!msgArgs.startsWith('https://')) {
+            const searchedSongs = await SongSearcher.search(msgArgs, { maxResults: 10 });
+            msgArgs = searchedSongs[0].url;
+        }
+        else if (msgArgs.startsWith('https://music.apple.com/')) {
+            let catalog = msgArgs.split('/')[3];
+            let songId = msgArgs.split('=')[1];
+            let targetURL = `https://api.music.apple.com/v1/catalog/${catalog}/songs/${songId}`;
+            let apiToken = await fetch("https://api.cider.sh/v1", {headers: { "User-Agent": "Cider" }});
+            apiToken = await apiToken.json();
+            let appleMusic = await fetch(targetURL, {headers: { "Authorization": "Bearer " + apiToken.token }});
+            appleMusic = await appleMusic.json()
+            let song = appleMusic.data[0].attributes;
+            msgArgs = `${song.artistName} - ${song.name} in ${song.albumName} (Audio)`;
+            const searchedSongs = await SongSearcher.search(msgArgs, { maxResults: 10 });
+            msgArgs = searchedSongs[0].url;
+        }
         console.log(msgArgs);
+
         if (!msgArgs) return interaction.reply('Argument required');
         const msgMember = interaction.guild.members.cache.get(interaction.member.user.id);
         if (msgMember && msgMember.voice.channel) {
