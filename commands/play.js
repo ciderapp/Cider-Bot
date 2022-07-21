@@ -37,6 +37,12 @@ export const command = {
                         await addToQueue(interaction, musicordPlayer, msgMember, track);
                     }
                 }
+                else if (target.kind === 'song') {
+                    const track = appleMusic.data[0];
+                    const searchedSongs = await SongSearcher.search(`${track.attributes.name} by ${track.attributes.artistName} (Audio)`, { maxResults: 10 });
+                    msgArgs = searchedSongs[0].url;
+                    await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
+                }
             }
             else if(msgArgs.startsWith('https://youtube.com/')) {
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
@@ -44,7 +50,6 @@ export const command = {
             else {
                 await interaction.reply('Sorry, I can only play links from Apple Music and YouTube for now');
             }
-            console.log(msgArgs);
         }
         else {
             interaction.reply(`${interaction.user} You need to be in a voice channel to use this command!`);
@@ -73,13 +78,14 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (queue) await queue.play(song, msgMember.voice.channel);
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
-        consola.info(queueInfo);
         if (queueInfo && queue) interaction.followUp(`${queueInfo.songs[queueInfo.songs.length - 1].title} has been added to the queue`)
     } else {
         const queue = musicordPlayer.initQueue(interaction.guild, {
             textChannel: interaction.channel,
             voiceChannel: msgMember.voice.channel
+
         });
+        queue.setBitrate(256000);
         if (queue) {
             interaction.deferReply();
             // queue.setFilter(AudioFilters.customEqualizer({
@@ -97,7 +103,6 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             await queue.play(song, msgMember.voice.channel)
         }
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
-        consola.info(queueInfo);
         if (queueInfo) return await interaction.editReply(`Playing ${queueInfo.songs[0].title}`)
     }
 }
