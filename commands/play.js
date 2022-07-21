@@ -90,7 +90,6 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
 
         });
         queue.setBitrate(384000);
-        queue.setFilter(AudioFilters.rotatingAudio);
         if (queue) {
             interaction.deferReply();
             // queue.setFilter(AudioFilters.customEqualizer({
