@@ -18,6 +18,7 @@ export const command = {
         if (msgMember && msgMember.voice.channel) {
             if (!msgArgs) return interaction.reply('Argument required');
             if (!msgArgs.startsWith('https://')) {
+                await interaction.reply(`Searching for ${msgArgs}`);
                 const searchedSongs = await SongSearcher.search(msgArgs, { maxResults: 10 });
                 msgArgs = searchedSongs[0].url;
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
@@ -38,6 +39,7 @@ export const command = {
                     }
                 }
                 else if (target.kind === 'song') {
+                    await interaction.reply(`Parsing song from Apple Music...`)
                     const track = appleMusic.data[0];
                     const searchedSongs = await SongSearcher.search(`${track.attributes.name} by ${track.attributes.artistName} (Audio)`, { maxResults: 10 });
                     msgArgs = searchedSongs[0].url;
@@ -45,6 +47,7 @@ export const command = {
                 }
             }
             else if(msgArgs.startsWith('https://youtube.com/')) {
+                await interaction.reply(`Getting song data from YouTube...`);
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
             }
             else {
@@ -78,7 +81,7 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (queue) await queue.play(song, msgMember.voice.channel);
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
-        if (queueInfo && queue) interaction.followUp(`${queueInfo.songs[queueInfo.songs.length - 1].title} has been added to the queue`)
+        if (queueInfo && queue) interaction.editReply(`**${queueInfo.songs[queueInfo.songs.length - 1].title}** has been added to the queue`)
     } else {
         const queue = musicordPlayer.initQueue(interaction.guild, {
             textChannel: interaction.channel,

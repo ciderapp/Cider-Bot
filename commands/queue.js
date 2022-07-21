@@ -18,7 +18,7 @@ export const command = {
             let songlist = queue.getSongs();
 
             consola.info(songlist);
-            await interaction.reply(songlist.map((song, i) => `(${i+1}). *${song.title}* - ${song.duration}`).join('\n'));
+            await interaction.reply(songlist.map((song, i) => `(${i+1}). **${song.title}** - ${song.duration}`).join('\n'));
         }
         else {
             await interaction.reply("You need to be in the same voice channel as the bot to skip the current song!");
