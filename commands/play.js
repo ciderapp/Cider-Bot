@@ -46,7 +46,7 @@ export const command = {
                     await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
                 }
             }
-            else if(msgArgs.startsWith('https://youtube.com/')) {
+            else if(msgArgs.startsWith('https://www.youtube.com/')) {
                 await interaction.reply(`Getting song data from YouTube...`);
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
             }
