@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import fetch from 'node-fetch';
+import { AudioFilters } from 'musicord';
 export const command = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -88,7 +89,8 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             voiceChannel: msgMember.voice.channel
 
         });
-        queue.setBitrate(256000);
+        queue.setBitrate(384000);
+        queue.setFilter(AudioFilters.rotatingAudio);
         if (queue) {
             interaction.deferReply();
             // queue.setFilter(AudioFilters.customEqualizer({
