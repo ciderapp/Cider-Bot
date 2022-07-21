@@ -25,7 +25,7 @@
     "@octokit/core": "^4.0.4",
     "cheerio": "^1.0.0-rc.12",
     "consola": "^2.15.3",
-    "discord-api-types": "^0.36.2",
+    "discord-api-types": "^0.36.3",
     "discord.js": "^14.0.3",
     "express": "^4.18.1",
     "ffmpeg": "^0.0.4",
@@ -33,6 +33,7 @@
     "mongodb": "^4.8.0",
     "musicord": "git+https://github.com/yazninja/musicord-test.git",
     "node-fetch": "^3.2.9",
+    "pretty-ms": "^8.0.0",
     "tweetnacl": "^1.0.3"
   },
   "devDependencies": {

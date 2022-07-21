@@ -1,6 +1,8 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+
 import fetch from 'node-fetch';
-import { AudioFilters } from 'musicord';
+import { AudioFilters, Player } from 'musicord';
+import { default as pm } from 'pretty-ms';
 export const command = {
     data: new SlashCommandBuilder()
         .setName("play")
@@ -24,7 +26,7 @@ export const command = {
                 msgArgs = searchedSongs[0].url;
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
             }
-            else if (msgArgs.startsWith('https://music.apple.com/') || msgArgs.startsWith('https://beta.music.apple.com/')) {
+            else if (msgArgs.startsWith('https://music.apple.com/') || msgArgs.startsWith('https://beta.music.apple.com/')) { 
                 let target = convertLinkToAPI(msgArgs);
                 let apiToken = await fetch("https://api.cider.sh/v1", { headers: { "User-Agent": "Cider" } });
                 apiToken = await apiToken.json();
@@ -47,7 +49,7 @@ export const command = {
                     await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
                 }
             }
-            else if(msgArgs.startsWith('https://www.youtube.com/')) {
+            else if (msgArgs.startsWith('https://www.youtube.com/')) {
                 await interaction.reply(`Getting song data from YouTube...`);
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
             }
@@ -87,11 +89,13 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
         const queue = musicordPlayer.initQueue(interaction.guild, {
             textChannel: interaction.channel,
             voiceChannel: msgMember.voice.channel
-
         });
+        queue.on('trackStart', async (channel, song) => {
+            channel.send(`${song.title} has started playing`)
+        })
         queue.setBitrate(384000);
         if (queue) {
-            interaction.deferReply();
+            // interaction.deferReply();
             // queue.setFilter(AudioFilters.customEqualizer({
             //    band1: 99, // 20
             //    band2: 45, // 50
@@ -107,6 +111,39 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             await queue.play(song, msgMember.voice.channel)
         }
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
+
+        let slidebar = queue.generateSongSlideBar();
+        let npEmbed = await interaction.followUp({
+            embeds: [new EmbedBuilder()
+                .setTitle(`${queueInfo.songs[0].title}`)
+                .setAuthor({
+                    name: 'Cider | Now Playing',
+                    iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                })
+                .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${queueInfo.songs[0].duration}`)
+                .setColor(0xf21f52)
+                .setThumbnail(queueInfo.songs[0].thumbnails[0].url)
+                .setURL(`${queueInfo.songs[0].url}`)
+            ]
+        });
+        setTimeout(() => clearInterval(npInterval), queueInfo.songs[0].msDuration);
+        let npInterval = setInterval(async () => {
+            let slidebar = queue.generateSongSlideBar();
+            npEmbed.edit({
+                embeds: [new EmbedBuilder()
+                    .setTitle(`${queueInfo.songs[0].title}`)
+                    .setAuthor({
+                        name: 'Cider | Now Playing',
+                        iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                    })
+                    .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${queueInfo.songs[0].duration}`)
+                    .setColor(0xf21f52)
+                    .setThumbnail(queueInfo.songs[0].thumbnails[0].url)
+                    .setURL(`${queueInfo.songs[0].url}`)
+                ]
+            })
+        }, 1000);
+
         if (queueInfo) return await interaction.editReply(`Playing ${queueInfo.songs[0].title}`)
     }
 }
