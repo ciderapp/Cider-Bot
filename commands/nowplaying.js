@@ -16,19 +16,17 @@ export const command = {
         consola.info(queueInfo.voiceChannel.id)
         if (queueInfo.voiceChannel.id === member.voice.channelId) {
             let slidebar = queue.generateSongSlideBar();
-            let songlist = queue.getSongs();
-            let queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
             await interaction.reply({
                 embeds: [new EmbedBuilder()
-                    .setTitle(`${songlist[0].title}`)
+                    .setTitle(`${queueInfo.songs[0].title}`)
                     .setAuthor({
                         name: 'Cider | Now Playing',
                         iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
                     })
-                    .setDescription(`${pm(queueInfo.ressource.playbackDuration, {colonNotation: true}).split('.')[0]} ${slidebar} ${songlist[0].duration}`)
+                    .setDescription(`${pm(queueInfo.ressource.playbackDuration, {colonNotation: true}).split('.')[0]} ${slidebar} ${queueInfo.songs[0].duration}`)
                     .setColor('Random')
-                    .setThumbnail(songlist[0].thumbnails[0].url)
-                    .setURL(`${songlist[0].url}`)
+                    .setThumbnail(`https://i.ytimg.com/vi/${queueInfo.songs[0].id}/maxresdefault.jpg`)
+                    .setURL(`${queueInfo.songs[0].url}`)
                 ]
             });
         }

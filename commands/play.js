@@ -26,7 +26,7 @@ export const command = {
                 msgArgs = searchedSongs[0].url;
                 await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
             }
-            else if (msgArgs.startsWith('https://music.apple.com/') || msgArgs.startsWith('https://beta.music.apple.com/')) { 
+            else if (msgArgs.startsWith('https://music.apple.com/') || msgArgs.startsWith('https://beta.music.apple.com/')) {
                 let target = convertLinkToAPI(msgArgs);
                 let apiToken = await fetch("https://api.cider.sh/v1", { headers: { "User-Agent": "Cider" } });
                 apiToken = await apiToken.json();
@@ -80,6 +80,7 @@ const convertLinkToAPI = (link) => {
 }
 
 const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
+    let npInterval, npEmbed;
     if (musicordPlayer.existQueue(interaction.guild)) {
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (queue) await queue.play(song, msgMember.voice.channel);
@@ -90,9 +91,55 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             textChannel: interaction.channel,
             voiceChannel: msgMember.voice.channel
         });
+        const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
         queue.on('trackStart', async (channel, song) => {
-            channel.send(`${song.title} has started playing`)
+            let bitrate = queueInfo.ressource.encoder._options.rate * queueInfo.ressource.encoder._options.channels / 1000;
+            let slidebar = queue.generateSongSlideBar();
+            npEmbed = await channel.send({ 
+                content: `Playing **${song.title}** @ ${bitrate}kbps`,
+                embeds: [new EmbedBuilder()
+                    .setTitle(`${song.title}`)
+                    .setAuthor({
+                        name: 'Cider | Now Playing',
+                        iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                    })
+                    .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
+                    .setColor(0xf21f52)
+                    .setThumbnail(`https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`)
+                    .setURL(`${song.url}`)
+                    .setFooter({ text: queueInfo.songs[1] != null ? `Next Track: ${queueInfo.songs[1].title}` : 'No more tracks in queue' })
+                ]
+            });
+           
+            npInterval = setInterval(async () => {
+                slidebar = queue.generateSongSlideBar();
+                await npEmbed.edit({
+                    content: `Playing **${song.title}** @ ${bitrate}kbps`,
+                    embeds: [new EmbedBuilder()
+                        .setTitle(`${song.title}`)
+                        .setAuthor({
+                            name: 'Cider | Now Playing',
+                            iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                        })
+                        .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
+                        .setColor(0xf21f52)
+                        .setThumbnail(`https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`)
+                        .setURL(`${song.url}`)
+                        .setFooter({ text: queueInfo.songs[1] != null ? `Next Track: ${queueInfo.songs[1].title}` : 'No more tracks in queue' })
+                    ]
+                })
+            }, 5000);
         })
+        queue.on('trackFinished', async (guild, song) => {
+            clearInterval(npInterval);
+            await npEmbed.delete();
+        })
+        queue.on('stop', async (guild, song) => {
+            consola.info(`The queue in ${guild} has stopped, Leaving Voice Chat`);
+            clearInterval(npInterval);
+            await npEmbed.delete();
+        })
+
         queue.setBitrate(384000);
         if (queue) {
             // interaction.deferReply();
@@ -110,40 +157,9 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             // }));
             await queue.play(song, msgMember.voice.channel)
         }
-        const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
+        
 
-        let slidebar = queue.generateSongSlideBar();
-        let npEmbed = await interaction.followUp({
-            embeds: [new EmbedBuilder()
-                .setTitle(`${queueInfo.songs[0].title}`)
-                .setAuthor({
-                    name: 'Cider | Now Playing',
-                    iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
-                })
-                .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${queueInfo.songs[0].duration}`)
-                .setColor(0xf21f52)
-                .setThumbnail(queueInfo.songs[0].thumbnails[0].url)
-                .setURL(`${queueInfo.songs[0].url}`)
-            ]
-        });
-        setTimeout(() => clearInterval(npInterval), queueInfo.songs[0].msDuration);
-        let npInterval = setInterval(async () => {
-            let slidebar = queue.generateSongSlideBar();
-            npEmbed.edit({
-                embeds: [new EmbedBuilder()
-                    .setTitle(`${queueInfo.songs[0].title}`)
-                    .setAuthor({
-                        name: 'Cider | Now Playing',
-                        iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
-                    })
-                    .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${queueInfo.songs[0].duration}`)
-                    .setColor(0xf21f52)
-                    .setThumbnail(queueInfo.songs[0].thumbnails[0].url)
-                    .setURL(`${queueInfo.songs[0].url}`)
-                ]
-            })
-        }, 1000);
-
-        if (queueInfo) return await interaction.editReply(`Playing ${queueInfo.songs[0].title}`)
+        
+        if (queueInfo) return await interaction.deleteReply();
     }
 }
