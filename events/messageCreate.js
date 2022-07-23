@@ -8,6 +8,9 @@ export const event = {
 
     async execute(message, replies) {
         const overrideRegex = new RegExp(/^\!/g);
+
+        if (message.author.bot) return;
+        
         const lRatio = (reaction, user) => {
             return reaction.emoji.name === "🇱"
         };
@@ -17,7 +20,7 @@ export const event = {
                 message.reply({ files: [{ attachment: 'https://github.com/ciderapp/Cider-Bot/blob/main/assets/lRatio.mp4?raw=true', name: 'lRatio.mp4' }] })
             }
         });
-        if (message.author.bot) return;
+        
 
         // /* Change Apple Music Link */
         // if (message.content.match(/^(?!cider:\/\/).+(music\.apple\.com)([^\s]+)/gi)) {
