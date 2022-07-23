@@ -116,6 +116,16 @@ client.on('interactionCreate', async interaction => {
             let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
+    } else if(interaction.isButton()) {
+        try {
+            await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
+        } catch (error) {
+            consola.error(error);
+            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
+            await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
+        }
+        
     }
 });
 

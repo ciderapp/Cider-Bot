@@ -58,7 +58,7 @@ export const command = {
             }
         }
         else {
-            interaction.reply(`${interaction.user} You need to be in a voice channel to use this command!`);
+            interaction.reply({content: `You need to be in a voice channel to use this command!`, ephemeral: true});
         }
     }
 }
@@ -83,9 +83,7 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
     let npInterval, npEmbed;
     if (musicordPlayer.existQueue(interaction.guild)) {
         const queue = musicordPlayer.getQueue(interaction.guild);
-        if (queue) await queue.play(song, msgMember.voice.channel);
-        const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
-        if (queueInfo && queue) interaction.editReply(`**${queueInfo.songs[queueInfo.songs.length - 1].title}** has been added to the queue`)
+        if (queue) queue.play(song, msgMember.voice.channel);
     } else {
         const queue = musicordPlayer.initQueue(interaction.guild, {
             textChannel: interaction.channel,
@@ -93,14 +91,13 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
         });
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
         queue.on('trackStart', async (channel, song) => {
-            let bitrate = queueInfo.ressource.encoder._options.rate * queueInfo.ressource.encoder._options.channels / 1000;
             let slidebar = queue.generateSongSlideBar();
             npEmbed = await channel.send({ 
-                content: `Playing **${song.title}** @ ${bitrate}kbps`,
+                content: `Playing **${song.title}** @ ${queueInfo.voiceChannel.bitrate / 1000}kbps`,
                 embeds: [new EmbedBuilder()
                     .setTitle(`${song.title}`)
                     .setAuthor({
-                        name: 'Cider | Now Playing',
+                        name: `${interaction.client.user.username} | Now Playing`,
                         iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
                     })
                     .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
@@ -114,11 +111,11 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             npInterval = setInterval(async () => {
                 slidebar = queue.generateSongSlideBar();
                 await npEmbed.edit({
-                    content: `Playing **${song.title}** @ ${bitrate}kbps`,
+                    content: `Playing **${song.title}** @ ${queueInfo.voiceChannel.bitrate / 1000}kbps`,
                     embeds: [new EmbedBuilder()
                         .setTitle(`${song.title}`)
                         .setAuthor({
-                            name: 'Cider | Now Playing',
+                            name: `${interaction.client.user.username} | Now Playing`,
                             iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
                         })
                         .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
@@ -139,8 +136,9 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             clearInterval(npInterval);
             await npEmbed.delete();
         })
-
-        queue.setBitrate(384000);
+        queue.on('pause', async (guild) => {
+            consola.info(`The queue in ${guild} has been paused`);
+        })
         if (queue) {
             // interaction.deferReply();
             // queue.setFilter(AudioFilters.customEqualizer({
@@ -157,9 +155,6 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
             // }));
             await queue.play(song, msgMember.voice.channel)
         }
-        
-
-        
         if (queueInfo) return await interaction.deleteReply();
     }
 }

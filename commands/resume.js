@@ -19,7 +19,7 @@ export const command = {
             await interaction.reply("Playback Resumed!");
         }
         else {
-            await interaction.reply("You need to be in the same voice channel as the bot to resume the current song!");
+            interaction.reply({content: `You need to be in a voice channel to use this command!`, ephemeral: true});
         }
     }
 };
