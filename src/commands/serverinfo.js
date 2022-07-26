@@ -10,7 +10,7 @@ export const command = {
         if (interaction.options.getSubcommand() === 'bans') {
             const bans = await interaction.guild.fetch();
             bans = bans.bans;
-            consola.info("Bans:", bans;
+            consola.info("Bans:", bans);
             await interaction.reply({ embeds: [new EmbedBuilder()
                 .setTitle(`Bans on **${interaction.guild.name}**`)
                 .setDescription(`${bans.length > 0 ? bans.map(ban => `${ban.user.tag} - ${ban.reason}`).join('\n') : 'No bans'}`)
