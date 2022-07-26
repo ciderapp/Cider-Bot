@@ -8,10 +8,12 @@ export const command = {
     category: 'General',
     execute: async (interaction) => {
         if (interaction.options.getSubcommand() === 'bans') {
-            consola.info("Bans:", interaction.guild.bans.cache);
+            const bans = await interaction.guild.fetch();
+            bans = bans.bans;
+            consola.info("Bans:", bans;
             await interaction.reply({ embeds: [new EmbedBuilder()
                 .setTitle(`Bans on **${interaction.guild.name}**`)
-                .setDescription(`${interaction.guild.bans.cache.length > 0 ? interaction.guild.bans.cache.map(ban => `${ban.user.tag} - ${ban.reason}`).join('\n') : 'No bans'}`)
+                .setDescription(`${bans.length > 0 ? bans.map(ban => `${ban.user.tag} - ${ban.reason}`).join('\n') : 'No bans'}`)
             ]});
         }
     }
