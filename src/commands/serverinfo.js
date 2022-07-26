@@ -14,7 +14,7 @@ export const command = {
                 .setColor('Red')
                 .setTitle(`Bans on **${interaction.guild.name}**`)
                 .setThumbnail(interaction.guild.iconURL())
-                .setDescription(`${bans.size > 0 ? bans.map(ban => `<@${ban.user.id}> - ${ban.reason || 'no reason provided'}`).join('\n') : 'No bans'}`)
+                .setDescription(`${bans.size > 0 ? bans.map(ban => `||${ban.user.id}|| - **${ban.user.username}#${ban.user.discriminator}** - ${ban.reason || 'no reason provided'}`).join('\n') : 'No bans'}`)
                 .setFooter({ text: `Ban Count: ${bans.size}` })
             ]});
         }
