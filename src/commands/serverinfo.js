@@ -8,8 +8,7 @@ export const command = {
     category: 'General',
     execute: async (interaction) => {
         if (interaction.options.getSubcommand() === 'bans') {
-            let bans = await interaction.guild.fetch();
-            bans = bans.bans;
+            let bans = await interaction.guild.bans.fetch();
             consola.info("Bans:", bans);
             await interaction.reply({ embeds: [new EmbedBuilder()
                 .setTitle(`Bans on **${interaction.guild.name}**`)
