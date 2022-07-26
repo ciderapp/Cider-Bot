@@ -9,10 +9,13 @@ export const command = {
     execute: async (interaction) => {
         if (interaction.options.getSubcommand() === 'bans') {
             let bans = await interaction.guild.bans.fetch();
-            consola.info("Bans:", bans);
+            // consola.info("Bans:", bans);
             await interaction.reply({ embeds: [new EmbedBuilder()
+                .setColor('Red')
                 .setTitle(`Bans on **${interaction.guild.name}**`)
-                .setDescription(`${bans.length > 0 ? bans.map(ban => `${ban.user.tag} - ${ban.reason}`).join('\n') : 'No bans'}`)
+                .setThumbnail(interaction.guild.iconURL())
+                .setDescription(`${bans.size > 0 ? bans.map(ban => `<@${ban.user.id}> - ${ban.reason || 'no reason provided'}`).join('\n') : 'No bans'}`)
+                .setFooter({ text: `Ban Count: ${bans.size}` })
             ]});
         }
     }
