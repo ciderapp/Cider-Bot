@@ -8,7 +8,7 @@ export const command = {
     category: 'General',
     execute: async (interaction) => {
         if (interaction.options.getSubcommand() === 'bans') {
-            consola.info("Bans:", interaction.guild.bans.cache.map(ban => ban.user.tag).join('\n'));
+            consola.info("Bans:", interaction.guild.bans.cache);
             await interaction.reply({ embeds: [new EmbedBuilder()
                 .setTitle(`Bans on **${interaction.guild.name}**`)
                 .setDescription(`${interaction.guild.bans.cache.length > 0 ? interaction.guild.bans.cache.map(ban => `${ban.user.tag} - ${ban.reason}`).join('\n') : 'No bans'}`)

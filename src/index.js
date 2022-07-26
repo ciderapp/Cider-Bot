@@ -9,6 +9,7 @@ import { Musicord, SongSearcher } from 'musicord';
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildBans,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
@@ -67,18 +68,18 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(guildId);
-    // if (guild) {
-    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-    //     mongo.getActiveUsers().then(users => {
-    //         client.activeUsers = users;
-    //         mongo.getTotalUsers().then(users => {
-    //             client.totalUsers = users;
-    //             client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
-    //             consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
-    //         })
-    //     })
-    // }
+    if (guild) {
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            client.activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                client.totalUsers = users;
+                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+            })
+        })
+    }
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 client.login(token);
