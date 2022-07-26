@@ -15,3 +15,5 @@ export const starboardChannel = isRailway() ? process.env.starboardChannel : env
 export const guildId = isRailway() ? process.env.guildId : environment.guildId;
 export const ocKey = isRailway() ? process.env.ocKey : environment.ocKey;
 export const ghKey = isRailway() ? process.env.ghKey : environment.ghKey;
+export const geniusKey = isRailway() ? process.env.geniusKey : environment.geniusKey;
+export const geniusSecret = isRailway() ? process.env.geniusSecret : environment.geniusSecret;

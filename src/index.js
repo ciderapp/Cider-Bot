@@ -2,6 +2,7 @@ import { Client, GatewayIntentBits, Partials, Collection, ActivityType, resolveC
 import consola from 'consola';
 import { app } from './integrations/express.js';
 import { mongo } from './integrations/mongo.js';
+import { getLyrics } from "./integrations/geniusLyrics.js";
 import { guildId, errorChannel, token } from './local.js';
 import { Musicord, SongSearcher } from 'musicord';
 
@@ -32,28 +33,28 @@ export { client };
 
 import { readdirSync } from 'fs';
 // Import Command Files
-const commandFiles = readdirSync('./commands').filter(file => file.endsWith('.js'));
+const commandFiles = readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const { command } = await import(`./commands/${file}`);
     client.commands.set(command.data.name, command);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Command:", command.data.name, command?.category);
 }
 // Import Interaction files
-const interactionFiles = readdirSync('./interactions').filter(file => file.endsWith('.js'));
+const interactionFiles = readdirSync('./src/interactions').filter(file => file.endsWith('.js'));
 for (const file of interactionFiles) {
     const { interaction } = await import(`./interactions/${file}`);
     client.interactions.set(interaction.data.name, interaction);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Interaction:", interaction.data.name);
 }
 // Import Autoreply files
-const replyFiles = readdirSync('./replies').filter(file => file.endsWith('.json'));
+const replyFiles = readdirSync('./src/replies').filter(file => file.endsWith('.json'));
 for (const file of replyFiles) {
     let { default: reply } = await import(`./replies/${file}`, { assert: { type: 'json' } });
     client.replies.push(reply);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
 }
 // Import Event files
-const eventFiles = readdirSync('./events').filter(file => file.endsWith('.js'));
+const eventFiles = readdirSync('./src/events').filter(file => file.endsWith('.js'));
 for (const file of eventFiles) {
     let { event } = await import(`./events/${file}`);
     client.events.push(event);
@@ -66,18 +67,18 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(guildId);
-    if (guild) {
-        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        mongo.getActiveUsers().then(users => {
-            client.activeUsers = users;
-            mongo.getTotalUsers().then(users => {
-                client.totalUsers = users;
-                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
-                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
-            })
-        })
-    }
+    // if (guild) {
+    //     mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+    //     mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+    //     mongo.getActiveUsers().then(users => {
+    //         client.activeUsers = users;
+    //         mongo.getTotalUsers().then(users => {
+    //             client.totalUsers = users;
+    //             client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+    //             consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+    //         })
+    //     })
+    // }
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 client.login(token);

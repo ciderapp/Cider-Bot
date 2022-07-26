@@ -84,6 +84,7 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
     if (musicordPlayer.existQueue(interaction.guild)) {
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (queue) queue.play(song, msgMember.voice.channel);
+        
     } else {
         const queue = musicordPlayer.initQueue(interaction.guild, {
             textChannel: interaction.channel,
@@ -91,6 +92,7 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
         });
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
         queue.on('trackStart', async (channel, song) => {
+            // consola.info("Now Playing", song)
             let slidebar = queue.generateSongSlideBar();
             npEmbed = await channel.send({ 
                 content: `Playing **${song.title}** @ ${queueInfo.voiceChannel.bitrate / 1000}kbps`,
