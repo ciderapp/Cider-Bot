@@ -67,19 +67,21 @@ client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
-    let guild = client.guilds.cache.get(guildId);
-    if (guild) {
-        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        mongo.getActiveUsers().then(users => {
-            client.activeUsers = users;
-            mongo.getTotalUsers().then(users => {
-                client.totalUsers = users;
-                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
-                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+    setInterval(() => {
+        let guild = client.guilds.cache.get(guildId);
+        if (guild) {
+            mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+            mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+            mongo.getActiveUsers().then(users => {
+                client.activeUsers = users;
+                mongo.getTotalUsers().then(users => {
+                    client.totalUsers = users;
+                    client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                    consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+                })
             })
-        })
-    }
+        }
+    },  1000 * 60 * 60);
     guild.channels.cache.get(errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 client.login(token);
@@ -118,7 +120,7 @@ client.on('interactionCreate', async interaction => {
             let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
-    } else if(interaction.isButton()) {
+    } else if (interaction.isButton()) {
         try {
             await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
         } catch (error) {
@@ -127,7 +129,7 @@ client.on('interactionCreate', async interaction => {
             let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
             await interaction.member.guild.channels.cache.get(errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
         }
-        
+
     }
 });
 
