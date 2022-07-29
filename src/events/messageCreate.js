@@ -21,7 +21,7 @@ export const event = {
         /* Auto Replies */
         if ((message.guildId == process.env.guildId && !autoreply.test(message.member._roles.toString()) && !vaporId.test(message.member.id.toString())) || overrideRegex.test(message.toString())) { // exclude dev team and donators
             for (let reply of replies) {
-                var regex = new RegExp(`(Cider|${reply.name}).*(${reply.name}|Cider)`, "gi");
+                var regex = new RegExp(`(?=.*Cider)(?=.*${reply.name})`, "gi");
                 if (regex.test(message.toString()) && !message.content.startsWith("https://")) {
                     consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                     mongo.replyCounter(reply.name)
@@ -38,7 +38,7 @@ export const event = {
                 }
                 if (reply.aliases) {
                     for (var i = 0; i < reply.aliases.length; i++) {
-                        var regex = new RegExp(`(Cider|${reply.aliases[i]}).*(${reply.aliases[i]}|Cider)`, "gi");
+                        var regex = new RegExp(`(?=.*Cider)(?=.*${reply.aliases[i]})`, "gi");
                         if (regex.test(message.toString())) {
                             consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
                             mongo.replyCounter(reply.name)

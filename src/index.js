@@ -92,7 +92,7 @@ client.on('ready', () => {
     let guild = client.guilds.cache.get(process.env.guildId);
     if (guild.id == "843954443845238864") { // if the bot sees the Cider guild
         syncUsers();
-        setInterval(() => { syncUsers(); }, 1000 * 60 * 60);
+        setInterval(() => { syncUsers(); }, 1800000);
     }
     guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });

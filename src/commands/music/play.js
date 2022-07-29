@@ -1,7 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-
 import fetch from 'node-fetch';
-import { AudioFilters, Player } from 'musicord';
 import { default as pm } from 'pretty-ms';
 export const command = {
     data: new SlashCommandBuilder()
@@ -38,7 +36,7 @@ export const command = {
                     for (let track of appleMusic.data) {
                         const searchedSongs = await SongSearcher.search(`${track.attributes.name} by ${track.attributes.artistName} (Audio)`, { maxResults: 10 });
                         track = searchedSongs[0].url;
-                        await addToQueue(interaction, musicordPlayer, msgMember, track);
+                        lawait addToQueue(interaction, musicordPlayer, msgMember, track);
                     }
                 }
                 else if (target.kind === 'song') {
@@ -47,11 +45,13 @@ export const command = {
                     const searchedSongs = await SongSearcher.search(`${track.attributes.name} by ${track.attributes.artistName} (Audio)`, { maxResults: 10 });
                     msgArgs = searchedSongs[0].url;
                     await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
+                    await interaction.editReply(`Added **${track.attributes.name}** by ${track.attributes.artistName} to the queue`);
                 }
             }
             else if (msgArgs.startsWith('https://www.youtube.com/')) {
                 await interaction.reply(`Getting song data from YouTube...`);
-                await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
+                let song = await addToQueue(interaction, musicordPlayer, msgMember, msgArgs);
+                await interaction.reply(`Added **${song.title}** to the queue`);
             }
             else {
                 await interaction.reply('Sorry, I can only play links from Apple Music and YouTube for now');
@@ -84,6 +84,7 @@ const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
     if (musicordPlayer.existQueue(interaction.guild)) {
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (queue) queue.play(song, msgMember.voice.channel);
+        return song;
         
     } else {
         const queue = musicordPlayer.initQueue(interaction.guild, {
