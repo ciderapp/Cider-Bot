@@ -23,7 +23,7 @@ export const command = {
             .setName('unmute')
             .setDescription('Unmutes a user from the server')
             .addUserOption(option => option.setName('user').setDescription('User to unmute').setRequired(true))),
-    category: 'General',
+    category: 'Moderation',
 
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
@@ -104,7 +104,7 @@ const approvalFunction = async (interaction, embed) => {
         ],
         fetchReply: true
     });
-    
+
     const collector = interactionMessage.createMessageComponentCollector({ time: 60_000, filter: (i) => i.user.id !== interaction.user.id });
     collector.on('collect', (i) => {
         i.reply({ content: `${i.user} You are not allowed to respond to this request.`, ephemeral: true });

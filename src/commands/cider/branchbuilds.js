@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
-import { mongo } from '../integrations/mongo.js';
+import { mongo } from '../../integrations/mongo.js';
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ export const command = {
             .setDescription('User to respond to (for use by Dev Team and Moderators only)')
             .setRequired(false)
     ),
-    category: 'General',
+    category: 'Cider',
     async execute(interaction) {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false

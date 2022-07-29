@@ -1,14 +1,14 @@
-import { guildId as cider_guild, starboardChannel }  from '../local.js';
+import 'dotenv/config';
 import { resolveColor } from 'discord.js';
 
 export const event = {
     name: 'messageReactionAdd',
     async execute(reaction, user) {
-        if (reaction.message.guild.id !== cider_guild) return;
+        if (reaction.message.guildId !== process.env.guildId) return;
         consola.info("\x1b[33m%s\x1b[0m", '[messageReactionAdd]', `${user.tag} reacted with ${reaction.emoji.name} `, user);
         const dev_channel = "848224563673694250";
         const handleStarboard = async () => {
-            const starboard = reaction.client.channels.cache.get(starboardChannel);
+            const starboard = reaction.client.channels.cache.get(process.env.starboardChannel);
             const msgs = await starboard.messages.fetch({ limit: 100 });
             const existingMsg = msgs.find(msg =>
                 msg.embeds.length === 1 ?
@@ -28,8 +28,8 @@ export const event = {
                     starboard.send({content: `⭐ **${reaction.count}** ${reaction.message.channel}`, embeds});
             }
         }
-        if (reaction.message.channel.id != dev_channel && reaction.emoji.name === '⭐' && (reaction.count >= 3 || reaction.client.guilds.cache.get(cider_guild).members.cache.get(user.id)._roles.includes("848363050205446165"))) {
-            if (reaction.message.channel == reaction.client.channels.cache.get(starboardChannel)) return;
+        if (reaction.message.channel.id != dev_channel && reaction.emoji.name === '⭐' && (reaction.count >= 3 || reaction.client.guilds.cache.get(process.env.guildId).members.cache.get(user.id)._roles.includes("848363050205446165"))) {
+            if (reaction.message.channel == reaction.client.channels.cache.get(process.env.starboardChannel)) return;
             if (reaction.message.partial) {
                 await reaction.fetch();
                 await reaction.message.fetch();

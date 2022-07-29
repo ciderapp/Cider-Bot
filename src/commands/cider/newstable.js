@@ -1,15 +1,13 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { Octokit } from '@octokit/core';
-import { ghKey as gh_token } from '../local.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('newstable').setDescription('Creates a pull request on Github (main -> stable)')
         .addStringOption(title => title.setName('title').setDescription('Title of the pull request').setRequired(true)),
-    category: 'General',
-
+    category: 'Github',
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165')) {
-            const octokit = new Octokit({ auth: gh_token });
+            const octokit = new Octokit({ auth: process.env.ghKey });
             let pull = await octokit.request('POST /repos/{owner}/{repo}/pulls', {
                 owner: 'ciderapp',
                 repo: 'cider',

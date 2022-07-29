@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('restrictions').setDescription('Responds to \"Why is my Cider skipping songs\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
-    category: 'Help',
+    category: 'Support',
     async execute(interaction) {
         let embed = new EmbedBuilder()
             .setColor('Random')

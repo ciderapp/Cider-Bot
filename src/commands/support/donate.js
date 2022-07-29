@@ -2,7 +2,7 @@ import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, But
 
 export const command = {
     data: new SlashCommandBuilder().setName('donate').setDescription('Responds to \"How donate????\"').addUserOption(option => option.setName('user').setDescription('User to repond to')),
-    category: 'Donation',
+    category: 'Support',
     async execute(interaction) {
         let embed = new EmbedBuilder()
             .setColor('Random')

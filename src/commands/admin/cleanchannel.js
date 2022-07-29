@@ -12,7 +12,7 @@ export const command = {
             .setDescription('Message id to start purging from (optional)')
             .setRequired(false)
     ),
-    category: 'General',
+    category: 'Moderation',
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802')) {
             let channel = interaction.options.getChannel('channel')

@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 export const command = {
     data: new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),
-    category: 'Image',
+    category: 'Emtertainment',
     async execute(interaction) {
         let marinrequest = await fetch('https://api.waifu.im/random/?selected_tags=marin-kitagawa')
         let marin = await marinrequest.json()

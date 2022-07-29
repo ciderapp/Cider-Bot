@@ -1,8 +1,8 @@
 import Genius from 'genius-lyrics';
-import { geniusKey } from '../local.js';
+import 'dotenv/config';
 import { EmbedBuilder } from 'discord.js';
 
-const client = new Genius.Client(geniusKey);
+const client = new Genius.Client(process.env.geniusKey);
 
 export const getLyrics = async song => {
     const searches = await client.songs.search(song);

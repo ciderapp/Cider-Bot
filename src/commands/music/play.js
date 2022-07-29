@@ -13,7 +13,7 @@ export const command = {
         ),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         const musicordPlayer = client.musicordPlayer;
         const SongSearcher = client.SongSearcher;
         let msgArgs = interaction.options.get('query').value;

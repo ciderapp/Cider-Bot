@@ -2,10 +2,10 @@ import { SlashCommandBuilder, EmbedBuilder, SelectMenuBuilder, ActionRowBuilder 
 
 export const command = {
     data: new SlashCommandBuilder().setName('help').setDescription('Displays help commands'),
-    category: 'Help',
+    category: 'Support',
     description: 'Displays help commands',
     async execute(interaction) {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         let categories = [];
         client.commands.each(command => {
             if (!categories.includes(command.category)) {

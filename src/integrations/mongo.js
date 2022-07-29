@@ -1,8 +1,8 @@
 import { MongoClient } from 'mongodb';
 import consola from 'consola';
 import fetch from 'node-fetch';
-import { mongo as config } from '../local.js';
-const client = new MongoClient(config);
+import 'dotenv/config';
+const client = new MongoClient(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
 
 export const mongo = {
     async init() {

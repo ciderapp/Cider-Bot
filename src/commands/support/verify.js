@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { ocKey as oc_token } from '../local.js';
-import { mongo } from '../integrations/mongo.js';
+
+import { mongo } from '../../integrations/mongo.js';
 import fetch from 'node-fetch';
 
 export const command = {
@@ -11,11 +11,11 @@ export const command = {
             .setDescription('Email used')
             .setRequired(true)
     ),
-    category: 'Donation',
+    category: 'Support',
     async execute(interaction) {
         await interaction.reply({content: 'Verifying your Donation/s from OpenCollective...', ephemeral: true})
         let email = interaction.options.getString('email');
-        let ocResult = await fetch(`https://api.opencollective.com/v1/collectives/ciderapp/transactions/?apiKey=` + oc_token)
+        let ocResult = await fetch(`https://api.opencollective.com/v1/collectives/ciderapp/transactions/?apiKey=` + process.env.ocKey)
         ocResult = await ocResult.json();
         let donations = []
         ocResult.result.forEach(transaction => {

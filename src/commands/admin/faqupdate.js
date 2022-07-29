@@ -1,11 +1,11 @@
 import { SlashCommandBuilder } from 'discord.js';
-import faqEmbed from '../faq.json' assert { type: 'json'};
+import faqEmbed from '../../data/faq.json' assert { type: 'json'};
 
 
 export const command = {
     data: new SlashCommandBuilder().setName('faqupdate').setDescription('Updates the FAQ page"')
         .addBooleanOption(option => option.setName('publish').setDescription('set to true to publish in FAQ channel').setRequired(false)),
-    category: 'General',
+    category: 'Moderation',
     async execute(interaction) {
         if (interaction.member._roles.includes('848363050205446165')) {
             let publish = interaction.options.getBoolean('publish') || false

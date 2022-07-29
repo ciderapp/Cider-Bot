@@ -6,7 +6,7 @@ export const command = {
         .setDescription("Skip the current song"),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         const musicordPlayer = client.musicordPlayer;
         const queue = musicordPlayer.getQueue(interaction.guild);
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);

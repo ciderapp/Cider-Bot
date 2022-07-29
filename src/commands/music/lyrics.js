@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
-import { getLyrics } from '../integrations/geniusLyrics.js';
+import { getLyrics } from '../../integrations/geniusLyrics.js';
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ export const command = {
         .addStringOption(o => o.setName("query").setRequired(false).setDescription("The song to get the lyrics of")),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         let query = interaction.options.getString('query');
         await interaction.reply({ content: 'Getting lyrics...'});
         if(!query) {

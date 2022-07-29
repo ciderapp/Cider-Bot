@@ -2,11 +2,11 @@ import { SlashCommandBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder()
-        .setName("playnext")
-        .setDescription("Queue a song to play next"),
+        .setName("shuffle")
+        .setDescription("Shuffle the current queue"),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         const musicordPlayer = client.musicordPlayer;
         const queue = musicordPlayer.getQueue(interaction.guild);
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);

@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from 'discord.js';
 export const command = {
     data: new SlashCommandBuilder().setName('keefe').setDescription('Humiliate Keefe for using Spotify'),
-    category: 'Image',
+    category: 'Emtertainment',
     async execute(interaction) {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         if(client.canPingKeefe){
             client.canPingKeefe = false;
             

@@ -2,11 +2,11 @@ import { SlashCommandBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder()
-        .setName("shuffle")
-        .setDescription("Shuffle the current queue"),
+        .setName("resume")
+        .setDescription("Resume playing the current song"),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         const musicordPlayer = client.musicordPlayer;
         const queue = musicordPlayer.getQueue(interaction.guild);
         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
@@ -15,11 +15,11 @@ export const command = {
 
         consola.info(queueInfo.voiceChannel.id)
         if (queueInfo.voiceChannel.id === member.voice.channelId) {
-            queue.shuffleQueue();
-            await interaction.reply("Queue shuffled!");
+            queue.resume();
+            await interaction.reply("Playback Resumed!");
         }
         else {
-            await interaction.reply({content: `You need to be in a voice channel to use this command!`, ephemeral: true});
+            interaction.reply({content: `You need to be in a voice channel to use this command!`, ephemeral: true});
         }
     }
 };

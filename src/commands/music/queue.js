@@ -7,7 +7,7 @@ export const command = {
         .setDescription("Shows the current queue"),
     category: 'Music',
     execute: async (interaction) => {
-        let { client } = await import('../index.js');
+        let { client } = await import('../../index.js');
         const musicordPlayer = client.musicordPlayer;
         const queue = musicordPlayer.getQueue(interaction.guild);
         if (!queue.isPlaying) return await interaction.reply({ content: 'There is no song playing currently!', ephemeral: true });
