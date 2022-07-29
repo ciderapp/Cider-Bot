@@ -68,6 +68,18 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(guildId);
+    if (guild) {
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            client.activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                client.totalUsers = users;
+                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+            })
+        })
+    }
     setInterval(() => {
         guild = client.guilds.cache.get(guildId);
         if (guild) {
