@@ -17,10 +17,10 @@ export const event = {
             // 911790844204437504 - Cider
             // 886578863147192350 - Apple Music
             /* Continue last spotify song on Cider */
-            if (activity && activity.name === "Spotify" && activity.type === ActivityType.Listening) {
-                await mongo.logSpotifyData(newMember, activity).catch(e => { })
-            }
-            if (activity && CiderRPCId.test(`${activity.applicationID}`)) {
+            // if (activity && activity.name === "Spotify" && activity.type === ActivityType.Listening) {
+            //     await mongo.logSpotifyData(newMember, activity).catch(e => { })
+            // }
+            if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
                 let listenerinfo = {
                     userid: newMember.userId,
                     userName: newMember.member.user.username,
