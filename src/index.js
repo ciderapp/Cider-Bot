@@ -67,8 +67,9 @@ client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
+    let guild = client.guilds.cache.get(guildId);
     setInterval(() => {
-        let guild = client.guilds.cache.get(guildId);
+        guild = client.guilds.cache.get(guildId);
         if (guild) {
             mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
             mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)

@@ -21,7 +21,7 @@
   "homepage": "https://github.com/ciderapp/Cider-Bot#readme",
   "dependencies": {
     "@discordjs/opus": "^0.8.0",
-    "@discordjs/rest": "^1.0.0",
+    "@discordjs/rest": "^1.0.1",
     "@octokit/core": "^4.0.4",
     "cheerio": "^1.0.0-rc.12",
     "consola": "^2.15.3",
@@ -31,7 +31,7 @@
     "ffmpeg": "^0.0.4",
     "genius-lyrics": "^4.3.8",
     "is-railway": "^1.1.3",
-    "mongodb": "^4.8.0",
+    "mongodb": "^4.8.1",
     "musicord": "git+https://github.com/yazninja/musicord-test.git",
     "node-fetch": "^3.2.9",
     "pretty-ms": "^8.0.0",
