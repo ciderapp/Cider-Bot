@@ -11,7 +11,7 @@ export const event = {
 
         if (message.author.bot) return;
         const lRatio = (reaction) => { return reaction.emoji.name === "🇱" };
-        const collector = message.create0ReactionCollector({ lRatio, time: 60000 })
+        const collector = message.createReactionCollector({ lRatio, time: 60000 })
         collector.once('collect', (reaction, user) => {
             if (reaction.emoji.name === "🇱") {
                 message.reply({ files: [{ attachment: 'https://user-images.githubusercontent.com/71800112/181668217-8f13ae27-9619-4381-8749-074a78c092c1.mp4', name: 'lRatio.mp4' }] })
@@ -19,7 +19,7 @@ export const event = {
         });
 
         /* Auto Replies */
-        if ((message.guildId == process.env.guildId && !autoreply.test(message.member._roles) && !vaporId.test(message.member.id)) || overrideRegex.test(message.toString())) { // exclude dev team and donators
+        if ((message.guildId == process.env.guildId && !autoreply.test(message.member._roles.toString()) && !vaporId.test(message.member.id.toString())) || overrideRegex.test(message.toString())) { // exclude dev team and donators
             for (let reply of replies) {
                 var regex = new RegExp(`(Cider|${reply.name}).*(${reply.name}|Cider)`, "gi");
                 if (regex.test(message.toString()) && !message.content.startsWith("https://")) {

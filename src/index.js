@@ -90,7 +90,7 @@ client.on('ready', () => {
     mongo.init()
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
-    if (guild.guildId == "843954443845238864") { // if the bot sees the Cider guild
+    if (guild.id == "843954443845238864") { // if the bot sees the Cider guild
         syncUsers();
         setInterval(() => { syncUsers(); }, 1000 * 60 * 60);
     }
