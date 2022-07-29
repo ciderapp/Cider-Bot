@@ -36,7 +36,7 @@ export const command = {
                     for (let track of appleMusic.data) {
                         const searchedSongs = await SongSearcher.search(`${track.attributes.name} by ${track.attributes.artistName} (Audio)`, { maxResults: 10 });
                         track = searchedSongs[0].url;
-                        lawait addToQueue(interaction, musicordPlayer, msgMember, track);
+                        await addToQueue(interaction, musicordPlayer, msgMember, track);
                     }
                 }
                 else if (target.kind === 'song') {
