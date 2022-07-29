@@ -30,7 +30,7 @@ export const event = {
                     artistName: String(activity.state).split("by ")[1],
                 }
 
-                if (listening.test(newMember.member._roles)) { // user already has listening role, no need to change roles
+                if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
                     consola.info("\x1b[2m", "Listener updated -", listenerinfo)
                     return // not changing any roles, just a log
                 } else {
