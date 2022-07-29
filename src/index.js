@@ -91,11 +91,10 @@ async function syncUsers() {
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    mongo.init()
+    mongo.init().then(() => {syncUsers();})
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
     if (guild.id == "843954443845238864") { // if the bot sees the Cider guild
-        syncUsers();
         setInterval(() => { syncUsers(); }, 1800000);
     }
     guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
