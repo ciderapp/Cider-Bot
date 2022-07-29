@@ -43,10 +43,10 @@ export const event = {
             }
         }
         if (using_cider) {
-            newMember.member.roles.add(listeningRole) // add listening on cider role
-            if (!newMember.member._roles.includes(ciderRole)) {
+            newMember.member.roles.add("932784788115427348") // add listening on cider role
+            if (!newMember.member._roles.includes("932816700305469510")) {
                 try {
-                    newMember.member.roles.add(ciderRole)
+                    newMember.member.roles.add("932816700305469510")
                     client.totalUsers++;
                     client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                 } catch (e) {
