@@ -1,9 +1,10 @@
-import { Client, GatewayIntentBits, Partials, Collection, ActivityType, resolveColor } from "discord.js"; // Define Client, Intents, and Collection
+import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
 import { mongo } from './integrations/mongo.js';
-import 'dotenv/config';
-import { Musicord, SongSearcher } from 'musicord';
 import { readdirSync } from 'fs';
+import { getAPIToken } from "./integrations/musickitAPI.js";
+import 'dotenv/config';
+import { Player } from 'discord-player';
 import { getLyrics } from "./integrations/geniusLyrics.js";
 
 const client = new Client({
@@ -25,8 +26,8 @@ const client = new Client({
         Partials.Reaction
     ]
 });
-client.musicordPlayer = new Musicord();
-client.SongSearcher = new SongSearcher();
+client.player = new Player(client, { ytdlOptions: { quality: 'highestaudio' }});
+client.amAPIToken = await getAPIToken();
 client.commands = new Collection();
 client.interactions = new Collection();
 client.replies = [];
@@ -35,7 +36,10 @@ client.totalUsers = 0;
 client.activeUsers = 0;
 client.canPingKeefe = true;
 
+
 export { client };
+
+const consolaDebug = consola.create({ level: 5 })
 
 // Import Command Files
 const commandFolders = readdirSync('./src/commands/');
@@ -97,7 +101,7 @@ client.on('ready', () => {
     guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
+client.on('presenceUpdate', async (oldMember, newMember) => { consola.info("Presence Changed!"); client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
 
 client.on('messageCreate', async (message) => {
     // consola.info(client.replies);
@@ -143,6 +147,68 @@ client.on('interactionCreate', async interaction => {
     }
 });
 client.login(process.env.TOKEN);
+
+let npInterval, npEmbed;
+client.player.on('trackStart', async (queue, track) => {
+    // consola.info("Track:", track)
+    let slidebar = queue.createProgressBar();
+    npEmbed = await queue.metadata.channel.send({ 
+        content: `Playing **${track.title}**`,
+        embeds: [new EmbedBuilder()
+            .setTitle(`${track.title}`)
+            .setAuthor({
+                name: `${client.user.username} | Now Playing`,
+                iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+            })
+            .setDescription(`${slidebar}`)
+            .setColor(0xf21f52)
+            .setThumbnail(`${track.thumbnail}`)
+            .setURL(`${track.url}`)
+            .setFooter({ text: queue.tracks[1] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+        ]
+    });
+   
+    npInterval = setInterval(async () => {
+        slidebar = queue.createProgressBar();
+        await npEmbed.edit({
+            content: `Playing **${track.title}**`,
+            embeds: [new EmbedBuilder()
+                .setTitle(`${track.title}`)
+                .setAuthor({
+                    name: `${client.user.username} | Now Playing`,
+                    iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                })
+                .setDescription(`${slidebar}`)
+                .setColor(0xf21f52)
+                .setThumbnail(`${track.thumbnail}`)
+                .setURL(`${track.url}`)
+                .setFooter({ text: queue.tracks[1] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+            ]
+        })
+    }, 5000);
+})
+
+client.player.on('trackEnd', async(queue, track) => {
+    clearInterval(npInterval);
+    await npEmbed.delete();
+})
+
+client.player.on('connectionError',async(queue, error) => {
+    queue.destroy();
+    if (npInterval) clearInterval(npInterval);
+    consola.error(error)
+    await queue.metadata.channel.send({ content: `There was an error playing the track!`, embeds: [{ color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }] })
+})
+client.player.on('debug', async(queue, message) => {
+    consolaDebug.debug(message)
+})
+
+client.player.on('error', async(queue, error) => {
+    queue.destroy();
+    if (npInterval) clearInterval(npInterval);
+    consola.error(error)
+    await queue.metadata.channel.send({ content: `There was an error playing the track!`, embeds: [{ color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }] })
+})
 
 /*** ERROR HANDLING ***/
 process.on('unhandledRejection', error => {
