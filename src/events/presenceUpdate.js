@@ -10,8 +10,6 @@ export const event = {
         //If role not found in guild, do nothing.
         try { if (oldMember.guild.id !== process.env.guildId || newMember.guild.id !== process.env.guildId) return } catch (e) { return }
         // or else it'll go BONK
-        const listeningRole = newMember.guild.roles.cache.get("932784788115427348");
-        const ciderRole = newMember.guild.roles.cache.get("932816700305469510");
         let using_cider = false;
         let { client } = await import('../index.js');
         for (const activity of newMember.activities) {
@@ -22,7 +20,7 @@ export const event = {
             if (activity && activity.name === "Spotify" && activity.type === ActivityType.Listening) {
                 await mongo.logSpotifyData(newMember, activity).catch(e => { })
             }
-            if (activity && CiderRPCId.test(activity.applicationID)) {
+            if (activity && CiderRPCId.test(`${activity.applicationID}`)) {
                 let listenerinfo = {
                     userid: newMember.userId,
                     userName: newMember.member.user.username,
