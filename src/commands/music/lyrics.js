@@ -8,6 +8,7 @@ export const command = {
         .addStringOption(o => o.setName("query").setRequired(false).setDescription("The song to get the lyrics of")),
     category: 'Music',
     execute: async (interaction) => {
+        if(interaction.guildId == process.env.guildId && interaction.channelId != "843954941827481670") return await interaction.reply({ content: "You must be in <#843954941827481670> to use this command!", ephemeral: true })
         let { client } = await import('../../index.js');
         let query = interaction.options.getString('query');
         await interaction.reply({ content: 'Getting lyrics...'});
