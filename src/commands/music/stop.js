@@ -1,5 +1,7 @@
 import { SlashCommandBuilder, underscore } from 'discord.js';
 import { mod } from '../../data/roles.js';
+import 'dotenv/config';
+
 export const command = {
     data: new SlashCommandBuilder()
         .setName("stop")

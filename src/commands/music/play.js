@@ -3,6 +3,8 @@ import fetch from 'node-fetch';
 import { default as pm } from 'pretty-ms';
 import { QueryType } from 'discord-player';
 import { stream } from 'play-dl'
+import 'dotenv/config';
+
 export const command = {
     data: new SlashCommandBuilder()
         .setName("play")

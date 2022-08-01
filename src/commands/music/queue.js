@@ -1,6 +1,8 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import fetch from 'node-fetch';
 import { default as pm } from 'pretty-ms';
+import 'dotenv/config';
+
 export const command = {
     data: new SlashCommandBuilder()
         .setName("queue")

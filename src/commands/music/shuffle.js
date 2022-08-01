@@ -1,4 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
+import 'dotenv/config';
 
 export const command = {
     data: new SlashCommandBuilder()

@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { getLyrics } from '../../integrations/geniusLyrics.js';
+import 'dotenv/config';
 
 export const command = {
     data: new SlashCommandBuilder()
