@@ -24,6 +24,7 @@ export const command = {
             await interaction.reply(`Searching for ${query}`);
             const track = await player.search(query, { requestedBy: interaction.user }).then(x => x.tracks[0]);
             if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
+            await interaction.editReply(`Added **${track.title}** to the start of the queue`);
             if (queue.nowPlaying() == null) await queue.play(track);
             else queue.insert(track);
         } else if (query.startsWith('https://music.apple.com/') || query.startsWith('https://beta.music.apple.com/')) { // if link is apple music
