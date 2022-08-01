@@ -14,7 +14,7 @@ export const command = {
         const player = client.player;
         const queue = player.getQueue(interaction.guild);
         if (!queue) return await interaction.reply({ content: 'There is no song playing currently!', ephemeral: true });
-        if (interaction.guildId == process.env.guildId && !interaction.channelId == "843954941827481670") return await interaction.reply({ content: "This command can only be used in the <#843954941827481670> channel!", ephemeral: true });
+        if (interaction.guildId == process.env.guildId && interaction.channelId != "843954941827481670") return await interaction.reply({ content: "This command can only be used in the <#843954941827481670> channel!", ephemeral: true });
         let queueEmbed = new EmbedBuilder()
             .setTitle(`Song Queue for ${interaction.guild.name} ${queue.tracks.length > 20 ? `(1/${Math.floor(queue.tracks.length / 20) + 1})` : ''}`)
             .setAuthor({
