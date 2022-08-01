@@ -163,7 +163,7 @@ client.player.on('trackStart', async (queue, track) => {
             .setColor(0xf21f52)
             .setThumbnail(`${track.thumbnail}`)
             .setURL(`${track.url}`)
-            .setFooter({ text: queue.tracks[1] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+            .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
         ]
     });
 
@@ -171,7 +171,7 @@ client.player.on('trackStart', async (queue, track) => {
         slidebar = queue.createProgressBar();
         await npEmbed.edit({
             embeds: [new EmbedBuilder()
-                .setTitle(`${track.title}`)
+                .setTitle(`${queue.current.title}`)
                 .setAuthor({
                     name: `${client.user.username} | Now Playing`,
                     iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
@@ -180,7 +180,7 @@ client.player.on('trackStart', async (queue, track) => {
                 .setColor(0xf21f52)
                 .setThumbnail(`${track.thumbnail}`)
                 .setURL(`${track.url}`)
-                .setFooter({ text: queue.tracks[1] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+                .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
             ]
         })
     }, 5000);
