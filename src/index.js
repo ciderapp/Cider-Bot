@@ -200,11 +200,11 @@ client.player.on('connectionError', async (queue, error) => {
 client.player.on('debug', async (queue, message) => {
     consolaDebug.debug(message)
 })
-client.player.on('botDisconnect') = async (queue) => {
+client.player.on('botDisconnect'), async (queue) => {
     queue.stop();
     queue.destroy();
     if (npInterval) clearInterval(npInterval);
-}
+})
 client.player.on('error', async (queue, error) => {
     queue.destroy();
     if (npInterval) clearInterval(npInterval);
