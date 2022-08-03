@@ -18,7 +18,7 @@ export const event = {
             }
         });
         let randnumber = Math.floor(Math.random() * (100000 - 10000 + 1) ) + 10000;
-        if(message.guild == process.env.guildId && (randnumber === 69420 || randnumber === 42069)) {
+        if(message.guildId == process.env.guildId && (randnumber === 69420 || randnumber === 42069)) {
             await message.reply(`<@325495275454070786> **${randnumber}** (just for testing purposes)`);
         }
         /* Auto Replies */
