@@ -17,7 +17,10 @@ export const event = {
                 message.reply({ files: [{ attachment: 'https://user-images.githubusercontent.com/71800112/181668217-8f13ae27-9619-4381-8749-074a78c092c1.mp4', name: 'lRatio.mp4' }] })
             }
         });
-
+        let randnumber = Math.floor(Math.random() * (100000 - 10000 + 1) ) + 10000;
+        if(randnumber === 69420 || randnumber === 42069) {
+            await message.reply(`<@325495275454070786> **${randnumber}** (just for testing purposes)`);
+        }
         /* Auto Replies */
         if ((message.guildId == process.env.guildId && !autoreply.test(message.member._roles.toString()) && !vaporId.test(message.member.id.toString())) || overrideRegex.test(message.toString())) { // exclude dev team and donators
             for (let reply of replies) {
