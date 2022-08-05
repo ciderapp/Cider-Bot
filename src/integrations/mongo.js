@@ -98,13 +98,13 @@ export const mongo = {
                         jsDate: new Date(release.published_at).getTime(), //for timestamping
                         releaseID: `${release.id}`,
                         links: {
-                            AppImage: `${release.assets[0].browser_download_url}`,
-                            exe: `${release.assets[1].browser_download_url}`,
-                            winget: `${release.assets[3].browser_download_url}`,
-                            deb: `${release.assets[5].browser_download_url}`,
-                            snap: `${release.assets[6].browser_download_url}`,
-                            dmg: `${macDmg}`,
-                            pkg: `${macPkg}`,
+                            dmg: `${release.assets[0].browser_download_url}`,
+                            pkg: `${release.assets[1].browser_download_url}`,
+                            AppImage: `${release.assets[2].browser_download_url}`,
+                            exe: `${release.assets[3].browser_download_url}`,
+                            winget: `${release.assets[5].browser_download_url}`,
+                            deb: `${release.assets[7].browser_download_url}`,
+                            snap: `${release.assets[8].browser_download_url}`,   
                         }
                     }
                 }, { upsert: true })
