@@ -3,4 +3,5 @@ tokens.json
 node_modules/
 yarn.lock
 .history
-.env
+.env*
+.idea/

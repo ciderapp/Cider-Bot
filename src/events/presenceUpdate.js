@@ -1,6 +1,4 @@
-import { mongo } from '../integrations/mongo.js';
 import 'dotenv/config';
-import { listening } from '../data/roles.js';
 import { ActivityType } from 'discord.js';
 
 export const event = {
@@ -52,9 +50,10 @@ export const event = {
                 } // Add Cider User role.
             }
         } else { // Remove role if exists or ignore.
-            if (listening.test(newMember.member._roles)) {
+            if (newMember.member._roles.includes("932784788115427348") && newMember.member.user.id !== "710318787202646036") {
                 try {
                     newMember.member.roles.remove("932784788115427348"); // remove listening on cider role
+                    consola.info("\x1b[2m", "Listener removed -", newMember.member.user.username, newMember.member._roles, newMember.activities)
                 } catch (e) {
                     consola.error("An error occurred on role removal. ", e)
                 }

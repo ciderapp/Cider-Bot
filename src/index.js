@@ -73,8 +73,7 @@ for (const file of replyFiles) {
     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
 }
 
-async function syncUsers() {
-    let guild = client.guilds.cache.get("843954443845238864");
+async function syncUsers(guild) {
     if (guild != null) {
         mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
         mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
@@ -93,11 +92,11 @@ async function syncUsers() {
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    mongo.init().then(() => { syncUsers(); })
+    mongo.init().then(() => { syncUsers(guild); })
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
-    setInterval(() => { syncUsers(); }, 1800000);
-    guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
+    setInterval(() => { syncUsers(guild); }, 1800000);
+    // guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}`, fields: [{ name: "Server List", value: `${Guilds.join('\n')}` }] }] })
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
@@ -159,10 +158,10 @@ client.player.on('trackStart', async (queue, track) => {
                 name: `${client.user.username} | Now Playing`,
                 iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
             })
-            .setDescription(`${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
+            .setDescription(`${track.description}\n${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
             .setColor(0xf21f52)
             .setThumbnail(`${track.thumbnail}`)
-            .setURL(`${track.url}`)
+            .setURL(`${track.views}`)
             .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
         ]
     });
@@ -176,10 +175,10 @@ client.player.on('trackStart', async (queue, track) => {
                     name: `${client.user.username} | Now Playing`,
                     iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
                 })
-                .setDescription(`${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
+                .setDescription(`${track.description}\n${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
                 .setColor(0xf21f52)
                 .setThumbnail(`${track.thumbnail}`)
-                .setURL(`${track.url}`)
+                .setURL(`${track.views}`)
                 .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
             ]
         })

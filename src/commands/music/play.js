@@ -48,7 +48,7 @@ export const command = {
         // await interaction.deferReply();
         // Convert Query links
 
-        if (!query.startsWith('https://')) { // if not a link
+        if (!query.startsWith('https://')) { // if not a linkarraySongs[0]
             await interaction.reply(`Searching for ${query}`);
             const track = await player.search(query, { requestedBy: interaction.user }).then(x => x.tracks[0]);
             if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
@@ -67,6 +67,11 @@ export const command = {
                 for (let song of arraySongs) {
                     const track = await player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
+                    track.author = song.artistName;
+                    track.title = song.name;
+                    track.views = song.url;
+                    track.description = `${song.name} by ${song.artistName} on Apple Music. ${song.releaseDate.split('-')[0]}. Duration ${pm(song.durationInMillis,  {colonNotation: true}).split('.')[0]}`;
+                    track.thumbnail = song.artwork.url.replace('{w}', song.artwork.width).replace('{h}', song.artwork.height)
                     if (queue.nowPlaying() == null) await queue.play(track);
                     else queue.addTrack(track);
                     await interaction.editReply(`Added **${song.name} by ${song.artistName}** to the queue (${i}/${arraySongs.length})`);
@@ -77,6 +82,11 @@ export const command = {
                 await interaction.editReply(`Parsing \`${arraySongs[0].name} by ${arraySongs[0].artistName}\` from Apple Music...`)
                 const track = await player.search(`${arraySongs[0].name} by ${arraySongs[0].artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                 if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
+                track.author = arraySongs[0].artistName;
+                track.title = arraySongs[0].name;
+                track.views = arraySongs[0].url;
+                track.description = `${arraySongs[0].name} by ${arraySongs[0].artistName} on Apple Music. ${arraySongs[0].releaseDate.split('-')[0]}. Duration ${pm(arraySongs[0].durationInMillis,  {colonNotation: true}).split('.')[0]}`;
+                track.thumbnail = arraySongs[0].artwork.url.replace('{w}', arraySongs[0].artwork.width).replace('{h}', arraySongs[0].artwork.height)
                 if (queue.nowPlaying() == null) await queue.play(track);
                 else queue.addTrack(track);
                 await interaction.editReply(`Added **${arraySongs[0].name} by ${arraySongs[0].artistName}** to the queue`);
@@ -124,6 +134,7 @@ async function getAppleMusicData(song, arraySongs, amAPIToken) {
     const href = `https://api.music.apple.com${song}`;
     let appleMusic = await fetch(href, { headers: { "Authorization": "Bearer " + amAPIToken } });
     appleMusic = await appleMusic.json();
+    consola.info(appleMusic);
     for (song of appleMusic.data) {
         arraySongs.push(song.attributes);
     }
@@ -147,86 +158,3 @@ async function getAppleMusicPlaylistName(link, amAPIToken) {
     }
     return appleMusic.data[0].attributes.name;
 }
-
-// const addToQueue = async (interaction, musicordPlayer, msgMember, song) => {
-//     let npInterval, npEmbed;
-//     if (musicordPlayer.existQueue(interaction.guild)) {
-//         const queue = musicordPlayer.getQueue(interaction.guild);
-//         if (queue) queue.play(song, msgMember.voice.channel);
-//         return song;
-
-//     } else {
-//         const queue = musicordPlayer.initQueue(interaction.guild, {
-//             textChannel: interaction.channel,
-//             voiceChannel: msgMember.voice.channel
-//         });
-//         const queueInfo = musicordPlayer.getQueueInfo(interaction.guild);
-//         queue.on('trackStart', async (channel, song) => {
-//             let slidebar = queue.generateSongSlideBar();
-//             let color = await getColors(Buffer.from(await (await fetch(`https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`)).arrayBuffer()), 'image/jpeg');
-//             npEmbed = await channel.send({
-//                 content: `Playing **${song.title}** @ ${queueInfo.voiceChannel.bitrate / 1000}kbps`,
-//                 embeds: [new EmbedBuilder()
-//                     .setTitle(`${song.title}`)
-//                     .setAuthor({
-//                         name: `${interaction.client.user.username} | Now Playing`,
-//                         iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
-//                     })
-//                     .setDescription(`${song.description}\n${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
-//                     .setColor(0xf21f52)
-//                     .setThumbnail(`https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`)
-//                     .setURL(`${song.url}`)
-//                     .setFooter({ text: queueInfo.songs[1] != null ? `Next Track: ${queueInfo.songs[1].title}` : 'No more tracks in queue' })
-//                 ]
-//             });
-
-//             npInterval = setInterval(async () => {
-//                 slidebar = queue.generateSongSlideBar();
-//                 await npEmbed.edit({
-//                     content: `Playing **${song.title}** @ ${queueInfo.voiceChannel.bitrate / 1000}kbps`,
-//                     embeds: [new EmbedBuilder()
-//                         .setTitle(`${song.title}`)
-//                         .setAuthor({
-//                             name: `${interaction.client.user.username} | Now Playing`,
-//                             iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
-//                         })
-//                         .setDescription(`${pm(queueInfo.ressource.playbackDuration, { colonNotation: true }).split('.')[0]} ${slidebar} ${song.duration}`)
-//                         .setColor(color ? +(color[0].hex().replace('#', '0x')) : 0xf21f52)
-//                         .setThumbnail(`https://i.ytimg.com/vi/${song.id}/maxresdefault.jpg`)
-//                         .setURL(`${song.url}`)
-//                         .setFooter({ text: queueInfo.songs[1] != null ? `Next Track: ${queueInfo.songs[1].title}` : 'No more tracks in queue' })
-//                     ]
-//                 })
-//             }, 5000);
-//         })
-//         queue.on('trackFinished', async (guild, song) => {
-//             clearInterval(npInterval);
-//             await npEmbed.delete();
-//         })
-//         queue.on('stop', async (guild, song) => {
-//             consola.info(`The queue in ${guild} has stopped, Leaving Voice Chat`);
-//             clearInterval(npInterval);
-//             await npEmbed.delete();
-//         })
-//         queue.on('pause', async (guild) => {
-//             consola.info(`The queue in ${guild} has been paused`);
-//         })
-//         if (queue) {
-//             // interaction.deferReply();
-//             // queue.setFilter(AudioFilters.customEqualizer({
-//             //    band1: 99, // 20
-//             //    band2: 45, // 50
-//             //    band3: 54, // 94.82
-//             //    band4: 53, // 200
-//             //    band5: 52, // 500
-//             //    band6: 51, // 1000
-//             //    band7: 50, // 2000
-//             //    band8: 49, // 5000
-//             //    band9: 48, // 10000
-//             //    band10: 47, // 20000
-//             // }));
-//             await queue.play(song, msgMember.voice.channel)
-//         }
-//         // if (queueInfo) return await interaction.deleteReply();
-//     }
-// }

@@ -39,6 +39,11 @@ export const command = {
                 for (let song of arraySongs) {
                     const track = await player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
+                    track.author = arraySongs[0].artistName;
+                    track.title = arraySongs[0].name;
+                    track.views = arraySongs[0].url;
+                    track.description = `${arraySongs[0].name} by ${arraySongs[0].artistName} on Apple Music. ${arraySongs[0].releaseDate.split('-')[0]}. Duration ${pm(arraySongs[0].durationInMillis, { colonNotation: true }).split('.')[0]}`;
+                    track.thumbnail = arraySongs[0].artwork.url.replace('{w}', arraySongs[0].artwork.width).replace('{h}', arraySongs[0].artwork.height)
                     if (queue.nowPlaying() == null) await queue.play(track);
                     else queue.addTrack(track);
                     await interaction.editReply(`Added **${song.name} by ${song.artistName}** to the queue (${i}/${arraySongs.length})`);
@@ -49,6 +54,10 @@ export const command = {
                 await interaction.editReply(`Parsing \`${arraySongs[0].name} by ${arraySongs[0].artistName}\` from Apple Music...`)
                 const track = await player.search(`${arraySongs[0].name} by ${arraySongs[0].artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                 if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
+                track.author = song.artistName;
+                track.title = song.name;
+                track.views = song.url;
+                track.description = `${song.name} by ${song.artistName} on Apple Music. ${song.releaseDate.split('-')[0]}. Duration ${pm(song.durationInMillis, { colonNotation: true }).split('.')[0]}`;
                 if (queue.nowPlaying() == null) await queue.play(track);
                 else queue.insert(track);
                 await interaction.editReply(`Added **${arraySongs[0].name} by ${arraySongs[0].artistName}** to the start of the queue`);
