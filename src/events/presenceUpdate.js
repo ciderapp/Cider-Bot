@@ -19,18 +19,18 @@ export const event = {
             //     await mongo.logSpotifyData(newMember, activity).catch(e => { })
             // }
             if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
-                let listenerinfo = {
-                    userid: newMember.userId,
-                    userName: newMember.member.user.username,
-                    songName: activity.details,
-                    artistName: String(activity.state).split("by ")[1],
-                }
+                // let listenerinfo = {
+                //     userid: newMember.userId,
+                //     userName: newMember.member.user.username,
+                //     songName: activity.details,
+                //     artistName: String(activity.state).split("by ")[1],
+                // }
 
                 if (newMember.member._roles.includes("932784788115427348")) { // user already has listening role, no need to change roles
-                    consola.info("\x1b[2m", "Listener updated -", listenerinfo)
+                    // consola.info("\x1b[2m", "Listener updated -", listenerinfo)
                     return // not changing any roles, just a log
                 } else {
-                    consola.info('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
+                    // consola.info('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
                     client.activeUsers++;
                     client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
                     using_cider = true // code below will handle it
@@ -53,16 +53,15 @@ export const event = {
             if (newMember.member._roles.includes("932784788115427348") && newMember.member.user.id !== "710318787202646036") {
                 try {
                     newMember.member.roles.remove("932784788115427348"); // remove listening on cider role
-                    consola.info("\x1b[2m", "Listener removed -", newMember.member.user.username, newMember.member._roles, newMember.activities)
                 } catch (e) {
                     consola.error("An error occurred on role removal. ", e)
                 }
-                let rmlistenerinfo = {
-                    userid: newMember.userId,
-                    userName: newMember.member.user.username,
-                    dateRemoved: Date()
-                }
-                consola.info("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
+                // let rmlistenerinfo = {
+                //     userid: newMember.userId,
+                //     userName: newMember.member.user.username,
+                //     dateRemoved: Date()
+                // }
+                // consola.info("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
                 client.activeUsers--;
                 client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
             }
