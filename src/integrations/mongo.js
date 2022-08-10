@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 import consola from 'consola';
 import fetch from 'node-fetch';
 import 'dotenv/config';
-const client = new MongoClient(`mongodb://${process.env.MONGOUSER}:${process.env.MONGOPASSWORD}@${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
+const client = new MongoClient(`mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
 
 export const mongo = {
     async init() {

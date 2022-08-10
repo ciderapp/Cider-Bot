@@ -158,10 +158,10 @@ client.player.on('trackStart', async (queue, track) => {
                 name: `${client.user.username} | Now Playing`,
                 iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
             })
-            .setDescription(`${track.description}\n${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
+            .setDescription(`${track.description + "\n" || ""}${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
             .setColor(0xf21f52)
             .setThumbnail(`${track.thumbnail}`)
-            .setURL(`${track.views}`)
+            .setURL(`${Number.isInteger(track.views) ? track.url : track.views}`)
             .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
         ]
     });
@@ -175,10 +175,10 @@ client.player.on('trackStart', async (queue, track) => {
                     name: `${client.user.username} | Now Playing`,
                     iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
                 })
-                .setDescription(`${track.description}\n${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
+                .setDescription(`${track.description + "\n" || ""}${queue.connection.paused ? ':pause_button:' : ':arrow_forward:'} ${slidebar}`)
                 .setColor(0xf21f52)
                 .setThumbnail(`${track.thumbnail}`)
-                .setURL(`${track.views}`)
+                .setURL(`${Number.isInteger(track.views) ? track.url : track.views}`)
                 .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
             ]
         })
