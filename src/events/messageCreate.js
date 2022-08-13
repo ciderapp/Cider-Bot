@@ -79,7 +79,7 @@ export const event = {
 async function leakCider2(message) {
     // get number of messages in leakchannel
     let { client } = await import('../index.js');
-    const leakchannel = message.guild.channels.resolve(process.env.leakchannel)
+yes    const leakchannel = message.guild.channels.resolve(process.env.leakChannel)
     const messages = await leakchannel.messages.fetch()
     await leakchannel.send({embeds:[new EmbedBuilder()
         .setColor(0xf21f52)
