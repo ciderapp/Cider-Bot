@@ -1,7 +1,25 @@
 import { MongoClient } from 'mongodb';
+import { default as tunnel } from 'tunnel-ssh';
 import consola from 'consola';
 import fetch from 'node-fetch';
 import 'dotenv/config';
+
+if (process.env.NODE_ENV === 'development') {
+    tunnel({
+        username: process.env.SSH_USER,
+        host: process.env.SSH_HOST,
+        port: process.env.SSH_PORT,
+        password: process.env.SSH_PASS,
+        dstHost: process.env.SSH_DST_HOST,
+        dstPort: process.env.SSH_DST_PORT,
+        localHost: process.env.SSH_LOCAL_HOST,
+        localPort: process.env.SSH_LOCAL_PORT,
+    }, function (error, server) {
+        if (error) { return console.log(error); }
+        console.log(`[SSH] Successfully Connected to ${server.address().address} @ ${server.address().port}`);
+    });
+}
+
 const client = new MongoClient(`mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
 
 export const mongo = {
@@ -91,21 +109,26 @@ export const mongo = {
         }
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
+                let dmg, pkg, exe, winget, AppImage, deb, snap;
+                for (let asset of release.assets) {
+                    switch(true) {
+                        case asset.name.endsWith('.dmg'): dmg = asset.browser_download_url; break;
+                        case asset.name.endsWith('.pkg'): pkg = asset.browser_download_url; break;
+                        case (asset.name.endsWith('.exe') && !asset.name.includes('-winget-')): exe = asset.browser_download_url; break;
+                        case (asset.name.endsWith('.exe') && asset.name.includes('-winget-')): winget = asset.browser_download_url; break;
+                        case asset.name.endsWith('.AppImage') : AppImage = asset.browser_download_url; break;
+                        case asset.name.endsWith('.deb'): deb = asset.browser_download_url; break;
+                        case asset.name.endsWith('.snap') : snap = asset.browser_download_url; break;
+                    }
+                }
+                console.log(` Dmg: ${dmg}\n Pkg: ${pkg}\n Exe: ${exe}\n WinGet: ${winget}\n AppImage: ${AppImage}\n Deb: ${deb}\n Snap: ${snap}`)
                 await client.db('bot').collection('releases').updateOne({ branch: `${branch}` }, {
                     $set: {
                         tag: `${release.tag_name}`,
                         lastUpdated: `${release.published_at}`,
                         jsDate: new Date(release.published_at).getTime(), //for timestamping
                         releaseID: `${release.id}`,
-                        links: {
-                            dmg: `${release.assets[0].browser_download_url}`,
-                            pkg: `${release.assets[1].browser_download_url}`,
-                            AppImage: `${release.assets[2].browser_download_url}`,
-                            exe: `${release.assets[3].browser_download_url}`,
-                            winget: `${release.assets[5].browser_download_url}`,
-                            deb: `${release.assets[7].browser_download_url}`,
-                            snap: `${release.assets[8].browser_download_url}`,   
-                        }
+                        links: { dmg, pkg, AppImage, exe, winget, deb, snap }   
                     }
                 }, { upsert: true })
                 consola.success("\x1b[33m%s\x1b[0m", '[mongo]', `Synced ${branch} release data.`)

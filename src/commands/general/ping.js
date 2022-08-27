@@ -11,12 +11,12 @@ export const command = {
     category: 'General',
     execute: async (interaction) => {
         let show = interaction.options.getBoolean('show') || false;
-        let test = Date.now()
-        await interaction.reply({ embeds: [{ color: resolveColor('Random'), description: "Pinging..." }], ephemeral: !show })
+        interaction.reply({ embeds: [{ color: resolveColor('Random'), description: "Pinging..." }], ephemeral: !show })
+        let reply = await interaction.fetchReply();
         let embed = new EmbedBuilder()
             .setColor("Random")
             .setTitle("Pong!🏓")
-            .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${test - interaction.createdTimestamp}ms\``);
+            .setDescription(`API: \`${interaction.client.ws.ping}ms\`\nLatency: \`${reply.createdTimestamp - interaction.createdTimestamp}ms\``);
         await interaction.editReply({ content: " ", embeds: [embed], ephemeral: !show });
     }
 };

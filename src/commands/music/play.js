@@ -29,6 +29,7 @@ export const command = {
                 voteskip: 0,
                 votestop: 0,
             },
+            bufferingTimeout: 10000, initialVolume: 50,
             async onBeforeCreateStream(track, source, _queue) {
                 // only trap youtube source
                 if (source === "youtube") {
@@ -66,7 +67,7 @@ export const command = {
                 await interaction.editReply(`Adding **${playName}** with \`${arraySongs.length}\` tracks to the queue`)
                 let i = 1;
                 for (let song of arraySongs) {
-                    const track = await player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+                    const track = player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
                     track.author = song.artistName;
                     track.title = song.name;

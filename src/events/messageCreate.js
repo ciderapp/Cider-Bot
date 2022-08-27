@@ -79,15 +79,21 @@ export const event = {
 async function leakCider2(message) {
     // get number of messages in leakchannel
     let { client } = await import('../index.js');
-    const leakchannel = message.guild.channels.resolve(process.env.leakChannel)
-    const messages = await leakchannel.messages.fetch()
-    await leakchannel.send({embeds:[new EmbedBuilder()
-        .setColor(0xf21f52)
-        .setDescription(`${message.author} has unlocked a Cider 2 leak: **${leaks[messages.size].name}**`)
-        .setAuthor({
-            name: `${client.user.username} | Cider 2 Leaks`,
-            iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+    if (client.canLeak) {
+        const leakchannel = message.guild.channels.resolve(process.env.leakChannel)
+        const messages = await leakchannel.messages.fetch()
+        await leakchannel.send({
+            embeds: [new EmbedBuilder()
+                .setColor(0xf21f52)
+                .setDescription(`${message.author} has unlocked a Cider 2 leak: **${leaks[messages.size].name}**`)
+                .setAuthor({
+                    name: `${client.user.username} | Cider 2 Leaks`,
+                    iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671',
+                })
+                .setImage(leaks[messages.size].url)
+            ]
         })
-        .setImage(leaks[messages.size].url)
-    ]})
+        client.canLeak = false;
+        setTimeout(() => { client.canLeak = true }, 60000) // 1 minute
+    }
 }
