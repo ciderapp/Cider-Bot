@@ -73,6 +73,12 @@ export const event = {
         if (message.mentions.has(message.client.user)) {
             await message.reply({ content: 'https://images-ext-1.discordapp.net/external/DgDEJfcfyMf0mxs09pQw0vLuyIbug6BCZabCBkZ4IuI/https/pbs.twimg.com/media/FX2mvLlUEAACH-q.jpg' })
         }
+        if (message.author.id === '635177737514123274') {
+            var regex = new RegExp(`(?=.*your)(?=.*mom)|(?=.*ur)(?=.*mom)`, "gi");
+            if (regex.test(message.content)) {
+                message.reply("No, your mom")
+            }
+        }
     }
 
 }

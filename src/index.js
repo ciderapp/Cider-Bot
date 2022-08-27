@@ -150,12 +150,12 @@ client.login(process.env.TOKEN);
 let npInterval, npEmbed;
 client.player.on('trackStart', async (queue, track) => {
     // consola.info("Track:", track)
-    consola.info("Queue Options", queue.options);
-    consola.info("Player Info", queue.player.voiceUtils);
-    consola.info("Voice Connection", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
-    consola.info("Audio Resource", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
-    consola.info("Audio Player", queue.player.voiceUtils.getConnection('585180490202349578').audioPlayer);
-    consola.info("Channel", queue.player.voiceUtils.getConnection('585180490202349578').channel);
+    // consola.info("Queue Options", queue.options);
+    // consola.info("Player Info", queue.player.voiceUtils);
+    // consola.info("Voice Connection", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
+    // consola.info("Audio Resource", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
+    // consola.info("Audio Player", queue.player.voiceUtils.getConnection('585180490202349578').audioPlayer);
+    // consola.info("Channel", queue.player.voiceUtils.getConnection('585180490202349578').channel);
     let slidebar = queue.createProgressBar();
     npEmbed = await queue.metadata.channel.send({
         embeds: [new EmbedBuilder()
