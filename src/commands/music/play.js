@@ -29,7 +29,6 @@ export const command = {
                 voteskip: 0,
                 votestop: 0,
             },
-            bufferingTimeout: 10000, initialVolume: 50,
             async onBeforeCreateStream(track, source, _queue) {
                 // only trap youtube source
                 if (source === "youtube") {
@@ -41,7 +40,10 @@ export const command = {
         });
         // verify vc connection
         try {
-            if (!queue.connection) await queue.connect(interaction.member.voice.channel);
+            if (!queue.connection) {
+                await queue.connect(interaction.member.voice.channel);
+                queue.setVolume(50);
+            } 
         } catch {
             queue.destroy();
             return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
@@ -55,7 +57,7 @@ export const command = {
             if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
             track.description = `Requested by <@${interaction.user.id}>`;
             await interaction.editReply(`Added **${track.title}** to the queue`);
-            if (queue.nowPlaying() == null) await queue.play(track);
+            if (queue.nowPlaying() == null) await queue.play(track, {immediate: true});
             else queue.addTrack(track);
         } else if (query.startsWith('https://music.apple.com/') || query.startsWith('https://beta.music.apple.com/')) { // if link is apple music
             await interaction.reply(`Connecting to Apple Music API...`);
@@ -74,7 +76,7 @@ export const command = {
                     track.views = song.url;
                     track.description = `${song.name} by ${song.artistName} on Apple Music. ${song.releaseDate.split('-')[0]}. Requested by <@${interaction.user.id}>`;
                     track.thumbnail = song.artwork.url.replace('{w}', song.artwork.width).replace('{h}', song.artwork.height)
-                    if (queue.nowPlaying() == null) await queue.play(track);
+                    if (queue.nowPlaying() == null) await queue.play(track,  {immediate: true});
                     else queue.addTrack(track);
                     await interaction.editReply(`Added **${song.name} by ${song.artistName}** to the queue (${i}/${arraySongs.length})`);
                     i++;
@@ -89,7 +91,7 @@ export const command = {
                 track.views = arraySongs[0].url;
                 track.description = `${arraySongs[0].name} by ${arraySongs[0].artistName} on Apple Music. ${arraySongs[0].releaseDate.split('-')[0]}. Requested by <@${interaction.user.id}>`;
                 track.thumbnail = arraySongs[0].artwork.url.replace('{w}', arraySongs[0].artwork.width).replace('{h}', arraySongs[0].artwork.height)
-                if (queue.nowPlaying() == null) await queue.play(track);
+                if (queue.nowPlaying() == null) await queue.play(track,  {immediate: true});
                 else queue.addTrack(track);
                 await interaction.editReply(`Added **${arraySongs[0].name} by ${arraySongs[0].artistName}** to the queue`);
 
