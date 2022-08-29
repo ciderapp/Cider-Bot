@@ -17,7 +17,7 @@ export const command = {
     async execute(interaction) {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false
-        interaction.deferReply();
+        interaction.deferReply({ ephemeral: !show });
         if (ping != "") { ping = ping.toString() }
         await mongo.syncReleaseData("main");
         await mongo.syncReleaseData("stable");
