@@ -24,7 +24,7 @@ export const command = {
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
         let res = await getArtwork(amAPIToken, query);
         if (!includeInfo) {
-            return await interaction.editReply(res);
+            return await interaction.editReply(res.attributes.artwork.url.replace('{w}', res.attributes.artwork.width).replace('{h}', res.attributes.artwork.height));
         }
         return await interaction.editReply({ content: '',
             embeds: [{
