@@ -23,7 +23,7 @@ export const interaction = {
                     new ButtonBuilder().setLabel("deb").setStyle(ButtonStyle.Link).setURL(`${release.links.deb}`),
                     new ButtonBuilder().setLabel("snap").setStyle(ButtonStyle.Link).setURL(`${release.links.snap}`)
                 )
-                if (branch == 'main' && release.links.dmg && release.links.dmg) {
+                if (release.links.dmg && release.links.dmg) {
                     buttonsMac.addComponents(
                         new ButtonBuilder().setLabel("macos-dmg").setStyle(5).setURL(`${release.links.dmg}`),
                         new ButtonBuilder().setLabel("macos-pkg").setStyle(5).setURL(`${release.links.pkg}`)

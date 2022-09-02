@@ -5,6 +5,7 @@ import { readdirSync } from 'fs';
 import { getAPIToken } from "./integrations/musickitAPI.js";
 import 'dotenv/config';
 import { Player } from 'discord-player';
+import { startServer } from "./server/express.js";
 import { getLyrics } from "./integrations/geniusLyrics.js";
 
 const client = new Client({
@@ -94,6 +95,7 @@ async function syncUsers(guild) {
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
     mongo.init().then(() => { syncUsers(guild); })
+    startServer();
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
     setInterval(() => { syncUsers(guild); }, 1800000);

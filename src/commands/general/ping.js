@@ -11,8 +11,7 @@ export const command = {
     category: 'General',
     execute: async (interaction) => {
         let show = interaction.options.getBoolean('show') || false;
-        interaction.reply({ embeds: [{ color: resolveColor('Random'), description: "Pinging..." }], ephemeral: !show })
-        let reply = await interaction.fetchReply();
+        let reply = await interaction.reply({ embeds: [{ color: resolveColor('Random'), description: "Pinging..." }], ephemeral: !show, fetchReply:true })
         let embed = new EmbedBuilder()
             .setColor("Random")
             .setTitle("Pong!🏓")

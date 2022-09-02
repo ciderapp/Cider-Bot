@@ -6,3 +6,4 @@ yarn.lock
 .env*
 .idea/
 leaks.json
+headers.js

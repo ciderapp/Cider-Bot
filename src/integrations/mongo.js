@@ -4,26 +4,25 @@ import consola from 'consola';
 import fetch from 'node-fetch';
 import 'dotenv/config';
 
-if (process.env.NODE_ENV === 'development') {
-    tunnel({
-        username: process.env.SSH_USER,
-        host: process.env.SSH_HOST,
-        port: process.env.SSH_PORT,
-        password: process.env.SSH_PASS,
-        dstHost: process.env.SSH_DST_HOST,
-        dstPort: process.env.SSH_DST_PORT,
-        localHost: process.env.SSH_LOCAL_HOST,
-        localPort: process.env.SSH_LOCAL_PORT,
-    }, function (error, server) {
-        if (error) { return console.log(error); }
-        console.log(`[SSH] Successfully Connected to ${server.address().address} @ ${server.address().port}`);
-    });
-}
-
 const client = new MongoClient(`mongodb://${process.env.MONGOHOST}:${process.env.MONGOPORT}`);
 
 export const mongo = {
     async init() {
+        if (process.env.NODE_ENV === 'development') {
+            tunnel({
+                username: process.env.SSH_USER,
+                host: process.env.SSH_HOST,
+                port: process.env.SSH_PORT,
+                password: process.env.SSH_PASS,
+                dstHost: process.env.SSH_DST_HOST,
+                dstPort: process.env.SSH_DST_PORT,
+                localHost: process.env.SSH_LOCAL_HOST,
+                localPort: process.env.SSH_LOCAL_PORT,
+            }, function (error, server) {
+                if (error) { return console.log(error); }
+                console.log(`[SSH] Successfully Connected to ${server.address().address} @ ${server.address().port}`);
+            });
+        }
         await client.connect()
         consola.success("\x1b[33m%s\x1b[0m", '[mongo]', 'Connected!')
     },
@@ -56,35 +55,39 @@ export const mongo = {
         }
 
     },
-    async logSpotifyData(listener, activity){
+    async logSpotifyData(listener, activity) {
         let track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}%20-%20${activity.assets.largeText}&country=US&entity=song`)
         track = await track.json()
-        if(!track.results[0]){
+        if (!track.results[0]) {
             track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state.split(";")[0]}%20-%20${activity.assets.largeText}&country=US&entity=song`)
             track = await track.json()
-            if(!track.results[0]){
+            if (!track.results[0]) {
                 track = await fetch(`https://itunes.apple.com/search?term=${activity.details}%20by%20${activity.state}&country=US&entity=song`)
                 track = await track.json()
-                if(!track.results[0]){
+                if (!track.results[0]) {
                     track = await fetch(`https://itunes.apple.com/search?term=${activity.details.split("(")[0]}%20by%20${activity.state}&country=US&entity=song`)
                     track = await track.json()
                 }
             }
         }
-        await client.db('connect').collection('users').updateOne({ id: listener.user.id }, { $set: { lastSpotifyTrack: {
-            artist: activity.state,
-            song: activity.details,
-            album: activity.assets.largeText,
-            url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
-        } } }, { upsert: true })
+        await client.db('connect').collection('users').updateOne({ id: listener.user.id }, {
+            $set: {
+                lastSpotifyTrack: {
+                    artist: activity.state,
+                    song: activity.details,
+                    album: activity.assets.largeText,
+                    url: `https://cider.sh/p?${track.results[0].trackViewUrl}`,
+                }
+            }
+        }, { upsert: true })
     },
-    async getSpotifyData(limit, userid){
+    async getSpotifyData(limit, userid) {
         // SELECT * FROM spotify-data WHERE userid = userid AND tracks.length >= limit
         let data = await client.db('bot').collection('spotify-data').findOne({ userid: userid })
-        if(!data || data.tracks.length < limit) return null
+        if (!data || data.tracks.length < limit) return null
         return data
     },
-    async setUserIsBan(userid){
+    async setUserIsBan(userid) {
         await client.db('bot').collection('spotify-data').updateOne({ userid: userid }, { $set: { isBanned: true } }, { upsert: true })
     },
 
@@ -101,34 +104,28 @@ export const mongo = {
     async syncReleaseData(branch) {
         let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
         releases = await releases.json()
-        releases.sort ((a, b) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
-        let macDmg = ""; let macPkg = "";
-        if (branch == 'main') {
-            macDmg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.dmg"
-            macPkg = "https://github.com/ciderapp/Cider/releases/download/macos-beta/Cider.pkg"
-        }
+        releases.sort((a, b) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
         for (let release of releases) {
             if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
                 let dmg, pkg, exe, winget, AppImage, deb, snap;
                 for (let asset of release.assets) {
-                    switch(true) {
+                    switch (true) {
                         case asset.name.endsWith('.dmg'): dmg = asset.browser_download_url; break;
                         case asset.name.endsWith('.pkg'): pkg = asset.browser_download_url; break;
                         case (asset.name.endsWith('.exe') && !asset.name.includes('-winget-')): exe = asset.browser_download_url; break;
                         case (asset.name.endsWith('.exe') && asset.name.includes('-winget-')): winget = asset.browser_download_url; break;
-                        case asset.name.endsWith('.AppImage') : AppImage = asset.browser_download_url; break;
+                        case asset.name.endsWith('.AppImage'): AppImage = asset.browser_download_url; break;
                         case asset.name.endsWith('.deb'): deb = asset.browser_download_url; break;
-                        case asset.name.endsWith('.snap') : snap = asset.browser_download_url; break;
+                        case asset.name.endsWith('.snap'): snap = asset.browser_download_url; break;
                     }
                 }
-                console.log(` Dmg: ${dmg}\n Pkg: ${pkg}\n Exe: ${exe}\n WinGet: ${winget}\n AppImage: ${AppImage}\n Deb: ${deb}\n Snap: ${snap}`)
                 await client.db('bot').collection('releases').updateOne({ branch: `${branch}` }, {
                     $set: {
                         tag: `${release.tag_name}`,
                         lastUpdated: `${release.published_at}`,
                         jsDate: new Date(release.published_at).getTime(), //for timestamping
                         releaseID: `${release.id}`,
-                        links: { dmg, pkg, AppImage, exe, winget, deb, snap }   
+                        links: { dmg, pkg, AppImage, exe, winget, deb, snap }
                     }
                 }, { upsert: true })
                 consola.success("\x1b[33m%s\x1b[0m", '[mongo]', `Synced ${branch} release data.`)

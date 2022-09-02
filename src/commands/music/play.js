@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { MusicKit as MusicKitHeader } from '../../data/headers.js';
 import fetch from 'node-fetch';
-import { default as pm } from 'pretty-ms';
 import { QueryType } from 'discord-player';
 import { stream } from 'play-dl'
 import 'dotenv/config';
@@ -69,7 +69,8 @@ export const command = {
                 await interaction.editReply(`Adding **${playName}** with \`${arraySongs.length}\` tracks to the queue`)
                 let i = 1;
                 for (let song of arraySongs) {
-                    const track = player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+                    consola.info(song)
+                    const track = await player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
                     track.author = song.artistName;
                     track.title = song.name;
@@ -139,7 +140,7 @@ async function getAppleMusicData(song, arraySongs, amAPIToken) {
         song = (await convertLinkToAPI(song)).url;
     }
     const href = `https://api.music.apple.com${song}`;
-    let appleMusic = await fetch(href, { headers: { "Authorization": "Bearer " + amAPIToken } });
+    let appleMusic = await fetch(href, { headers: MusicKitHeader(amAPIToken) });
     appleMusic = await appleMusic.json();
     consola.info(appleMusic);
     for (song of appleMusic.data) {
@@ -158,7 +159,7 @@ async function getAppleMusicPlaylistName(link, amAPIToken) {
         link = link.url;
     }
     const href = `https://api.music.apple.com${link.replace('/tracks', '')}`;
-    let appleMusic = await fetch(href, { headers: { "Authorization": "Bearer " + amAPIToken } });
+    let appleMusic = await fetch(href, { headers: MusicKitHeader(amAPIToken) });
     appleMusic = await appleMusic.json();
     if (kind === 'album') {
         return `${appleMusic.data.attributes.name} by ${appleMusic.data.attributes.artistName}`;
