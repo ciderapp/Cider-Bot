@@ -20,7 +20,7 @@ export const command = {
         let includeInfo = interaction.options.getBoolean('include-info') || false;
         if (query && !query.startsWith('https://')) {
             query = `/v1/catalog/us/search/?term=${query.replace(' ', '+')}&with=topResults`;
-        } else if (!query.startsWith('https://music.apple.com/') || !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
+        } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
         let res = await getArtwork(amAPIToken, query).catch((err) => {
             if (err.name === "TypeError") return interaction.editReply({
