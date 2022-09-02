@@ -14,7 +14,8 @@ export const getArtwork = async (apiToken, query) => {
     const href = `https://api.music.apple.com${query}`;
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
-    return res.data[0].attributes.artwork.url.replace('{w}', res.data[0].attributes.artwork.width).replace('{h}', res.data[0].attributes.artwork.height);
+    if(res.results) { res = res.results.topResults }
+    return res.data[0];
 };
 
 const convertLinkToAPI = async (link) => {
