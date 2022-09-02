@@ -21,8 +21,10 @@ export const command = {
         if (query && !query.startsWith('https://')) {
             query = `/v1/catalog/us/search/?term=${query.replace(' ', '+')}&with=topResults`;
         }
+        if (!query.startsWith('https://music.apple.com/') || !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
-        let res = await getArtwork(amAPIToken, query);
+        let res = await getArtwork(amAPIToken, query).catch( () => { return interaction.editReply({ content: 'An error occured while getting the artwork' }) });
+        if (!res) return await interaction.editReply({ content: `No artwork found for \`${query}\`` });
         if (!includeInfo) {
             return await interaction.editReply(res.attributes.artwork.url.replace('{w}', res.attributes.artwork.width).replace('{h}', res.attributes.artwork.height));
         }
@@ -35,9 +37,5 @@ export const command = {
                 url: res.attributes.url
             }]
         });
-
-
-
-
     }
 }
