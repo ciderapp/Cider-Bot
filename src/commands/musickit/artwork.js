@@ -22,7 +22,17 @@ export const command = {
             query = `/v1/catalog/us/search/?term=${query.replace(' ', '+')}&with=topResults`;
         } else if (!query.startsWith('https://music.apple.com/') || !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
-        let res = await getArtwork(amAPIToken, query).catch(() => { return interaction.editReply({ content: 'An error occured while getting the artwork' }) });
+        let res = await getArtwork(amAPIToken, query).catch((err) => {
+            if (err.name === "TypeError") return interaction.editReply({
+                content: '', embeds: [{
+                    color: resolveColor('Red'),
+                    author: { name: `${client.user.username} | Search Error`, iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671' },
+                    description: `We cannot find an artwork that matches your query:\n\`${interaction.options.getString('query')}\``,
+                    footer: { text: `requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) }
+                }]
+            })
+            return interaction.editReply({ content: `An error occured while getting the artwork: \`${err}\`` });
+        });
         if (!res) return await interaction.editReply({ content: `No artwork found for \`${query}\`` });
         if (!includeInfo) {
             return await interaction.editReply(res.attributes.artwork.url.replace('{w}', res.attributes.artwork.width).replace('{h}', res.attributes.artwork.height));
