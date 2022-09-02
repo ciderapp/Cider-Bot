@@ -26,7 +26,7 @@ export const command = {
         if (!includeInfo) {
             return await interaction.editReply(res);
         }
-        return await interaction.editReply({
+        return await interaction.editReply({ content: '',
             embeds: [{
                 color: resolveColor(`#${res.attributes.artwork.bgColor}`),
                 title: res.attributes.name,
