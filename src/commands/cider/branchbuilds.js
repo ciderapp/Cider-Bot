@@ -19,8 +19,6 @@ export const command = {
         let show = interaction.options.getBoolean('show') || false
         interaction.deferReply({ ephemeral: !show });
         if (ping != "") { ping = ping.toString() }
-        await mongo.syncReleaseData("main");
-        await mongo.syncReleaseData("stable");
         let branchMenu = new ActionRowBuilder()
             .addComponents(
                 new SelectMenuBuilder()
