@@ -17,7 +17,6 @@ export const command = {
     async execute(interaction) {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false
-        interaction.deferReply({ ephemeral: !show });
         if (ping != "") { ping = ping.toString() }
         let branchMenu = new ActionRowBuilder()
             .addComponents(
@@ -38,10 +37,10 @@ export const command = {
                     ])
             )
         if (ping != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
-            await interaction.editReply({ content: `${ping} Choose your branch:`, components: [branchMenu] });
+            await interaction.reply({ content: `${ping} Choose your branch:`, components: [branchMenu] });
         }
         else {
-            await interaction.editReply({ content: `Choose your branch:`, ephemeral: !show, components: [branchMenu] });
+            await interaction.reply({ content: `Choose your branch:`, ephemeral: !show, components: [branchMenu] });
             if (ping != "") {
                 await interaction.followUp({ content: `You do not have the permission to ping users.`, ephemeral: true, components: [] })
             }
