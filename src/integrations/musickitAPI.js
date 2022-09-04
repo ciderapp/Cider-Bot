@@ -12,14 +12,15 @@ export const getArtwork = async (apiToken, query, animatedArtwork) => {
         query = (await convertLinkToAPI(query)).url;
     }
     let href = `https://amp-api.music.apple.com${query}`;
-    if(animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo";
-    else if(animatedArtwork) href = href + "?extend=editorialVideo,editorialArtwork";
+    if(animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo&include=albums";
+    else if(animatedArtwork) href = href + "?extend=editorialVideo&include=albums";
     console.log(href);
 
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
-    consola.info(res);
+    
     if(res.results) { res = res.results.topResults }
+    if (res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes.editorialVideo;
     consola.info(res.data[0].attributes);
     return res.data[0];
 };

@@ -51,7 +51,8 @@ export const command = {
                     }]
                 });
             }
-            exec(`yt-dlp ${res.attributes.editorialVideo.motionDetailSquare.video} -S "codec:h264" -o "temp.mp4" && ffmpeg -y -i temp.mp4 artwork.mp4`, async (err, stdout, stderr) => {
+            if (res.type === "artists") res.attributes.editorialVideo.motionDetailSquare = res.attributes.editorialVideo.motionArtistSquare1x1;
+            exec(`yt-dlp ${res.attributes.editorialVideo.motionDetailSquare.video} -S "codec:h264,res:960" -o "temp.mp4" && ffmpeg -y -i temp.mp4 artwork.mp4`, async (err, stdout, stderr) => {
                 if (err) return console.error(err)
                 consola.info(stdout)
                 consola.info(stderr)
@@ -65,6 +66,9 @@ export const command = {
             })
         }
         else {
+            if(animatedArtwork && !res.attributes.editorialVideo) {
+                await interaction.followUp({ content: 'Sorry, We cannot find an animated artwork for your query' });
+            }
             if (!res) return await interaction.editReply({ content: `No artwork found for \`${query}\`` });
             if (!includeInfo) {
                 return await interaction.editReply(res.attributes.artwork.url.replace('{w}', res.attributes.artwork.width).replace('{h}', res.attributes.artwork.height));
