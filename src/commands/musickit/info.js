@@ -45,7 +45,8 @@ export const command = {
             .setThumbnail(info.attributes.artwork.url.replace('{w}', info.attributes.artwork.width).replace('{h}', info.attributes.artwork.height))
             .setColor(resolveColor(`#${info.attributes.artwork.bgColor}`))
             .setFooter({ text: `requested by ${interaction.user.tag}`, iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-        if (info.attributes.editorialNotes) embed.setDescription(info.attributes.editorialNotes.short);
+        if (info.type === "apple-curators") embed.setDescription(info.attributes.editorialNotes.standard.split('\n')[0]);
+        else if (info.attributes.editorialNotes) embed.setDescription(info.attributes.editorialNotes.short);
         if (info.attributes.artistName) embed.addFields({ name: 'Artist', value: info.attributes.artistName, inline: true });
         if (info.attributes.albumName) embed.addFields({ name: 'Album', value: info.attributes.albumName, inline: true });
         if (info.attributes.genreNames) embed.addFields({ name: 'Genre', value: info.attributes.genreNames.join(', '), inline: true });

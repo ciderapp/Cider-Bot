@@ -8,12 +8,11 @@ export const getAPIToken = async () => {
 };
 
 export const getArtwork = async (apiToken, query, animatedArtwork, storefront) => {
-    if (query.startsWith('https://music.apple.com/')) {
-        query = convertLinkToAPI(query, storefront).url;
-    }
+    if (query.startsWith('https://music.apple.com/') || query.startsWith('https://beta.music.apple.com/')) query = await convertLinkToAPI(query, storefront);
     let href = `https://amp-api.music.apple.com${query}`;
     if (animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo&include=albums";
     else if (animatedArtwork) href = href + "?extend=editorialVideo&include=albums";
+    // consola.info(href)
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
     if (res.results) {
@@ -23,34 +22,42 @@ export const getArtwork = async (apiToken, query, animatedArtwork, storefront) =
             res = await res.json();
         }
     }
+    // consola.info(res)
     if (animatedArtwork && res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes?.editorialVideo;
     return res.data[0];
 };
 
 export const getInfo = async (apiToken, query, storefront) => {
-    if (query.startsWith('https://music.apple.com/')) query = convertLinkToAPI(query, storefront).url;
+    if (query.startsWith('https://music.apple.com/') || query.startsWith('https://beta.music.apple.com/')) query = await convertLinkToAPI(query, storefront);
     let href = `https://amp-api.music.apple.com${query}`;
+    // consola.info(href)
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
     if (res.results) res = res.results.top;
+    // consola.info(res.data[0])
     return res.data[0];
 }
 
-const convertLinkToAPI = (link, storefront) => {
+const convertLinkToAPI = async (link, storefront) => {
     let catalog = storefront || link.split('/')[3];
     let kind = link.split('/')[4];
+    let name = link.split('/')[5];
     let albumId = link.split('/')[6];
     let songId = link.split('=')[1];
     if (kind === 'album') {
         if (songId) {
-            return { url: `/v1/catalog/${catalog}/songs/${songId}`, kind: 'song' }
+            return `/v1/catalog/${catalog}/songs/${songId}`;
         }
-        return { url: `/v1/catalog/${catalog}/albums/${albumId}`, kind: 'album' };
+        return `/v1/catalog/${catalog}/albums/${albumId}`
     }
     else if (kind === 'playlist') {
-        return { url: `/v1/catalog/${catalog}/playlists/${albumId}`, kind: 'playlist' };
+        return `/v1/catalog/${catalog}/playlists/${albumId}`
     }
     else if (kind === 'artist') {
-        return { url: `/v1/catalog/${catalog}/artists/${albumId}`, kind: 'artist' };
+        return `/v1/catalog/${catalog}/artists/${albumId}`
+    }
+    else if (kind === 'curator') {
+        if(name.startsWith('apple-music-')) return `/v1/catalog/${catalog}/apple-curators/${albumId}`
+        return `/v1/catalog/${catalog}/curators/${albumId}`
     }
 }
