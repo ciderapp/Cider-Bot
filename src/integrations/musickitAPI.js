@@ -7,15 +7,13 @@ export const getAPIToken = async () => {
     return (await apiToken.json()).token;
 };
 
-export const getArtwork = async (apiToken, query, animatedArtwork) => {
+export const getArtwork = async (apiToken, query, animatedArtwork, storefront) => {
     if (query.startsWith('https://music.apple.com/')) {
-        query = convertLinkToAPI(query).url;
+        query = convertLinkToAPI(query, storefront).url;
     }
     let href = `https://amp-api.music.apple.com${query}`;
     if (animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo&include=albums";
     else if (animatedArtwork) href = href + "?extend=editorialVideo&include=albums";
-    console.log(href);
-
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
     if (res.results) {
@@ -26,13 +24,20 @@ export const getArtwork = async (apiToken, query, animatedArtwork) => {
         }
     }
     if (animatedArtwork && res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes?.editorialVideo;
-    consola.info(res.data[0].attributes);
     return res.data[0];
 };
 
-const convertLinkToAPI = (link) => {
-    consola.info(link);
-    let catalog = link.split('/')[3];
+export const getInfo = async (apiToken, query, storefront) => {
+    if (query.startsWith('https://music.apple.com/')) query = convertLinkToAPI(query, storefront).url;
+    let href = `https://amp-api.music.apple.com${query}`;
+    let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
+    res = await res.json();
+    if (res.results) res = res.results.topResults;
+    return res.data[0];
+}
+
+const convertLinkToAPI = (link, storefront) => {
+    let catalog = storefront || link.split('/')[3];
     let kind = link.split('/')[4];
     let albumId = link.split('/')[6];
     let songId = link.split('=')[1];

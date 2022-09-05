@@ -1,9 +1,6 @@
 import { SlashCommandBuilder, resolveColor, AttachmentBuilder } from 'discord.js';
 import { getArtwork } from '../../integrations/musickitAPI.js';
-import { CiderPOST as CiderHeader } from '../../data/headers.js';
 import m3u8 from 'm3u8-stream-list'
-import { exec } from 'child_process';
-import { unlinkSync } from 'fs';
 import 'dotenv/config';
 
 export const command = {
@@ -13,25 +10,30 @@ export const command = {
         .addStringOption(o => o.setName("query")
             .setDescription("The song/artist to get the artwork of (works with apple music links and normal queries only)")
             .setRequired(true))
+        .addStringOption(o => o.setName("storefront")
+            .setDescription("Override the storefront to search in (defaults to 'us')")
+            .setRequired(false))
         .addBooleanOption(o => o.setName("include-info")
             .setDescription("Include the song/abum/artist info in the embed")
             .setRequired(false))
         .addBooleanOption(o => o.setName("animated-artwork")
             .setDescription("Include the animated artwork in the embed (if available)")
             .setRequired(false)),
-    category: 'Music',
+    category: 'MusicKit',
     execute: async (interaction) => {
         let { client } = await import('../../index.js');
         let amAPIToken = client.amAPIToken;
         let query = interaction.options.getString('query');
+        let storefront = interaction.options.getString('storefront') || 'us';
         let includeInfo = interaction.options.getBoolean('include-info') || false;
         let animatedArtwork = interaction.options.getBoolean('animated-artwork') || false;
         let failed = false
         if (query && !query.startsWith('https://')) {
-            query = `/v1/catalog/us/search/?term=${query.replace(/ /g, '+')}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
+            query = `/v1/catalog/${storefront}/search/?term=${query.replace(/ /g, '+')}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
-        let res = await getArtwork(amAPIToken, query, animatedArtwork).catch((err) => {
+
+        let res = await getArtwork(amAPIToken, query, animatedArtwork, storefront).catch((err) => {
             consola.error(err);
             failed = true;
             if (err.name === "TypeError") return interaction.editReply({
@@ -60,10 +62,10 @@ export const command = {
             let playlist = await fetch(res.attributes.editorialVideo.motionDetailSquare.video)
             playlist = Buffer.from(await playlist.arrayBuffer())
             let videos = m3u8(playlist).filter(v => v.CODECS.includes('avc1') && v.RESOLUTION == '1080x1080')
-            if(!includeInfo) await interaction.editReply({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
-            else await interaction.followUp({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') }) 
+            if (!includeInfo) await interaction.editReply({ content: videos[videos.length - 1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
+            else await interaction.followUp({ content: videos[videos.length - 1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
         }
-        else if(!failed){
+        else if (!failed) {
             if (animatedArtwork && !res.attributes?.editorialVideo) {
                 await interaction.followUp({ content: `Sorry ${interaction.user}, We cannot find an animated artwork for your query` });
             }
@@ -71,8 +73,6 @@ export const command = {
             if (!includeInfo) {
                 return await interaction.editReply(res.attributes.artwork.url.replace('{w}', res.attributes.artwork.width).replace('{h}', res.attributes.artwork.height));
             }
-
-
             return await interaction.editReply({
                 content: '',
                 embeds: [{
