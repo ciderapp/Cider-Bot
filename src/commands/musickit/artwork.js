@@ -26,12 +26,14 @@ export const command = {
         let query = interaction.options.getString('query');
         let includeInfo = interaction.options.getBoolean('include-info') || false;
         let animatedArtwork = interaction.options.getBoolean('animated-artwork') || false;
+        let failed = false
         if (query && !query.startsWith('https://')) {
             query = `/v1/catalog/us/search/?term=${query.replace(/ /g, '+')}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
         let res = await getArtwork(amAPIToken, query, animatedArtwork).catch((err) => {
             consola.error(err);
+            failed = true;
             if (err.name === "TypeError") return interaction.editReply({
                 content: '', embeds: [{
                     color: resolveColor('Red'),
@@ -61,9 +63,9 @@ export const command = {
             if(!includeInfo) await interaction.editReply({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
             else await interaction.followUp({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') }) 
         }
-        else {
+        else if(!failed){
             if (animatedArtwork && !res.attributes?.editorialVideo) {
-                return await interaction.followUp({ content: 'Sorry, We cannot find an animated artwork for your query' });
+                await interaction.followUp({ content: `Sorry ${interaction.user}, We cannot find an animated artwork for your query` });
             }
             if (!res) return await interaction.editReply({ content: `No artwork found for \`${query}\`` });
             if (!includeInfo) {
@@ -82,6 +84,5 @@ export const command = {
                 }]
             });
         }
-
     }
 }
