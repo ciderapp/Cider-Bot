@@ -58,7 +58,6 @@ export const command = {
         if (info.attributes.lastModifiedDate) embed.addFields({ name: 'Last Modified', value: `<t:${Date.parse(`${info.attributes.lastModifiedDate}`)/1000}:f>`, inline: true });
         if (info.attributes.playlistType) embed.addFields({ name: 'Playlist Type', value: info.attributes.playlistType, inline: true });
         if (info.attributes.curatorName) embed.addFields({ name: 'Curator', value: info.attributes.curatorName, inline: true });
-        if (info.attributes.recordLabel) embed.addFields({ name: 'Record Label', value: info.attributes.recordLabel, inline: true });
         if (info.attributes.trackCount != null) embed.addFields({ name: 'Tracks', value: `${info.attributes.trackCount}`, inline: true });
         await interaction.editReply({ content: '', embeds: [embed] });
     }
