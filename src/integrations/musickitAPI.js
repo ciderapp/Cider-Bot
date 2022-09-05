@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { CiderGET as CiderHeader , MusicKit as MusicKitHeader} from '../data/headers.js';
+import { CiderGET as CiderHeader, MusicKit as MusicKitHeader } from '../data/headers.js';
 import 'dotenv/config';
 
 export const getAPIToken = async () => {
@@ -9,22 +9,29 @@ export const getAPIToken = async () => {
 
 export const getArtwork = async (apiToken, query, animatedArtwork) => {
     if (query.startsWith('https://music.apple.com/')) {
-        query = (await convertLinkToAPI(query)).url;
+        query = convertLinkToAPI(query).url;
     }
     let href = `https://amp-api.music.apple.com${query}`;
-    if(animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo&include=albums";
-    else if(animatedArtwork) href = href + "?extend=editorialVideo&include=albums";
+    if (animatedArtwork && href.includes('?')) href = href + "&extend=editorialVideo&include=albums";
+    else if (animatedArtwork) href = href + "?extend=editorialVideo&include=albums";
     console.log(href);
 
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
-    if(res.results) { res = res.results.topResults }
+    if (res.results) {
+        res = res.results.topResults
+        if (res.data[0].type === "songs") {
+            res = await fetch(`https://amp-api.music.apple.com${res.data[0].href}?extend=editorialVideo&include=albums`, { headers: MusicKitHeader(apiToken) });
+            res = await res.json();
+        }
+    }
     if (animatedArtwork && res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes?.editorialVideo;
     consola.info(res.data[0].attributes);
     return res.data[0];
 };
 
-const convertLinkToAPI = async (link) => {
+const convertLinkToAPI = (link) => {
+    consola.info(link);
     let catalog = link.split('/')[3];
     let kind = link.split('/')[4];
     let albumId = link.split('/')[6];
@@ -38,7 +45,7 @@ const convertLinkToAPI = async (link) => {
     else if (kind === 'playlist') {
         return { url: `/v1/catalog/${catalog}/playlists/${albumId}`, kind: 'playlist' };
     }
-    else if(kind === 'artist') {
+    else if (kind === 'artist') {
         return { url: `/v1/catalog/${catalog}/artists/${albumId}`, kind: 'artist' };
     }
 }
