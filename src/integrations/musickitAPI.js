@@ -17,7 +17,7 @@ export const getArtwork = async (apiToken, query, animatedArtwork, storefront) =
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
     if (res.results) {
-        res = res.results.topResults
+        res = res.results.top
         if (res.data[0].type === "songs") {
             res = await fetch(`https://amp-api.music.apple.com${res.data[0].href}?extend=editorialVideo&include=albums`, { headers: MusicKitHeader(apiToken) });
             res = await res.json();
@@ -32,7 +32,7 @@ export const getInfo = async (apiToken, query, storefront) => {
     let href = `https://amp-api.music.apple.com${query}`;
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
-    if (res.results) res = res.results.topResults;
+    if (res.results) res = res.results.top;
     return res.data[0];
 }
 

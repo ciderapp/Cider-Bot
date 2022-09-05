@@ -19,7 +19,7 @@ export const command = {
         let failed = false
 
         if (query && !query.startsWith('https://')) {
-            query = `/v1/catalog/${storefront}/search/?term=${encodeURIComponent(query.replace(/ /g, '+'))}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
+            query = `/v1/catalog/${storefront}/search/?term=${encodeURIComponent(query.replace(/ /g, '+'))}&platform=web&types=activities,albums,apple-curators,artists,curators,editorial-items,music-movies,music-videos,playlists,songs,stations,tv-episodes,uploaded-videos,record-labels&limit=25&relate[editorial-items]=contents&include[editorial-items]=contents&include[albums]=artists&include[songs]=artists&include[music-videos]=artists&extend=artistUrl&fields[artists]=url,name,artwork,hero&fields[albums]=artistName,artistUrl,artwork,contentRating,editorialArtwork,name,playParams,releaseDate,url&with=serverBubbles,lyricHighlights&art[url]=c,f&omit[resource]=autos`;
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting info from Apple Music' });
 
