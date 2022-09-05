@@ -997,6 +997,18 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+m3u8-reader@^1.0.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/m3u8-reader/-/m3u8-reader-1.1.0.tgz#e79e5783c8aa9e058371d6fc50a33a9f2847d9d5"
+  integrity sha512-Q8lC1kTmTZGf69Dwp5Rw6AFga3RltEI0WZGmlQ/si4SLUdtQr+4KA0iwIA9GMXJyIIZGXdR5YphBgwnPeRzA/A==
+
+m3u8-stream-list@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/m3u8-stream-list/-/m3u8-stream-list-1.1.0.tgz#6cd16d782a7668b2a1e0ce2c1ef432c9238d50dd"
+  integrity sha512-3tvRw8V5Vzw3Fy/Z5+aiLrbx125l4yNsZQOXek+Xy4CltItsjcCkAhm5z8MVZvld/0Mi/sac8HrpjCCu+i1v0A==
+  dependencies:
+    m3u8-reader "^1.0.0"
+
 m3u8stream@^0.8.4, m3u8stream@^0.8.6:
   version "0.8.6"
   resolved "https://registry.yarnpkg.com/m3u8stream/-/m3u8stream-0.8.6.tgz#0d6de4ce8ee69731734e6b616e7b05dd9d9a55b1"

@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { Cider as CiderHeader , MusicKit as MusicKitHeader} from '../data/headers.js';
+import { CiderGET as CiderHeader , MusicKit as MusicKitHeader} from '../data/headers.js';
 import 'dotenv/config';
 
 export const getAPIToken = async () => {
@@ -18,9 +18,8 @@ export const getArtwork = async (apiToken, query, animatedArtwork) => {
 
     let res = await fetch(href, { headers: MusicKitHeader(apiToken) });
     res = await res.json();
-    
     if(res.results) { res = res.results.topResults }
-    if (res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes.editorialVideo;
+    if (animatedArtwork && res.data[0].type === "songs") res.data[0].attributes.editorialVideo = res.data[0].relationships.albums.data[0].attributes?.editorialVideo;
     consola.info(res.data[0].attributes);
     return res.data[0];
 };

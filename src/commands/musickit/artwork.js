@@ -1,5 +1,7 @@
 import { SlashCommandBuilder, resolveColor, AttachmentBuilder } from 'discord.js';
 import { getArtwork } from '../../integrations/musickitAPI.js';
+import { CiderPOST as CiderHeader } from '../../data/headers.js';
+import m3u8 from 'm3u8-stream-list'
 import { exec } from 'child_process';
 import { unlinkSync } from 'fs';
 import 'dotenv/config';
@@ -29,6 +31,7 @@ export const command = {
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
         let res = await getArtwork(amAPIToken, query, animatedArtwork).catch((err) => {
+            consola.error(err);
             if (err.name === "TypeError") return interaction.editReply({
                 content: '', embeds: [{
                     color: resolveColor('Red'),
@@ -39,11 +42,11 @@ export const command = {
             })
             return interaction.editReply({ content: `An error occured while getting the artwork: \`${err}\`` });
         });
-        if (animatedArtwork && res.attributes.editorialVideo) {
+        if (animatedArtwork && res.attributes?.editorialVideo) {
             await interaction.editReply({ content: 'Converting animated artwork...' });
-            if(includeInfo) {
+            if (includeInfo) {
                 await interaction.editReply({
-                    content: 'Converting your artwork...', embeds: [{
+                    content: '', embeds: [{
                         color: resolveColor(`#${res.attributes.artwork.bgColor}`),
                         title: res.attributes.name,
                         description: `${res.attributes.artistName ? `by **${res.attributes.artistName}**` : ""} ${res.attributes.albumName ? `on **${res.attributes.albumName}**` : ""}\nKind: **${res.type.slice(0, -1)}**`,
@@ -52,22 +55,16 @@ export const command = {
                 });
             }
             if (res.type === "artists") res.attributes.editorialVideo.motionDetailSquare = res.attributes.editorialVideo.motionArtistSquare1x1;
-            exec(`yt-dlp ${res.attributes.editorialVideo.motionDetailSquare.video} -S "codec:h264,res:960" -o "temp.mp4" && ffmpeg -y -i temp.mp4 artwork.mp4`, async (err, stdout, stderr) => {
-                if (err) return console.error(err)
-                consola.info(stdout)
-                consola.info(stderr)
-                unlinkSync('temp.mp4');
-                await interaction.editReply({
-                    content: '',
-                    files: [
-                        new AttachmentBuilder().setFile('artwork.mp4').setName('artwork.mp4')
-                    ]
-                })
+            let playlist = await fetch(res.attributes.editorialVideo.motionDetailSquare.video)
+            playlist = Buffer.from(await playlist.arrayBuffer())
+            let videos = m3u8(playlist).filter(v => v.CODECS.includes('avc1') && v.RESOLUTION == '1080x1080')
+            await interaction.followUp({
+                content: videos[videos.length -1].url.replace('.m3u8', '.mp4'),
             })
         }
         else {
-            if(animatedArtwork && !res.attributes.editorialVideo) {
-                await interaction.followUp({ content: 'Sorry, We cannot find an animated artwork for your query' });
+            if (animatedArtwork && !res.attributes?.editorialVideo) {
+                return await interaction.followUp({ content: 'Sorry, We cannot find an animated artwork for your query' });
             }
             if (!res) return await interaction.editReply({ content: `No artwork found for \`${query}\`` });
             if (!includeInfo) {
