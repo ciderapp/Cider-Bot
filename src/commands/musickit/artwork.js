@@ -58,9 +58,8 @@ export const command = {
             let playlist = await fetch(res.attributes.editorialVideo.motionDetailSquare.video)
             playlist = Buffer.from(await playlist.arrayBuffer())
             let videos = m3u8(playlist).filter(v => v.CODECS.includes('avc1') && v.RESOLUTION == '1080x1080')
-            await interaction.followUp({
-                content: videos[videos.length -1].url.replace('.m3u8', '.mp4'),
-            })
+            if(!includeInfo) await interaction.editReply({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
+            else await interaction.followUp({ content: videos[videos.length -1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') }) 
         }
         else {
             if (animatedArtwork && !res.attributes?.editorialVideo) {
