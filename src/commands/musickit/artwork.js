@@ -29,7 +29,7 @@ export const command = {
         let animatedArtwork = interaction.options.getBoolean('animated-artwork') || false;
         let failed = false
         if (query && !query.startsWith('https://')) {
-            query = `/v1/catalog/${storefront}/search/?term=${query.replace(/ /g, '+')}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
+            query = `/v1/catalog/${storefront}/search/?term=${encodeURIComponent(query.replace(/ /g, '+'))}&with=topResults&types=activities,albums,apple-curators,artists,curators,music-videos,playlists,record-labels,songs,stations`;
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
 
