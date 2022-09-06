@@ -7,6 +7,7 @@ import 'dotenv/config';
 import { Player } from 'discord-player';
 import { startServer } from "./server/express.js";
 import { getLyrics } from "./integrations/geniusLyrics.js";
+import { DiscordTogether } from 'discord-together';
 
 const client = new Client({
     intents: [
@@ -27,6 +28,7 @@ const client = new Client({
         Partials.Reaction
     ]
 });
+client.discordTogether = new DiscordTogether(client);
 client.player = new Player(client, { ytdlOptions: { quality: 'highestaudio' } });
 client.amAPIToken = await getAPIToken();
 client.commands = new Collection();
