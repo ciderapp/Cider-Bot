@@ -9,8 +9,8 @@ export const command = {
     async execute(interaction) {
         if (!interaction.member.voice.channelId) return await interaction.reply({ content: "You need to be in a voice channel to use this command!", ephemeral: true });
         let { client } = await import('../../index.js');
-        client.discordTogether.createTogetherCode(interaction.member.voice.channelId, 'youtubeDev').then(async invite => {
-            return interaction.reply(`${invite.code}`);
+        client.discordTogether.createTogetherCode(interaction.member.voice.channelId, 'youtube').then(async invite => {
+            return interaction.reply({content: invite.code, ephemeral: true});
         });
     }
 }
