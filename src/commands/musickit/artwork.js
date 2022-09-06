@@ -33,7 +33,7 @@ export const command = {
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting artwork from Apple Music' });
 
-        let res = await getArtwork(amAPIToken, query, animatedArtwork, storefront).catch((err) => {
+        let res = await getArtwork(amAPIToken, query, animatedArtwork).catch((err) => {
             consola.error(err);
             failed = true;
             if (err.name === "TypeError") return interaction.editReply({
@@ -58,10 +58,10 @@ export const command = {
                     }]
                 });
             }
-            if (res.type === "artists") res.attributes.editorialVideo.motionDetailSquare = res.attributes.editorialVideo.motionArtistSquare1x1;
+            if (res.type === "artists") res.attributes.editorialVideo.motionDetailSquare = res.attributes.editorialVideo.motionArtistFullscreen16x9;
             let playlist = await fetch(res.attributes.editorialVideo.motionDetailSquare.video)
             playlist = Buffer.from(await playlist.arrayBuffer())
-            let videos = m3u8(playlist).filter(v => v.CODECS.includes('avc1') && v.RESOLUTION == '1080x1080')
+            let videos = m3u8(playlist).filter(v => v.CODECS.includes('avc1'))
             if (!includeInfo) await interaction.editReply({ content: videos[videos.length - 1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
             else await interaction.followUp({ content: videos[videos.length - 1].url.replace('-.m3u8', "-.mp4").replace('.m3u8', '-.mp4') })
         }

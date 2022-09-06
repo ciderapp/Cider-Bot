@@ -22,8 +22,7 @@ export const command = {
             query = `/v1/catalog/${storefront}/search/?term=${encodeURIComponent(query).replace(/%20/g, '+')}&platform=web&types=activities,albums,apple-curators,artists,curators,editorial-items,music-movies,music-videos,playlists,songs,stations,tv-episodes,uploaded-videos,record-labels&limit=1&with=serverBubbles,lyricHighlights&omit[resource]=autos`;
         } else if (!query.startsWith('https://music.apple.com/') && !query.startsWith('https://beta.music.apple.com/')) return await interaction.reply({ content: ' We only support apple music links and normal queries', ephemeral: true });
         await interaction.reply({ content: 'Getting info from Apple Music' });
-
-        let info = await getInfo(amAPIToken, query, storefront).catch(async err => {
+        let info = await getInfo(amAPIToken, query).catch(async err => {
             consola.error(err);
             failed = true;
             if (err.name === "TypeError") return interaction.editReply({
