@@ -85,7 +85,7 @@ async function syncUsers(guild) {
             client.activeUsers = users;
             mongo.getTotalUsers().then(users => {
                 client.totalUsers = users;
-                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', {notation: 'compact'}).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
                 consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
             })
         })

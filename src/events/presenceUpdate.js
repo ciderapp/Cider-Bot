@@ -32,7 +32,7 @@ export const event = {
                 } else {
                     // consola.info('\x1b[35m%s\x1b[0m', "Listener added -", listenerinfo)
                     client.activeUsers++;
-                    client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                    client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', {notation: 'compact'}).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
                     using_cider = true // code below will handle it
                     break
                 }
@@ -44,7 +44,7 @@ export const event = {
                 try {
                     newMember.member.roles.add("932816700305469510")
                     client.totalUsers++;
-                    client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                    client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', {notation: 'compact'}).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
                 } catch (e) {
                     consola.error("An error occurred while adding role. ", e)
                 } // Add Cider User role.
@@ -63,7 +63,7 @@ export const event = {
                 // }
                 // consola.info("\x1b[33m%s\x1b[0m", "Listener removed -", rmlistenerinfo)
                 client.activeUsers--;
-                client.user.setActivity(`${client.activeUsers} / ${client.totalUsers} Active Cider Users`, { type: ActivityType.Watching });
+                client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', {notation: 'compact'}).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
             }
         }
     }
