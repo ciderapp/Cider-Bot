@@ -109,10 +109,10 @@ client.on('ready', () => {
 
 client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
 
-client.on('messageCreate', async (message) => {
-    // consola.info(client.replies);
-    client.events.find(event => event.name === "messageCreate").execute(message, client.replies)
-});
+// client.on('messageCreate', async (message) => {
+//     // consola.info(client.replies);
+//     client.events.find(event => event.name === "messageCreate").execute(message, client.replies)
+// });
 
 client.on('messageReactionAdd', async (reaction, user) => { client.events.find(event => event.name === "messageReactionAdd").execute(reaction, user) });
 
