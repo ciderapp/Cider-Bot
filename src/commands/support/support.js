@@ -13,7 +13,7 @@ export const command = {
             new ButtonBuilder().setLabel('Ticket Support').setStyle(ButtonStyle.Link).setURL('https://discord.com/channels/843954443845238864/872561715110367302'), // Ticket Channel Link
             new ButtonBuilder().setLabel('Mail').setStyle(ButtonStyle.Link).setURL('mailto:cryptofyre@cider.sh'),
             new ButtonBuilder().setLabel('GitHub').setStyle(ButtonStyle.Link).setURL('https://github.com/orgs/ciderapp/discussions'),
-            new ButtonBuilder().setLabel('Twitter').setStyle(ButtonStyle.Link).setURL('twitter.com/useCider/'),
+            new ButtonBuilder().setLabel('Twitter').setStyle(ButtonStyle.Link).setURL('https://twitter.com/useCider/'),
         )];
         let user = interaction.options.getUser('user') || null
         if (user) {
