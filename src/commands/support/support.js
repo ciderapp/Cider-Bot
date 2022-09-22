@@ -9,7 +9,7 @@ export const command = {
             .setTitle("Support")
             .setDescription("Need support? Or want to request for data deletion? Contact us on given platforms.");
         let components = [new ActionRowBuilder().addComponents(
-            new ButtonBuilder().setLabel('Mail').setStyle(ButtonStyle.Link).setURL('mailto:cryptofyre@cider.sh'),
+            new ButtonBuilder().setLabel('Mail').setStyle(ButtonStyle.Link).setURL('mailto://cryptofyre@cider.sh'),
             new ButtonBuilder().setLabel('GitHub').setStyle(ButtonStyle.Link).setURL('https://github.com/orgs/ciderapp/discussions'),
             new ButtonBuilder().setLabel('Twitter').setStyle(ButtonStyle.Link).setURL('https://twitter.com/useCider/'),
         )];
