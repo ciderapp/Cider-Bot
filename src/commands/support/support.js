@@ -19,5 +19,6 @@ export const command = {
         } else {
             await interaction.reply({ embeds: [embed], components: [components], ephemeral: true });
         }
+        interaction.reply({ embeds: [embed], components: [components] });
     },
 };
