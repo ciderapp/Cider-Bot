@@ -12,7 +12,7 @@ export const command = {
                 owner: 'ciderapp',
                 repo: 'cider',
                 title: interaction.options.getString('title'),
-                body: 'This pull request is intended to merge the main branch into the stable branch.',
+                body: `Pull Request Opened by ${interaction.member.user.username} via Cider Bot.\n This pull request is intended to merge the main branch into the stable branch.`,
                 head: 'main',
                 base: 'stable'
             })
