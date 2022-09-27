@@ -6,12 +6,14 @@ export const command = {
     description: 'Displays help commands',
     async execute(interaction) {
         let { client } = await import('../../index.js');
+        let applicationCommands = await client.application.commands.fetch();
         let categories = [];
         client.commands.each(command => {
             if (!categories.includes(command.category)) {
                 categories.push(command.category);
             }
         })
+
 
         const reply = {
             embeds: [
@@ -47,7 +49,6 @@ export const command = {
             time: 120000, 
         })
         collector.on('collect', async component => {
-            console.log(component)
             if (component.user.id !== interaction.user.id) return await component.reply({ content: `These components are not for you my guy`, ephemeral: true });
             const categoryValue = component.values[0];
             if (categories.includes(categoryValue))
@@ -56,7 +57,7 @@ export const command = {
                         new EmbedBuilder()
                             .setColor('Random')
                             .setTitle(`Help - ${categoryValue}`)
-                            .setDescription(client.commands.filter(cmd => cmd.category === categoryValue).map(cmd => `\`${cmd.data.name}\` - ${cmd.data.description}`).join('\n')),
+                            .setDescription(client.commands.filter(cmd => cmd.category === categoryValue).map(cmd => `</${cmd.data.name}:${applicationCommands.find(command => command.name === cmd.data.name).id}> - ${cmd.data.description}`).join('\n'))
                     ]
                 })
         })

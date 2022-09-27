@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-
+import pack from '../../../package.json' assert { type: 'json'};
 export const command = {
     data: new SlashCommandBuilder().setName('support').setDescription("Need support?").addUserOption(option => option.setName('user').setDescription('User to repond to')),
     category: 'Support',
@@ -7,17 +7,13 @@ export const command = {
         let embed = new EmbedBuilder()
             .setColor('Random')
             .setTitle("Support")
-            .setDescription("Need support? Or want to request for data deletion? Contact us on given platforms.");
-        let component = new ActionRowBuilder().addComponents(
-            // new ButtonBuilder().setLabel('Mail').setStyle(ButtonStyle.Link).setURL('mailto://cryptofyre@cider.sh'),
-            new ButtonBuilder().setLabel('GitHub').setStyle(ButtonStyle.Link).setURL('https://github.com/orgs/ciderapp/discussions'),
-            new ButtonBuilder().setLabel('Twitter').setStyle(ButtonStyle.Link).setURL('https://twitter.com/useCider/'),
-        );
+            .setDescription("Need support? Or want to request for data deletion?\nContact us on these platforms:\n\n:envelope_with_arrow: <mailto://cryptofyre@cider.sh>\n[<:github:967957574525804624> Github](https://github.com/orgs/ciderapp/discussions)\n[<:twitter:1024171779289251970> Twitter](https://twitter.com/useCider/)")
+            .setFooter({ text: `Bot Version: ${pack.version} ${process.env.NODE_ENV || ""}` })        
         let user = interaction.options.getUser('user') || null
         if (user) {
-            await interaction.reply({ content: `${user}`, embeds: [embed], components: [component] });
+            await interaction.reply({ content: `${user}`, embeds: [embed]});
         } else {
-            await interaction.reply({ embeds: [embed], components: [component], ephemeral: true });
+            await interaction.reply({ embeds: [embed], ephemeral: true });
         }
     },
 };
