@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor } from "discord.js"; // Define Client, Intents, and Collection
+import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
 import { mongo } from './integrations/mongo.js';
 import { readdirSync } from 'fs';
@@ -142,7 +142,13 @@ client.on('interactionCreate', async interaction => {
         }
     } else if (interaction.isButton()) {
         try {
-            await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
+            if(interaction.customId.split('|')[1] != null) {
+                await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
+            } else {
+                const command = client.commands.get(interaction.customId);
+                mongo.commandCounter(interaction.commandName)
+                await command.execute(interaction);
+            }
         } catch (error) {
             consola.error(error);
             await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
@@ -176,6 +182,13 @@ client.player.on('trackStart', async (queue, track) => {
             .setThumbnail(`${track.thumbnail}`)
             .setURL(`${Number.isInteger(track.views) ? track.url : track.views}`)
             .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+        ],
+        components: [new ActionRowBuilder().addComponents(
+            new ButtonBuilder().setEmoji('🔀').setStyle(ButtonStyle.Secondary).setCustomId('shuffle').setDisabled(queue.tracks.length < 2),
+            new ButtonBuilder().setEmoji('⏮️').setStyle(ButtonStyle.Secondary).setCustomId('previous').setDisabled(queue.previousTracks.length < 1),
+            new ButtonBuilder().setEmoji(queue.connection.paused ? '▶️' : '⏸️').setStyle(ButtonStyle.Secondary).setCustomId(queue.connection.paused ? 'resume' : 'pause'),
+            new ButtonBuilder().setEmoji('⏭️').setStyle(ButtonStyle.Secondary).setCustomId('skip').setDisabled(queue.tracks.length < 1),
+            new ButtonBuilder().setEmoji('🔁').setStyle(ButtonStyle.Secondary).setCustomId('loop').setDisabled(queue.tracks.length < 1))
         ]
     });
 
@@ -193,6 +206,13 @@ client.player.on('trackStart', async (queue, track) => {
                 .setThumbnail(`${track.thumbnail}`)
                 .setURL(`${Number.isInteger(track.views) ? track.url : track.views}`)
                 .setFooter({ text: queue.tracks[0] != null ? `Next Track: ${queue.tracks[0].title}` : 'No more tracks in queue' })
+            ],
+            components: [new ActionRowBuilder().addComponents(
+                new ButtonBuilder().setEmoji('🔀').setStyle(ButtonStyle.Secondary).setCustomId('shuffle').setDisabled(queue.tracks.length < 2),
+                new ButtonBuilder().setEmoji('⏮️').setStyle(ButtonStyle.Secondary).setCustomId('previous').setDisabled(queue.previousTracks.length < 1),
+                new ButtonBuilder().setEmoji(queue.connection.paused ? '▶️' : '⏸️').setStyle(ButtonStyle.Secondary).setCustomId(queue.connection.paused ? 'resume' : 'pause'),
+                new ButtonBuilder().setEmoji('⏭️').setStyle(ButtonStyle.Secondary).setCustomId('skip').setDisabled(queue.tracks.length < 1),
+                new ButtonBuilder().setEmoji('🔁').setStyle(ButtonStyle.Secondary).setCustomId('loop').setDisabled(queue.tracks.length < 1))
             ]
         })
     }, 5000);
