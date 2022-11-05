@@ -10,7 +10,7 @@ export const getLyrics = async song => {
     if (!firstSong) return null;
     console.log("firstsong:",firstSong)
     const lyrics = await firstSong.lyrics();
-    // console.log(lyrics)
+    console.log("Lyrics:",lyrics)
     if (!lyrics) return null;
     return new EmbedBuilder()
         .setTitle(`${firstSong.fullTitle}`)
@@ -18,5 +18,4 @@ export const getLyrics = async song => {
         .setColor(0xf21f52)
         .setThumbnail(`${firstSong.image}`)
         .setURL(`${firstSong.url}`)
-
 }

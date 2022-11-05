@@ -99,7 +99,7 @@ async function syncUsers(guild) {
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    mongo.init().then(() => { syncUsers(guild); })
+    mongo.init().then(() => { if(process.env.NODE_ENV == "production"){syncUsers(guild);} })
     startServer();
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);

@@ -5,6 +5,7 @@ export const event = {
     name: 'presenceUpdate',
 
     async execute(oldMember, newMember) {
+        if(process.env.NODE_ENV === 'development') return; // Don't run in development
         //If role not found in guild, do nothing.
         try { if (oldMember.guild.id !== process.env.guildId || newMember.guild.id !== process.env.guildId) return } catch (e) { return }
         // or else it'll go BONK

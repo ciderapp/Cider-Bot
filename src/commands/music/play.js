@@ -3,6 +3,7 @@ import { MusicKit as MusicKitHeader } from '../../data/headers.js';
 import fetch from 'node-fetch';
 import { QueryType } from 'discord-player';
 import { stream } from 'play-dl'
+import { searchMusics } from 'node-youtube-music';
 import 'dotenv/config';
 
 export const command = {
@@ -41,6 +42,12 @@ export const command = {
         // verify vc connection
         try {
             if (!queue.connection) {
+                console.log("Joinable:", interaction.member.voice.channel.joinable);
+                if(!interaction.member.voice.channel.joinable) {
+                    queue.destroy();
+                    return await interaction.reply({ content: "I don't have permission to join your voice channel!", ephemeral: true });
+                }
+                console.log('Creating connection...');
                 await queue.connect(interaction.member.voice.channel);
                 queue.setVolume(50);
             } 
@@ -48,12 +55,11 @@ export const command = {
             queue.destroy();
             return await interaction.reply({ content: "Could not join your voice channel!", ephemeral: true });
         }
-        // await interaction.deferReply();
         // Convert Query links
 
         if (!query.startsWith('https://')) { // if not a linkarraySongs[0]
             await interaction.reply(`Searching for ${query}`);
-            const track = await player.search(query, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+            const track = await player.search(query, { requestedBy: interaction.user, searchEngine: QueryType.YOUTUBE_SEARCH }).then(x => x.tracks[0]);
             if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
             track.description = `Requested by <@${interaction.user.id}>`;
             await interaction.editReply(`Added **${track.title}** to the queue`);
@@ -70,7 +76,8 @@ export const command = {
                 let i = 1;
                 for (let song of arraySongs) {
                     consola.info(song)
-                    const track = await player.search(`${song.name} by ${song.artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+                    const link = "https://www.youtube.com/watch?v=" + (await searchMusics(`${arraySongs[0].name} by ${arraySongs[0].artistName}`))[0].youtubeId;
+                    const track = await player.search(link, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
                     track.author = song.artistName;
                     track.title = song.name;
@@ -85,7 +92,9 @@ export const command = {
                 await interaction.editReply(`Added \`${arraySongs.length}\` tracks from **${playName}** to the queue`)
             } else if (arraySongs.length === 1) {
                 await interaction.editReply(`Parsing \`${arraySongs[0].name} by ${arraySongs[0].artistName}\` from Apple Music...`)
-                const track = await player.search(`${arraySongs[0].name} by ${arraySongs[0].artistName} (Audio)`, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+                const link = "https://www.youtube.com/watch?v=" + (await searchMusics(`${arraySongs[0].name} by ${arraySongs[0].artistName}`))[0].youtubeId;
+                const track = await player.search(link, { requestedBy: interaction.user }).then(x => x.tracks[0]);
+                console.log("Playing:",track);
                 if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
                 track.author = arraySongs[0].artistName;
                 track.title = arraySongs[0].name;
