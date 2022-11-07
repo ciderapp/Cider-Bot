@@ -19,7 +19,7 @@ export const event = {
             // if (activity && activity.name === "Spotify" && activity.type === ActivityType.Listening) {
             //     await mongo.logSpotifyData(newMember, activity).catch(e => { })
             // }
-            if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")))) {
+            if (activity && (activity.applicationId === ("911790844204437504") || (activity.applicationId === ("886578863147192350")) || (activity.applicationId === ("1032800329332445255")))) {
                 // let listenerinfo = {
                 //     userid: newMember.userId,
                 //     userName: newMember.member.user.username,
