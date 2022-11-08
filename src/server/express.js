@@ -24,7 +24,7 @@ app.get('/api/v1/github/sync/:branch' , async (req, res) => {
 });
 
 export const startServer = () => {
-    app.listen(process.env.EXPRESS_PORT, () => {
+    app.listen(process.env.EXPRESS_PORT, 'localhost', () => {
         consola.success(`Server started on port ${process.env.EXPRESS_PORT}`);
     });
 }
