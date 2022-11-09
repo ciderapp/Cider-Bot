@@ -25,9 +25,7 @@ export const command = {
                     embeds: [
                         new EmbedBuilder()
                             .setColor('Blurple')
-                            .setDescription(`The current time for **${user.tag}**'s is: ${formatter.format(new Date())}`)
-                            .setFooter(`Timezone: ${timezone}`)
-                    ]
+                            .setDescription(`The current time for **${user.tag}**'s is: ${formatter.format(new Date())}`)                    ]
                 })
             }
         })
