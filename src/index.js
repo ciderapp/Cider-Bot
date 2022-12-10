@@ -94,8 +94,9 @@ async function syncUsers(guild) {
         })
     }
 }
-async function syncAppleApiStatus() {
+async function syncAppleApiStatus(guild) {
     if (process.env.NODE_ENV != "production") return;
+    let channel = guild.channels.cache.get(process.env.APPLE_STATUS_CHANNEL);
     let events = await getServiceStatus();
     if (events.length === 0) return
     let embeds = [];
@@ -118,7 +119,7 @@ async function syncAppleApiStatus() {
             embeds.push(embed);
         }
     }
-    message.reply({ embeds })
+    channel.send({ embeds })
 }
 
 /***  CLIENT EVENTS ***/
@@ -130,7 +131,7 @@ client.on('ready', () => {
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
     setInterval(() => { syncUsers(guild); }, 1800000);
-    setInterval(() => { syncAppleApiStatus(); }, 300000);
+    setInterval(() => { syncAppleApiStatus(guild); }, 300000);
     guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
 });
 
