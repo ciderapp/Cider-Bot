@@ -8,7 +8,7 @@ import { Player } from 'discord-player';
 import { startServer } from "./server/express.js";
 import { getLyrics } from "./integrations/geniusLyrics.js";
 import { DiscordTogether } from 'discord-together';
-import { getServiceStatus } from "../integrations/serviceStatus.js";
+import { getServiceStatus } from "./integrations/serviceStatus.js";
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
