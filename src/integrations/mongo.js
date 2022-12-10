@@ -148,6 +148,15 @@ export const mongo = {
         return activeUsers[0].count
     },
 
+    async addServiceEvent(service, event) {
+        client.db('bot').collection('services').updateOne({ name: service }, { $set: { messageId: event.messageId, eventStatus: event.eventStatus } }, { upsert: true })
+    },
+    async getServiceEvents(service) {
+        let events = client.db('bot').collection('services').find({ name: service })
+        events = await events.toArray()
+        if (events.length == 0) { return [] }
+        return events
+    },
     async incrementActiveUsers() {
         client.db('bot').collection('analytics').updateOne({ name: 'currActiveUsers' }, { $inc: { count: 1 } }, { upsert: true })
     },
