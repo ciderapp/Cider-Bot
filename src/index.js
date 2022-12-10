@@ -97,27 +97,26 @@ async function syncUsers(guild) {
 async function syncAppleApiStatus(guild) {
     if (process.env.NODE_ENV != "production") return;
     let channel = guild.channels.cache.get(process.env.APPLE_STATUS_CHANNEL);
-    let events = await getServiceStatus();
-    if (events.length === 0) return
+    let services = await getServiceStatus();
+    if (services.length === 0) return
     let embeds = [];
     let statusEmoji = "";
-    for (let event of events) {
-        for (let e of event.events) {
-            if (e.eventStatus === "resolved") statusEmoji = "🟢";
-            else if (e.eventStatus === "ongoing") statusEmoji = "🟠";
-            else if (e.eventStatus === "scheduled") statusEmoji = "🟡";
-            else statusEmoji = "🔴";
-            let embed = new EmbedBuilder()
-                .setAuthor({ name: event.serviceName, url: event.redirectUrl, iconURL: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png" })
-                .setDescription(`${statusEmoji} ${e.statusType} - ${e.usersAffected}\n\n${e.message}`)
-                .setFields([{ name: "Status", value: `${e.eventStatus}`, inline: true }, { name: "Message ID", value: e.messageId, inline: true }, { name: "Affected Service", value: e.affectedServices || event.serviceName, inline: true }])
-                .setTimestamp();
-            if (e.epochStartDate) embed.addFields({ name: "Start Date", value: `<t:${e.epochStartDate / 1000}:R>`, inline: true });
-            if (e.epochEndDate) embed.addFields({ name: "End Date", value: `<t:${e.epochEndDate / 1000}:R>`, inline: true });
-            if (e.eventStatus === "resolved") embed.setColor([0, 255, 0]);
-            else if (e.eventStatus === "ongoing") embed.setColor([255, 180, 0]);
-            embeds.push(embed);
-        }
+
+    for (let service of services) {
+        if (service.event.eventStatus === "resolved") statusEmoji = "🟢";
+        else if (service.event.eventStatus === "ongoing") statusEmoji = "🟠";
+        else if (service.event.eventStatus === "scheduled") statusEmoji = "🟡";
+        else statusEmoji = "🔴";
+        let embed = new EmbedBuilder()
+            .setAuthor({ name: service.serviceName, url: service.redirectUrl, iconURL: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png" })
+            .setDescription(`${statusEmoji} ${service.event.statusType} - ${service.event.usersAffected}\n\n${service.event.message}`)
+            .setFields([{ name: "Status", value: `${service.event.eventStatus}`, inline: true }, { name: "Message ID", value: service.event.messageId, inline: true }, { name: "Affected Service", value: service.event.affectedServices || service.serviceName, inline: true }])
+            .setTimestamp();
+        if (service.event.epochStartDate) embed.addFields({ name: "Start Date", value: `<t:${service.event.epochStartDate / 1000}:R>`, inline: true });
+        if (service.event.epochEndDate) embed.addFields({ name: "End Date", value: `<t:${service.event.epochEndDate / 1000}:R>`, inline: true });
+        if (service.event.eventStatus === "resolved") embed.setColor([0, 255, 0]);
+        else if (service.event.eventStatus === "ongoing") embed.setColor([255, 180, 0]);
+        embeds.push(embed);
     }
     channel.send({ embeds })
 }
@@ -126,7 +125,7 @@ async function syncAppleApiStatus(guild) {
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    mongo.init().then(async() => { if (process.env.NODE_ENV == "production") { await syncUsers(guild); await syncAppleApiStatus(guild); } })
+    mongo.init().then(async () => { if (process.env.NODE_ENV == "production") { await syncUsers(guild); await syncAppleApiStatus(guild); } })
     startServer();
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
@@ -191,7 +190,7 @@ client.login(process.env.TOKEN);
 let npInterval, npEmbed;
 client.player.on('trackStart', async (queue, track) => {
     consola.info("Track:", track)
-    // consola.info("Queue Options", queue.options);
+    consola.info("Queue:", queue);
     // consola.info("Player Info", queue.player.voiceUtils);
     // consola.info("Voice Connection", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
     // consola.info("Audio Resource", queue.player.voiceUtils.getConnection('585180490202349578').audioResource);
