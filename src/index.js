@@ -126,7 +126,7 @@ async function syncAppleApiStatus(guild) {
 
 client.on('ready', () => {
     consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    mongo.init().then(() => { if (process.env.NODE_ENV == "production") { syncUsers(guild); syncAppleApiStatus(guild); } })
+    mongo.init().then(async() => { if (process.env.NODE_ENV == "production") { await syncUsers(guild); await syncAppleApiStatus(guild); } })
     startServer();
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
