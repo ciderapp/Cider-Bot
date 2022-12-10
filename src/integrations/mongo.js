@@ -177,5 +177,14 @@ export const mongo = {
     },
     async setTotalUsers(count) {
         client.db('bot').collection('analytics').updateOne({ name: 'totalUsers' }, { $set: { count: count } }, { upsert: true })
+    },
+    async getUserTimezone(userid) {
+        let user = await client.db('bot').collection('users').find({ id: userid })
+        user = await user.toArray()
+        if (user.length == 0) { return null }
+        return user[0].timezone
+    },
+    async setUserTimezone(userid, timezone) {
+        await client.db('bot').collection('users').updateOne({ id: userid }, { $set: { timezone: timezone } }, { upsert: true })
     }
 }
