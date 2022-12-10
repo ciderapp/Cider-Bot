@@ -149,7 +149,7 @@ export const mongo = {
     },
 
     async addServiceEvent(service, event) {
-        client.db('bot').collection('services').updateOne({ name: service }, { $set: { messageId: event.messageId, eventStatus: event.eventStatus } }, { upsert: true })
+        client.db('bot').collection('services').updateOne({ name: service, messageId: event.messageId }, { $set: { eventStatus: event.eventStatus } }, { upsert: true })
     },
     async getServiceEvents(service) {
         let events = client.db('bot').collection('services').find({ name: service })
