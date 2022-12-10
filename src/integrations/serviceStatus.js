@@ -11,13 +11,14 @@ export const getServiceStatus = async () => {
                 if (cachedServiceEvents.length === 0) {
                     mongo.addServiceEvent(service.serviceName, event);
                     toReturn.push(service);
+                } else {
+                    for (let cachedEvent of cachedServiceEvents)
+                        if (event.messageId === cachedEvent.messageId && event.eventStatus !== cachedEvent.eventStatus) {
+                            mongo.addServiceEvent(service.serviceName, event);
+                            cachedEvent.eventStatus = event.eventStatus;
+                            toReturn.push(service);
+                        }
                 }
-                for (let cachedEvent of cachedServiceEvents)
-                    if (event.messageId === cachedEvent.messageId && event.eventStatus !== cachedEvent.eventStatus) {
-                        mongo.addServiceEvent(service.serviceName, event);
-                        cachedEvent.eventStatus = event.eventStatus;
-                        toReturn.push(service);
-                    }
             }
             return toReturn;
         }
