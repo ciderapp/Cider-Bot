@@ -5,7 +5,7 @@ export const command = {
     data: new SlashCommandBuilder().setName('marin').setDescription('Gives you a random picture of our godess Marin Kitagawa'),
     category: 'Entertainment',
     async execute(interaction) {
-        let marinrequest = await fetch('https://api.waifu.im/search/?selected_tags=marin-kitagawa')
+        let marinrequest = await fetch('https://api.waifu.im/search/?included_tags=marin-kitagawa')
         let marin = await marinrequest.json()
         let buttons = new ActionRowBuilder()
         let marincontent = await marin.images[0].url;
