@@ -186,5 +186,14 @@ export const mongo = {
     },
     async setUserTimezone(userid, timezone) {
         await client.db('bot').collection('users').updateOne({ id: userid }, { $set: { timezone: timezone } }, { upsert: true })
-    }
+    },
+    async emailExists(email) {
+        let emails = await client.db('bot').collection('emailsUsed').find({ email: email })
+        emails = await emails.toArray()
+        if (emails.length == 0) { return false }
+        return true
+    },
+    async addEmail(email) {
+        await client.db('bot').collection('emailsUsed').updateOne({ email: email }, { upsert: true })
+    },
 }
