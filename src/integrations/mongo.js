@@ -188,10 +188,18 @@ export const mongo = {
         await client.db('bot').collection('users').updateOne({ id: userid }, { $set: { timezone: timezone } }, { upsert: true })
     },
     async emailExists(email, userId) {
-        const count = await client.db('bot').collection('emailsUsed').countDocuments({ email: email, userId: userId });
-        if (count > 0) { return true }
-        else { return false };
-    },
+        const emailUsed = await client.db('bot').collection('emailsUsed').findOne({ email: email });
+
+        if (emailUsed) {
+            if (emailUsed.userId === userId) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+      },
     async addEmail(email, userId) {
         const emailExists = await client.db('bot').collection('emailsUsed').findOne({ email: email });
 
