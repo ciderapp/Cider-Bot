@@ -16,9 +16,9 @@ export const command = {
         await interaction.reply({ content: 'Verifying your Donation/s from OpenCollective...', ephemeral: true })
 
         let email = interaction.options.getString('email');
-        await mongo.emailExists(email).then(async (emailExists) => {
-            if (emailExists) {
-                await interaction.editReply({ content: 'This email id has already been used', ephemeral: true });
+        await mongo.emailExists(email, interaction.user.id).then(async (emailExists) => {
+            if (emailExists && interaction.user.id !== emailExists.userId) {
+                await interaction.editReply({ content: 'Email is already in use by another user', ephemeral: true });
                 return;
             } else {
                 let ocResult = await fetch(`https://api.opencollective.com/v1/collectives/ciderapp/transactions/?apiKey=` + process.env.ocKey);
@@ -49,7 +49,7 @@ export const command = {
                             // console.log(error)
                         }
                     }
-                    mongo.addEmail(email);
+                    mongo.addEmail(email, interaction.user.id);
 
                     await interaction.editReply({ content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true });
                 }
