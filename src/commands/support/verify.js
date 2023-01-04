@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 
-import { mongo } from '../../integrations/mongo.js';
+import { firebase } from '../../integrations/firebase.js';
 import fetch from 'node-fetch';
 
 export const command = {
@@ -36,7 +36,7 @@ export const command = {
         //   Payment Processor Fee: \`${donation.paymentProcessorFeeInHostCurrency / 100}\` ${donation.hostCurrency}
         //   Received Amount: \`${donation.netAmountInCollectiveCurrency / 100}\` ${donation.hostCurrency}
         // `});
-        //             mongo.addDonation(donation, interaction.member.id);
+        //             firebase.addDonation(donation, interaction.member.id);
         //         });
         //         if (interaction.guild.id === '843954443845238864') {
         //             embed.setFooter({ text: 'Your role should be given to you shortly' });
@@ -47,7 +47,7 @@ export const command = {
         //                 // console.log(error)
         //             }
         //         }
-        //         mongo.addEmail(email, interaction.user.id);
+        //         firebase.addEmail(email, interaction.user.id);
 
         //         await interaction.editReply({ content: "Thank you for donating to Cider!", embeds: [embed], ephemeral: true });
         //     }

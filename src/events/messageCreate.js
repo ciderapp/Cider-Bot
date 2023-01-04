@@ -2,7 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import 'dotenv/config';
 import { autoreply, vaporId } from "../data/roles.js";
 import leaks from '../data/leaks.json' assert { type: 'json'};
-import { mongo } from '../integrations/mongo.js';
+import { firebase } from '../integrations/firebase.js';
 
 export const event = {
     name: 'messageCreate',
@@ -29,7 +29,7 @@ export const event = {
                 var regex = new RegExp(`(?=.*Cider)(?=.*${reply.name})`, "gi");
                 if (regex.test(message.toString()) && !message.content.startsWith("https://")) {
                     consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
-                    mongo.replyCounter(reply.name)
+                    firebase.replyCounter(reply.name)
                     message.react("✅")
                     const embed = new EmbedBuilder()
                         .setColor(reply.color)
@@ -46,7 +46,7 @@ export const event = {
                         var regex = new RegExp(`(?=.*Cider)(?=.*${reply.aliases[i]})`, "gi");
                         if (regex.test(message.toString())) {
                             consola.success("\x1b[32m%s\x1b[0m", "[Reply] ", `triggered: ${reply.name}`)
-                            mongo.replyCounter(reply.name)
+                            firebase.replyCounter(reply.name)
                             message.react("✅")
                             const embed = new EmbedBuilder()
                                 .setColor(reply.color)
