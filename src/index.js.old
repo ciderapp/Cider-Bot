@@ -1,18 +1,14 @@
-import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
-import { firebase } from "./integrations/firebase.js";
-import { getAPIToken } from "./integrations/musickitAPI.js";
+import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js"; // Define Client, Intents, and Collection
 import consola from 'consola';
-
-
+import { mongo } from './integrations/mongo.js';
 import { readdirSync } from 'fs';
-
+import { getAPIToken } from "./integrations/musickitAPI.js";
 import 'dotenv/config';
 import { Player } from 'discord-player';
 import { startServer } from "./server/express.js";
 import { getLyrics } from "./integrations/geniusLyrics.js";
+import { DiscordTogether } from 'discord-together';
 import { getServiceStatus } from "./integrations/serviceStatus.js";
-
-// Configure Client Intents for Public bot
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -21,6 +17,7 @@ const client = new Client({
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
+        // GatewayIntentBits.MessageContent,
         GatewayIntentBits.GuildVoiceStates,
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.DirectMessageReactions,
@@ -34,16 +31,21 @@ const client = new Client({
         Partials.Reaction
     ]
 });
+client.discordTogether = new DiscordTogether(client);
 client.player = new Player(client, { ytdlOptions: { quality: 'highestaudio' } });
 client.amAPIToken = await getAPIToken();
 client.commands = new Collection();
 client.interactions = new Collection();
+client.replies = [];
 client.events = [];
 client.totalUsers = 0;
 client.activeUsers = 0;
+client.canPingKeefe = true;
+client.canLeak = true;
+
+
 export { client };
 
-// add Debug Console
 const consolaDebug = consola.create({ level: 5 })
 
 // Import Command Files
@@ -70,22 +72,26 @@ for (const file of eventFiles) {
     client.events.push(event);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Event:", event.name);
 }
-// // Import Autoreply files
-// const replyFiles = readdirSync('./src/replies').filter(file => file.endsWith('.json'));
-// for (const file of replyFiles) {
-//     let { default: reply } = await import(`./replies/${file}`, { assert: { type: 'json' } });
-//     client.replies.push(reply);
-//     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
-// }
+// Import Autoreply files
+const replyFiles = readdirSync('./src/replies').filter(file => file.endsWith('.json'));
+for (const file of replyFiles) {
+    let { default: reply } = await import(`./replies/${file}`, { assert: { type: 'json' } });
+    client.replies.push(reply);
+    consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
+}
 
 async function syncUsers(guild) {
     if (guild != null) {
-        await firebase.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        await firebase.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        client.activeUsers = await firebase.getActiveUsers();
-        client.totalUsers = await firebase.getTotalUsers();
-        client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', { notation: 'compact' }).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
-        consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+        mongo.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
+        mongo.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
+        mongo.getActiveUsers().then(users => {
+            client.activeUsers = users;
+            mongo.getTotalUsers().then(users => {
+                client.totalUsers = users;
+                client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', { notation: 'compact' }).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
+                consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+            })
+        })
     }
 }
 async function syncAppleApiStatus(guild) {
@@ -117,17 +123,15 @@ async function syncAppleApiStatus(guild) {
 
 /***  CLIENT EVENTS ***/
 
-client.on('ready', async () => {
+client.on('ready', () => {
+    consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
+    mongo.init().then(async () => { if (process.env.NODE_ENV == "production") { await syncUsers(guild); await syncAppleApiStatus(guild); } })
+    startServer();
     const Guilds = client.guilds.cache.map(guild => guild.name);
     let guild = client.guilds.cache.get(process.env.guildId);
-
-    consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    await syncUsers(guild); 
-    await syncAppleApiStatus(guild);
-    startServer();
     setInterval(() => { syncUsers(guild); }, 1800000);
     setInterval(() => { syncAppleApiStatus(guild); }, 300000);
-    guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
+    guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nAutoReplies: ${client.replies.length}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
 });
 
 client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
@@ -141,7 +145,7 @@ client.on('messageReactionAdd', async (reaction, user) => { client.events.find(e
 
 client.on('interactionCreate', async interaction => {
     // if (!interaction.isChatInputCommand()) return;
-    if (interaction.isStringSelectMenu()) {
+    if (interaction.isSelectMenu()) {
         if (!client.interactions.get(interaction.customId)) return;
         try {
             await client.interactions.get(interaction.customId).execute(interaction);
@@ -155,8 +159,7 @@ client.on('interactionCreate', async interaction => {
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
         try {
-
-            firebase.commandCounter(interaction.commandName)
+            mongo.commandCounter(interaction.commandName)
             await command.execute(interaction);
         } catch (error) {
             consola.error(error);
@@ -170,7 +173,7 @@ client.on('interactionCreate', async interaction => {
                 await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
             } else {
                 const command = client.commands.get(interaction.customId);
-                firebase.commandCounter(interaction.commandName)
+                mongo.commandCounter(interaction.commandName)
                 await command.execute(interaction);
             }
         } catch (error) {

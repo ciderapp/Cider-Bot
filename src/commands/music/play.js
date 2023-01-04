@@ -57,9 +57,10 @@ export const command = {
         }
         // Convert Query links
 
-        if (!query.startsWith('https://')) { // if not a linkarraySongs[0]
+        if (!query.startsWith('https://')) {
             await interaction.reply(`Searching for ${query}`);
-            const track = await player.search(query, { requestedBy: interaction.user, searchEngine: QueryType.YOUTUBE_SEARCH }).then(x => x.tracks[0]);
+            const link = "https://www.youtube.com/watch?v=" + (await searchMusics(query))[0].youtubeId;
+            const track = await player.search(query, { requestedBy: interaction.user }).then(x => x.tracks[0]);
             if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
             track.description = `Requested by <@${interaction.user.id}>`;
             await interaction.editReply(`Added **${track.title}** to the queue`);
@@ -76,7 +77,7 @@ export const command = {
                 let i = 1;
                 for (let song of arraySongs) {
                     consola.info(song)
-                    const link = "https://www.youtube.com/watch?v=" + (await searchMusics(`${arraySongs[0].name} by ${arraySongs[0].artistName}`))[0].youtubeId;
+                    const link = "https://www.youtube.com/watch?v=" + (await searchMusics(`${song.name} by ${song.artistName}`))[0].youtubeId;
                     const track = await player.search(link, { requestedBy: interaction.user }).then(x => x.tracks[0]);
                     if (!track) return await interaction.followUp({ content: `❌ | Track **${query}** not found!` });
                     track.author = song.artistName;
@@ -124,9 +125,7 @@ export const command = {
             if (!searchResult.playlist) await interaction.editReply(`Added **${searchResult.tracks[0].title}** to the queue`);
         } else { await interaction.reply('Sorry, I can only play links from Apple Music and YouTube for now'); }
         // consola.success(queue.tracks);
-
     }
-
 }
 
 const convertLinkToAPI = async (link) => {
@@ -175,3 +174,5 @@ async function getAppleMusicPlaylistName(link, amAPIToken) {
     }
     return appleMusic.data[0].attributes.name;
 }
+
+// write something that will make me cry

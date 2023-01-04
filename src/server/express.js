@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser'
-import { mongo } from '../integrations/mongo.js';
+import { firebase } from '../integrations/firebase.js';
 import 'dotenv/config';
 
 export const app = express();
@@ -13,7 +13,7 @@ app.get('/', async (req, res) => {
 app.get('/api/v1/github/sync/:branch' , async (req, res) => {
     if(req.params.branch === 'main' || req.params.branch === 'stable') {
         res.status(200);
-        await mongo.syncReleaseData(req.params.branch).then(() => {
+        await firebase.syncReleaseData(req.params.branch).then(() => {
             res.send(`Synced ${req.params.branch}`);
         });
     }

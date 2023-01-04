@@ -1,5 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { mongo } from '../integrations/mongo.js'
+import { firebase } from '../integrations/firebase.js';
+import { Timestamp } from 'firebase-admin/firestore';
 import consola from 'consola';
 
 
@@ -13,7 +14,8 @@ export const interaction = {
         let buttons = new ActionRowBuilder()
         let buttonsMac = new ActionRowBuilder()
         let release = null;
-        release = await mongo.getLatestRelease(branch)
+        await firebase.syncReleaseData(branch)
+        release = await firebase.getLatestRelease(branch)
         consola.info("Release: ", release);
         try {
             if (release) {
@@ -34,16 +36,16 @@ export const interaction = {
                 } else {
                     if (user != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
                         if (buttonsMac.components.length == 0) {
-                            await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons] })
+                            await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.lastUpdated.seconds}:R>`, components: [buttons] })
                         } else {
-                            await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
+                            await interaction.update({ content: `${user}, What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.lastUpdated.seconds}:R>`, components: [buttons, buttonsMac] })
                         }
                     }
                     else {
                         if (buttonsMac.components.length == 0) {
-                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons] })
+                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.lastUpdated.seconds}:R>`, components: [buttons] })
                         } else {
-                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.jsDate / 1000}:R>`, components: [buttons, buttonsMac] })
+                            await interaction.update({ content: `What installer do you want from the **${branch}** branch?\nVersion:  ${release.tag.slice(1)}\nLast Updated: <t:${release.lastUpdated.seconds}:R>`, components: [buttons, buttonsMac] })
                         }
                     }
                 }

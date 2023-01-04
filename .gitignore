@@ -6,4 +6,5 @@ yarn.lock
 .env*
 .idea/
 leaks.json
+serviceAccountKey.json
 headers.js

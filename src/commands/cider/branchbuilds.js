@@ -1,5 +1,4 @@
-import { SlashCommandBuilder, ActionRowBuilder, SelectMenuBuilder } from 'discord.js';
-import { mongo } from '../../integrations/mongo.js';
+import { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
 
 export const command = {
     data: new SlashCommandBuilder()
@@ -20,7 +19,7 @@ export const command = {
         if (ping != "") { ping = ping.toString() }
         let branchMenu = new ActionRowBuilder()
             .addComponents(
-                new SelectMenuBuilder()
+                new StringSelectMenuBuilder()
                     .setCustomId('branch')
                     .setPlaceholder('Select a branch')
                     .addOptions([
