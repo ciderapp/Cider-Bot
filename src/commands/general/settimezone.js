@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
-import { mongo } from '../../integrations/mongo.js';
+import { firebase } from '../../integrations/firebase.js';
 
 export const command = {
     data: new SlashCommandBuilder().setName('settimezone').setDescription("Set your local timezone").addStringOption(option => option.setName('timezone').setDescription('Provide your local timezone').setRequired(true)),
@@ -32,12 +32,12 @@ export const command = {
             return;
         } else {
 
-            await mongo.getUserTimezone(interaction.user.id).then(async (returnTimezone) => {
+            await firebase.getUserTimezone(interaction.user.id).then(async (returnTimezone) => {
                 if (!returnTimezone) {
-                    mongo.setUserTimezone(interaction.user.id, timezone);
+                    firebase.setUserTimezone(interaction.user.id, timezone);
                     interaction.reply({ content: `Timezone set to ${timezone}`, ephemeral: true });
                 } else {
-                    mongo.setUserTimezone(interaction.user.id, timezone);
+                    firebase.setUserTimezone(interaction.user.id, timezone);
                     interaction.reply({ content: `Timezone updated to ${timezone}`, ephemeral: true });
                 }
             })
