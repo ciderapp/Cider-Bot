@@ -5,7 +5,6 @@ export const getServiceStatus = async () => {
     res = JSON.parse(res);
     let toReturn = [];
     for (let service of res.services) {
-        consola.info(service)
         if (service.events.length > 0) {
             let cachedServiceEvents = await firebase.getServiceEvents(service.serviceName);
             for (let event of service.events) {
