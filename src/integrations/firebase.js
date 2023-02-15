@@ -13,6 +13,7 @@ const app = initializeApp({
 });
 
 const firestore = getFirestore(app);
+
 consola.success("\x1b[32m%s\x1b[0m", '[firebase]', "Connected")
 
 export const firebase = {
@@ -35,45 +36,65 @@ export const firebase = {
         }
     },
     async syncReleaseData(branch) {
-        try {
-            let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
-            releases = await releases.json()
-            consola.info(releases)
-            releases.sort((a, b) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
-            for (let release of releases) {
-                if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
-                    let dmg, pkg, exe, winget, AppImage, deb, snap;
-                    for (let asset of release.assets) {
-                        consola.info(asset.name)
-                        switch (true) {
-                            case asset.name.endsWith('.dmg'): dmg = asset.browser_download_url; break;
-                            case asset.name.endsWith('.pkg'): pkg = asset.browser_download_url; break;
-                            case (asset.name.endsWith('.exe') && !asset.name.includes('-winget-')): exe = asset.browser_download_url; break;
-                            case (asset.name.endsWith('.exe') && asset.name.includes('-winget-')): winget = asset.browser_download_url; break;
-                            case asset.name.endsWith('.AppImage'): AppImage = asset.browser_download_url; break;
-                            case asset.name.endsWith('.deb'): deb = asset.browser_download_url; break;
-                            case asset.name.endsWith('.snap'): snap = asset.browser_download_url; break;
+        consola.info(branch);
+        switch(branch) {
+            case 'cider2electron':
+                firestore.doc(`cider-bot/releases/cider-2/${branch}`).set({ ready: false })
+            case 'cider2uwp':
+                firestore.doc(`cider-bot/releases/cider-2/${branch}`).set({ ready: false })
+            default:
+                try {
+                    let releases = await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases?per_page=100`)
+                    releases = await releases.json()
+                    releases.sort((a, b) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
+                    for (let release of releases) {
+                        if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
+                            let links = {};
+                            for (let asset of release.assets) {
+                                switch (true) {
+                                    case asset.name.endsWith('.dmg'): links.dmg = asset.browser_download_url; break;
+                                    case asset.name.endsWith('.pkg'): links.pkg = asset.browser_download_url; break;
+                                    case (asset.name.endsWith('.exe') && !asset.name.includes('-winget-')): links.exe = asset.browser_download_url; break;
+                                    case (asset.name.endsWith('.exe') && asset.name.includes('-winget-')): links.winget = asset.browser_download_url; break;
+                                    case asset.name.endsWith('.AppImage'): links.AppImage = asset.browser_download_url; break;
+                                    case asset.name.endsWith('.deb'): links.deb = asset.browser_download_url; break;
+                                    case asset.name.endsWith('.snap'): links.snap = asset.browser_download_url; break;
+                                }
+                            }
+                            
+                            let analytics = firestore.doc(`cider-bot/releases/cider-1/${branch}`)
+                            analytics.set({
+                                'tag' : release.tag_name,
+                                'lastUpdated':  Timestamp.fromDate(new Date(release.published_at)),
+                                'timestamp': Timestamp.now(),
+                                'releaseID': release.id,
+                                'links': links
+                            })
+                            return;
                         }
                     }
-                    let analytics = firestore.doc(`cider-bot/releases/cider-1/${branch}`)
-                    analytics.update(
-                        'tag', release.tag_name,
-                        'lastUpdated', Timestamp.fromDate(new Date(release.published_at)),
-                        'timestamp', Timestamp.now(),
-                        'releaseID', release.id,
-                        'links', { dmg, pkg, exe, winget, AppImage, deb, snap }
-                    )
-                    return;
                 }
-            }
+                catch (e) {
+                    consola.error(e)
+                }
+            break;                
         }
-        catch (e) {
-            consola.error(e)
-        }
+        
+        
     },
     async getLatestRelease(branch) {
         try {
+            if (branch == 'alpha') {
+                const authKey = Buffer.from(`${process.env.AZURE_USER}:${process.env.AZURE_PAT}`).toString('base64');
+                let runId = await fetch(`https://dev.azure.com/${process.env.AZURE_ORG}/${process.env.AZURE_PROJECT}/_apis/pipelines/1/runs?api-version=7.0`, { headers: { 'Authorization': `Basic ${authKey}` } })
+                runId = (await runId.json()).count
+                let release = await fetch(`https://dev.azure.com/${process.env.AZURE_ORG}/${process.env.AZURE_PROJECT}/_apis/build/builds/${runId}/artifacts?artifactName=Cider-UWP&api-version=7.0`, { headers: { 'Authorization': `Basic ${authKey}` } })
+                release = await release.json()
+                console.log(release)
+                return release.resource.downloadUrl;
+            }
             let analytics = firestore.doc(`cider-bot/releases/cider-1/${branch}`)
+            if(branch.includes('cider2')) analytics = firestore.doc(`cider-bot/releases/cider-2/${branch}`)
             let data = await analytics.get()
             return data.data()
         }
@@ -151,7 +172,7 @@ export const firebase = {
         try {
             let analytics = firestore.doc(`cider-bot/analytics/apple-services/${service}`)
             let data = await analytics.get()
-            if(!data.data()) return []
+            if (!data.data()) return []
             return data.data().events
         }
         catch (e) {

@@ -1,5 +1,4 @@
 import { SlashCommandBuilder, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
-
 export const command = {
     data: new SlashCommandBuilder()
         .setName('branchbuilds')
@@ -17,24 +16,24 @@ export const command = {
         let ping = interaction.options.getUser('ping') || "";
         let show = interaction.options.getBoolean('show') || false
         if (ping != "") { ping = ping.toString() }
-        let branchMenu = new ActionRowBuilder()
-            .addComponents(
-                new StringSelectMenuBuilder()
-                    .setCustomId('branch')
-                    .setPlaceholder('Select a branch')
-                    .addOptions([
-                        {
-                            label: 'main',
-                            description: 'Cider(Nightly) compiled from main branch',
-                            value: `main|${show}|${ping}`,
-                        },
-                        {
-                            label: 'stable',
-                            description: 'Cider compiled from stable branch (synced w/ MSFT store)',
-                            value: `stable|${show}|${ping}`,
-                        }
-                    ])
-            )
+        let components = new StringSelectMenuBuilder()
+        .setCustomId('branch')
+        .setPlaceholder('Select a branch')
+        .addOptions([
+            {
+                label: 'Cider Classic (main)',
+                description: 'Cider 1.x compiled from main branch',
+                value: `main|${show}|${ping}`,
+            },
+            {
+                label: 'Cider Classic (stable)',
+                description: 'Cider 1.x compiled from stable branch (synced w/ MSFT store)',
+                value: `stable|${show}|${ping}`,
+            }
+        ])
+        if(process.env.NODE_ENV == "development" || interaction.member._roles.includes('932811694751768656')) components.addOptions([{ label: 'Cider 2 (Beta) - Electron' , description: 'Cider 2.x compiled with Electron', value: `cider2electron|${show}|${ping}`}])
+        if(process.env.NODE_ENV == "development" || interaction.member._roles.includes('1050089837648162886')) components.addOptions([{ label: 'Cider 2 (Beta) - UWP' , description: 'Cider 2.x compiled with UWP', value: `cider2uwp|${show}|${ping}`}])
+        let branchMenu = new ActionRowBuilder().addComponents(components)
         if (ping != "" && (interaction.member._roles.includes('848363050205446165') || interaction.member._roles.includes('875082121427955802'))) {
             await interaction.reply({ content: `${ping} Choose your branch:`, components: [branchMenu] });
         }

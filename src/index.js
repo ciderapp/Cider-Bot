@@ -1,24 +1,20 @@
 import { Client, GatewayIntentBits, Partials, Collection, ActivityType, EmbedBuilder, resolveColor, ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
-import { firebase } from "./integrations/firebase.js";
+
 import { getAPIToken } from "./integrations/musickitAPI.js";
 import consola from 'consola';
-
-
 import { readdirSync } from 'fs';
-
 import 'dotenv/config';
 import { Player } from 'discord-player';
-import { startServer } from "./server/express.js";
 import { getLyrics } from "./integrations/geniusLyrics.js";
-import { getServiceStatus } from "./integrations/serviceStatus.js";
+
 
 // Configure Client Intents for Public bot
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildBans,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.GuildPresences,
+        GatewayIntentBits.GuildModeration,
+        // GatewayIntentBits.GuildMessages,
+        // GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.GuildMessageReactions,
         GatewayIntentBits.GuildVoiceStates,
@@ -27,11 +23,10 @@ const client = new Client({
         GatewayIntentBits.DirectMessageTyping,
     ],
     partials: [
-        Partials.Channel,
-        Partials.Message,
-        Partials.User,
-        Partials.GuildMember,
-        Partials.Reaction
+        // Partials.Channel,
+        // Partials.User,
+        // Partials.GuildMember,
+        // Partials.Reaction
     ]
 });
 client.player = new Player(client, { ytdlOptions: { quality: 'highestaudio' } });
@@ -69,119 +64,14 @@ for (const file of eventFiles) {
     let { event } = await import(`./events/${file}`);
     client.events.push(event);
     consola.info("\x1b[32m%s\x1b[0m", "Registered Event:", event.name);
-}
-// // Import Autoreply files
-// const replyFiles = readdirSync('./src/replies').filter(file => file.endsWith('.json'));
-// for (const file of replyFiles) {
-//     let { default: reply } = await import(`./replies/${file}`, { assert: { type: 'json' } });
-//     client.replies.push(reply);
-//     consola.info("\x1b[32m%s\x1b[0m", "Registered Reply:", reply.name);
-// }
-
-async function syncUsers(guild) {
-    if (guild != null) {
-        await firebase.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        await firebase.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        client.activeUsers = await firebase.getActiveUsers();
-        client.totalUsers = await firebase.getTotalUsers();
-        client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', { notation: 'compact' }).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
-        consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
+    if(event?.devOnly && process.env.NODE_ENV !== 'development') continue;
+    if (event?.once) {
+        client.once(event.name, (...args) => event.execute(...args));
+    } else {
+        client.on(event.name, (...args) => event.execute(...args));
     }
 }
-async function syncAppleApiStatus(guild) {
-    if (process.env.NODE_ENV != "production") return;
-    let channel = guild.channels.cache.get(process.env.APPLE_STATUS_CHANNEL);
-    let services = await getServiceStatus();
-    if (services.length === 0) return
-    let embeds = [];
-    let statusEmoji = "";
 
-    for (let service of services) {
-        if (service.event.eventStatus === "resolved") statusEmoji = "🟢";
-        else if (service.event.eventStatus === "ongoing") statusEmoji = "🟠";
-        else if (service.event.eventStatus === "scheduled") statusEmoji = "🟡";
-        else statusEmoji = "🔴";
-        let embed = new EmbedBuilder()
-            .setAuthor({ name: service.serviceName, url: service.redirectUrl, iconURL: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png" })
-            .setDescription(`${statusEmoji} ${service.event.statusType} - ${service.event.usersAffected}\n\n${service.event.message}`)
-            .setFields([{ name: "Status", value: `${service.event.eventStatus}`, inline: true }, { name: "Message ID", value: service.event.messageId, inline: true }, { name: "Affected Service", value: service.event.affectedServices || service.serviceName, inline: true }])
-            .setTimestamp();
-        if (service.event.epochStartDate) embed.addFields({ name: "Start Date", value: `<t:${service.event.epochStartDate / 1000}:R>`, inline: true });
-        if (service.event.epochEndDate) embed.addFields({ name: "End Date", value: `<t:${service.event.epochEndDate / 1000}:R>`, inline: true });
-        if (service.event.eventStatus === "resolved") embed.setColor([0, 255, 0]);
-        else if (service.event.eventStatus === "ongoing") embed.setColor([255, 180, 0]);
-        embeds.push(embed);
-    }
-    channel.send({ embeds })
-}
-
-/***  CLIENT EVENTS ***/
-
-client.on('ready', async () => {
-    const Guilds = client.guilds.cache.map(guild => guild.name);
-    let guild = client.guilds.cache.get(process.env.guildId);
-
-    consola.success(`Logged in as ${client.user.tag} at ${Date()}`);
-    await syncUsers(guild); 
-    await syncAppleApiStatus(guild);
-    startServer();
-    setInterval(() => { syncUsers(guild); }, 1800000);
-    setInterval(() => { syncAppleApiStatus(guild); }, 300000);
-    guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
-});
-
-client.on('presenceUpdate', async (oldMember, newMember) => { client.events.find(event => event.name === "presenceUpdate").execute(oldMember, newMember) });
-
-// client.on('messageCreate', async (message) => {
-//     // consola.info(client.replies);
-//     client.events.find(event => event.name === "messageCreate").execute(message, client.replies)
-// });
-
-client.on('messageReactionAdd', async (reaction, user) => { client.events.find(event => event.name === "messageReactionAdd").execute(reaction, user) });
-
-client.on('interactionCreate', async interaction => {
-    // if (!interaction.isChatInputCommand()) return;
-    if (interaction.isStringSelectMenu()) {
-        if (!client.interactions.get(interaction.customId)) return;
-        try {
-            await client.interactions.get(interaction.customId).execute(interaction);
-        } catch (error) {
-            consola.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
-            await interaction.member.guild.channels.cache.get(process.env.errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
-        }
-    } else if (interaction.isChatInputCommand()) {
-        const command = client.commands.get(interaction.commandName);
-        if (!command) return;
-        try {
-
-            firebase.commandCounter(interaction.commandName)
-            await command.execute(interaction);
-        } catch (error) {
-            consola.error(error);
-            await interaction.reply({ title: "Error", content: 'There was an error while executing this command!', ephemeral: true });
-            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
-            await interaction.member.guild.channels.cache.get(process.env.errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
-        }
-    } else if (interaction.isButton()) {
-        try {
-            if (interaction.customId.split('|')[1] != null) {
-                await client.interactions.get(interaction.customId.split('|')[0]).execute(interaction);
-            } else {
-                const command = client.commands.get(interaction.customId);
-                firebase.commandCounter(interaction.commandName)
-                await command.execute(interaction);
-            }
-        } catch (error) {
-            consola.error(error);
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-            let errorEmbed = { color: resolveColor("Red"), title: "Error", description: `${error.name}`, fields: [{ name: 'Message', value: `${error.message}` }, { name: 'Origin', value: `${error.stack}` }] }
-            await interaction.member.guild.channels.cache.get(process.env.errorChannel).send({ content: `There was an error executing ${interaction.commandName}`, embeds: [errorEmbed] })
-        }
-
-    }
-});
 client.login(process.env.TOKEN);
 
 let npInterval, npEmbed;
