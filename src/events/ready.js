@@ -12,7 +12,7 @@ export const event = {
         if (process.env.NODE_ENV === 'development') return; // Don't run in development
         const Guilds = client.guilds.cache.map(guild => guild.name);
         let guild = client.guilds.cache.get(process.env.guildId);
-        await syncUsers(guild);
+        await syncUsers(guild, client);
         await syncAppleApiStatus(guild);
         setInterval(() => { syncUsers(guild); }, 1800000);
         setInterval(() => { syncAppleApiStatus(guild); }, 300000);
@@ -20,7 +20,7 @@ export const event = {
     }
 }
 
-async function syncUsers(guild) {
+async function syncUsers(guild, client) {
     if (guild != null) {
         await firebase.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
         await firebase.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
@@ -39,9 +39,9 @@ async function syncAppleApiStatus(guild) {
     let statusEmoji = "";
 
     for (let service of services) {
-        if (service.event.eventStatus === "resolved") statusEmoji = "🟢";
+        if (service.event.eventStatus === "resolved" || service.event.eventStatus === "completed") statusEmoji = "🟢";
         else if (service.event.eventStatus === "ongoing") statusEmoji = "🟠";
-        else if (service.event.eventStatus === "scheduled") statusEmoji = "🟡";
+        else if (service.event.eventStatus === "scheduled" || service.event.eventStatus === "upcoming" ) statusEmoji = "🟡";
         else statusEmoji = "🔴";
         let embed = new EmbedBuilder()
             .setAuthor({ name: service.serviceName, url: service.redirectUrl, iconURL: "https://upload.wikimedia.org/wikipedia/commons/a/ab/Apple-logo.png" })
