@@ -14,7 +14,7 @@ export const event = {
         let guild = client.guilds.cache.get(process.env.guildId);
         await syncUsers(guild, client);
         await syncAppleApiStatus(guild);
-        setInterval(() => { syncUsers(guild); }, 1800000);
+        setInterval(() => { syncUsers(guild, client); }, 1800000);
         setInterval(() => { syncAppleApiStatus(guild); }, 300000);
         guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
     }
