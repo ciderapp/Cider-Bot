@@ -13,7 +13,7 @@ export const event = {
         let guild = client.guilds.cache.get(process.env.guildId);
         await syncAppleApiStatus(guild);
         setInterval(() => { syncAppleApiStatus(guild); }, 300000);
-        client.user.setActivity("GET CIDER NOW: https://cider.sh", { type: ActivityType.Custom });
+        client.user.setActivity(`to ${client.guilds.cache.size} servers`, { type: ActivityType.Listening });
         guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
     }
 }
