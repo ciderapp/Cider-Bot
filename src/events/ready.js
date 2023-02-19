@@ -12,22 +12,10 @@ export const event = {
         if (process.env.NODE_ENV === 'development') return; // Don't run in development
         const Guilds = client.guilds.cache.map(guild => guild.name);
         let guild = client.guilds.cache.get(process.env.guildId);
-        await syncUsers(guild, client);
         await syncAppleApiStatus(guild);
-        setInterval(() => { syncUsers(guild, client); }, 1800000);
         setInterval(() => { syncAppleApiStatus(guild); }, 300000);
+        client.user.setActivity("GET CIDER NOW: https://cider.sh")
         guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
-    }
-}
-
-async function syncUsers(guild, client) {
-    if (guild != null) {
-        await firebase.setActiveUsers(guild.roles.cache.get("932784788115427348").members.size)
-        await firebase.setTotalUsers(guild.roles.cache.get("932816700305469510").members.size)
-        client.activeUsers = await firebase.getActiveUsers();
-        client.totalUsers = await firebase.getTotalUsers();
-        client.user.setActivity(`${client.activeUsers} / ${Intl.NumberFormat('en', { notation: 'compact' }).format(client.totalUsers)} Active Cider Users`, { type: ActivityType.Watching });
-        consola.info(`Total Users: ${client.totalUsers} | Active Users: ${client.activeUsers}`)
     }
 }
 async function syncAppleApiStatus(guild) {
