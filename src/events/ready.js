@@ -28,7 +28,7 @@ async function syncAppleApiStatus(guild) {
     for (let service of services) {
         let found = false;
         let storedEvents = await firebase.getServiceEvents(service.serviceName)
-        storedEvents.array.forEach(el => {
+        storedEvents.forEach(el => {
             if (el.messageId === service.event.messageId) found = true;
         });
         if (found) return;
