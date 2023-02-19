@@ -12,6 +12,8 @@ export const event = {
         const Guilds = client.guilds.cache.map(guild => guild.name);
         let guild = client.guilds.cache.get(process.env.guildId);
         await syncAppleApiStatus(guild);
+        await syncOpenAIStatus(guild);
+        setInterval(() => { syncOpenAIStatus(guild); }, 300000);
         setInterval(() => { syncAppleApiStatus(guild); }, 300000);
         client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Listening });
         guild.channels.cache.get(process.env.errorChannel).send({ embeds: [{ color: 0x00ff00, title: `Bot Initialized <t:${Math.trunc(Date.now() / 1000)}:R>`, description: `Commands: ${client.commands.size}\nServers: ${client.guilds.cache.size}\n\n **Server List**\n${Guilds.join('\n')}` }] });
@@ -49,4 +51,16 @@ async function syncAppleApiStatus(guild) {
         await firebase.addServiceEvent(service.serviceName, service.event)
     }
     channel.send({ embeds })
+}
+async function syncOpenAIStatus(guild) {
+    if(process.env.NODE_ENV != "production") return;
+    let channel = guild.channels.cache.get(process.env.APPLE_STATUS_CHANNEL);
+    let res = await fetch(`https://status.openai.com/api/v2/status.json`);
+    res = await res.json();
+    if(res.status.indicator === "none") return;
+    let embed = new EmbedBuilder()
+        .setAuthor({ name: "OpenAI Status", url: "https://status.openai.com/", })
+        .setDescription(`**${res}**`)
+        .setTimestamp();
+    channel.send({ embeds: [embed] });
 }
