@@ -1,6 +1,5 @@
 import 'dotenv/config';
-import { ActivityType } from 'discord.js';
-import { Events } from 'discord.js';
+import { EmbedBuilder, Events } from 'discord.js';
 import { getServiceStatus } from "../integrations/serviceStatus.js";
 import { firebase } from "../integrations/firebase.js";
 
