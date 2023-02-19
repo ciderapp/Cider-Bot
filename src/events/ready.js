@@ -26,6 +26,12 @@ async function syncAppleApiStatus(guild) {
     let statusEmoji = "";
 
     for (let service of services) {
+        let found = false;
+        let storedEvents = await firebase.getServiceEvents(service.serviceName)
+        storedEvents.array.forEach(el => {
+            if (el.messageId === service.event.messageId) found = true;
+        });
+        if (found) return;
         if (service.event.eventStatus === "resolved" || service.event.eventStatus === "completed") statusEmoji = "🟢";
         else if (service.event.eventStatus === "ongoing") statusEmoji = "🟠";
         else if (service.event.eventStatus === "scheduled" || service.event.eventStatus === "upcoming" ) statusEmoji = "🟡";
@@ -40,6 +46,7 @@ async function syncAppleApiStatus(guild) {
         if (service.event.eventStatus === "resolved") embed.setColor([0, 255, 0]);
         else if (service.event.eventStatus === "ongoing") embed.setColor([255, 180, 0]);
         embeds.push(embed);
+        await firebase.addServiceEvent(service.serviceName, service.event)
     }
     channel.send({ embeds })
 }
