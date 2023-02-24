@@ -178,6 +178,26 @@ export const firebase = {
         catch (e) {
             consola.error(e)
         }
+    },
+    async addOpenAIEvent(event) {
+        try {
+            let analytics = firestore.doc(`cider-bot/analytics/openai/events`)
+            analytics.create({ events: [event] }).catch(() => analytics.update('events', FieldValue.arrayUnion(event)))
+        }
+        catch (e) {
+            consola.error(e)
+        }
+    },
+    async getOpenAIEvents() {
+        try {
+            let analytics = firestore.doc(`cider-bot/analytics/openai/events`)
+            let data = await analytics.get()
+            if (!data.data()) return []
+            return data.data().events
+        }  
+        catch (e) {
+            consola.error(e)
+        }
     }
 }
 

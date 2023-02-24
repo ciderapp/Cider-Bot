@@ -55,12 +55,43 @@ async function syncAppleApiStatus(guild) {
 async function syncOpenAIStatus(guild) {
     if(process.env.NODE_ENV != "production") return;
     let channel = guild.channels.cache.get(process.env.APPLE_STATUS_CHANNEL);
-    let res = await fetch(`https://status.openai.com/api/v2/status.json`);
+    let res = await fetch(`https://status.openai.com/api/v2/incidents.json`);
     res = await res.json();
-    if(res.status.indicator === "none") return;
-    let embed = new EmbedBuilder()
-        .setAuthor({ name: "OpenAI Status", url: "https://status.openai.com/", })
-        .setDescription(`**${res}**`)
-        .setTimestamp();
-    channel.send({ embeds: [embed] });
+    if(res.incidents.length == 0) return;
+
+    for(let incident of res.incidents) {
+        let found = false;
+        let storedEvents = await firebase.getOpenAIEvents();
+        storedEvents.forEach(el => {
+            if (el.id === incident.id && el.incident_updates.length == incident.incident_updates.length) found = true;
+        });
+        if (found) return;
+        await firebase.addOpenAIEvent(incident);
+        let current = {
+            name: incident.resolved_at ? "Resolved Date" : " Last Updated",
+            date: incident.resolved_at ? `<t:${Math.floor(Date.parse(incident.resolved_at) / 1000)}:f>` : `<t:${Math.floor(Date.parse(incident.incident_updates[0].updated_at) / 1000)}:R>` 
+        }
+        let status_indicator = "";
+        let status_color = [0,0,0];
+        switch(incident.status) {
+            case "postmortem" :
+            case "resolved" : status_indicator = "🟢"; status_color= [0, 255, 0]; break;
+            case "investigating" : status_indicator = "🟠"; status_color= [255, 127, 0]; break;
+            case "identified" : 
+            case "monitoring" : status_indicator = "🟡"; status_color = status_color = [255, 255, 0]; break;
+            default: status_indicator = "🔴"; status_color = [255, 0, 0]; break;
+        }
+        consola.info(incident, current, status_indicator)
+        let embed = new EmbedBuilder()
+            .setAuthor({ name: "OpenAI Status", url: "https://status.openai.com/", iconURL: "https://openai.com/content/images/2022/05/openai-avatar.png" })
+            .setTitle(`${status_indicator} [${incident.impact}] ${incident.name}`)
+            .setDescription(incident.incident_updates[0].body)
+            .setFields({ name: "Start Date", value: `<t:${Math.floor(Date.parse(incident.started_at) / 1000)}:f>`, inline: true }, { name: `${current.name}`, value: current.date, inline: true })
+            .setTimestamp();
+        if(incident.incident_updates[0].affected_components) embed.addFields({ name: "Affected Services", value: incident.incident_updates[0].affected_components.map(el => el.name + ' - ' + el.new_status).join("\n")})
+            
+        embed.setColor(status_color);
+        
+        channel.send({ embeds: [embed] });
+    } 
 }
