@@ -38,7 +38,7 @@ export function nowPlayingEmbed(queue: GuildQueue, track: Track) {
         .setTitle(track.title)
         .setURL(track.url)
         .setAuthor({ name: `${queue.player.client.user?.username} | Now Playing`, iconURL: queue.player.client.user?.displayAvatarURL()})
-        .setDescription(`${track.title} by ${track.author} on ${track.raw.source?.replace(/(^|_)(\w)/g, function ($0, $1, $2) { return ($1 && ' ') + $2.toUpperCase() })}. Requested by ${track.requestedBy}\n${queue.node.isPlaying() ? ':arrow_forward:' : ':pause_button:'} ${slidebar}\n\nUseful Commands: </play:1082907327239299124> </playnext:1082907327239299125> </lyrics:1082948231589265428> </queue:1082963008965312605> `)
+        .setDescription(`${track.title} by ${track.author} on ${track.raw.source?.replace(/(^|_)(\w)/g, function ($0, $1, $2) { return ($1 && ' ') + $2.toUpperCase() })}. Requested by ${track.requestedBy}\n${queue.node.isPlaying() ? ':arrow_forward:' : ':pause_button:'} ${slidebar}\n\nUseful Commands: </play:1087278852813881383> </playnext:1087278852960690217> </lyrics:1087278852813881381> </queue:1087278852960690219> `)
         .setColor(0xf21f52)
         .setThumbnail(track.thumbnail)
         .setFooter({ text: queue.tracks.size == 0 ? 'No more tracks in queue' : `Next Track: ${queue.tracks.at(0)?.title}` })
