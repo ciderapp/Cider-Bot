@@ -32,7 +32,7 @@ export const command = {
         if (query.startsWith('http') && query.includes('youtube.com') && query.includes('watch?v=') && query.includes('&list')) query = `https://youtube.com/playlist?list=${query.split('list=')[1]}`;
         await interaction.reply({ content: `Searching for \`${query}\``})
         try {
-            let searchResult = await player.search(query, { requestedBy: interaction.user, searchEngine: QueryType.AUTO_SEARCH }); 
+            let searchResult = await player.search(query, { requestedBy: interaction.user, searchEngine: QueryType.AUTO }); 
             let queue = player.nodes.get(interaction.guildId!);
             if (!queue) {
                 queue = player.nodes.create(interaction.guild!, {
