@@ -1,5 +1,5 @@
 import { ActionRowBuilder, AutocompleteInteraction, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
-
+import { firebase } from '../../integrations/firebase.js';
 export const command = {
     data: new SlashCommandBuilder()
         .setName('settimezone')
@@ -52,15 +52,15 @@ export const command = {
             });
             return;
         } else {
-            // await firebase.getUserTimezone(interaction.user.id).then(async (returnTimezone) => {
-            //     if (!returnTimezone) {
-            //         firebase.setUserTimezone(interaction.user.id, timezone);
-            //         interaction.reply({ content: `Timezone set to ${timezone}`, ephemeral: true });
-            //     } else {
-            //         firebase.setUserTimezone(interaction.user.id, timezone);
-            //         interaction.reply({ content: `Timezone updated to ${timezone}`, ephemeral: true });
-            //     }
-            // });
+            await firebase.getUserTimezone(interaction.user.id).then(async (returnTimezone) => {
+                if (!returnTimezone) {
+                    firebase.setUserTimezone(interaction.user.id, timezone as string);
+                    interaction.reply({ content: `Timezone set to ${timezone}`, ephemeral: true });
+                } else {
+                    firebase.setUserTimezone(interaction.user.id, timezone as string);
+                    interaction.reply({ content: `Timezone updated to ${timezone}`, ephemeral: true });
+                }
+            });
         }
     }
 };
