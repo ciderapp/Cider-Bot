@@ -11,6 +11,7 @@ export const command = {
         if(!queue) return await interaction.reply({ content: "There is no music playing!", ephemeral: true });
         if(queue.repeatMode == 3) queue.repeatMode = 0;
         queue.node.stop();
+        queue.delete();
         await interaction.reply({ content: `Stopped the queue!`, ephemeral: interaction.isButton() })
     }
 }
