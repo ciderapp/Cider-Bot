@@ -32,7 +32,8 @@ export const command = {
         if (query.startsWith('http') && query.includes('youtube.com') && query.includes('watch?v=') && query.includes('&list')) query = `https://youtube.com/playlist?list=${query.split('list=')[1]}`;
         await interaction.reply({ content: `Searching for \`${query}\``})
         try {
-            let searchResult = await player.search(query, { requestedBy: interaction.user, searchEngine: QueryType.AUTO }); 
+            let searchResult = await player.search(query, { requestedBy: interaction.user });
+            consola.info(searchResult) 
             let queue = player.nodes.get(interaction.guildId!);
             if (!queue) {
                 queue = player.nodes.create(interaction.guild!, {
@@ -50,7 +51,7 @@ export const command = {
                 });
             }
             if (!queue.connection) await queue.connect((interaction.member as GuildMember).voice.channel as GuildVoiceChannelResolvable)
-            queue.addTrack(searchResult.tracks)
+            queue.addTrack(searchResult.hasPlaylist() ? searchResult.playlist?.tracks as Track[] : searchResult.tracks[0])
             if(!queue.isPlaying()) await queue.node.play()
             consola.info(searchResult.tracks)
             if(searchResult.hasPlaylist()) {
@@ -59,25 +60,6 @@ export const command = {
             else {
                 interaction.editReply({ content: `Added **${searchResult.tracks[0].author} - ${searchResult.tracks[0].title}** to the queue`})
             }
-            // let result = await player.play((interaction.member as GuildMember).voice.channel as GuildVoiceChannelResolvable, searchResult.tracks as Track[], {
-            //     requestedBy: interaction.user.id,
-            //     nodeOptions: {
-            //         metadata: {
-            //             channel: interaction.channel,
-            //             client: interaction.client,
-            //         },
-                    
-            //         selfDeaf: true,
-            //         volume: 80,
-            //         leaveOnEmpty: false,
-            //         leaveOnEmptyCooldown: 300000,
-            //         leaveOnEnd: true,
-            //         leaveOnEndCooldown: 300000,
-            //     }})
-            //     result.track.requestedBy = interaction.user;
-            // consola.info(result.track);
-            // if(result.track.raw.source === 'youtube' && result.track.author.endsWith(' - Topic')) result.track.author = result.track.author.replace(' - Topic', '')
-            // interaction.editReply({ content: `Added **${result.track.author} - ${result.track.title}** to the queue`})
         } catch (error) {
             consola.error(error)
             interaction.editReply({ content: `❌ | Cannot find \`${query}\`` })
