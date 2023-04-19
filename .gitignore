@@ -6,3 +6,4 @@ yarn.lock
 serviceAccountKey.json
 headers.ts
 build/
+*.sh
