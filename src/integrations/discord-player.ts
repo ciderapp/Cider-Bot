@@ -13,7 +13,7 @@ export const playerEvents = (player: Player) => {
         let metadata = queue.metadata as any;
         let embed = await metadata.channel.send({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) });
         let interval = setInterval(() => {
-            metadata.embed.edit({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) });
+            metadata.embed.edit({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) }).catch((e: Error)=>{});
         }, 5000);
         metadata.interval = interval;
         metadata.embed = embed;
