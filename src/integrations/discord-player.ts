@@ -69,7 +69,7 @@ export const playerEvents = (player: Player) => {
 function convertMsToMinutes(ms: number) {
     let minutes = Math.floor(ms / 60000);
     let seconds = ((ms % 60000) / 1000).toFixed(0);
-    return `${minutes > 0 ? `${minutes} minutes and` : ''} ${parseInt(seconds) > 0 ? `${parseInt(seconds) < 10 ? '0' : ''}${seconds} seconds` : ''}`;
+    return `${minutes > 0 ? `${minutes} minutes` : ''} ${minutes > 0 && parseInt(seconds) > 0 ? 'and' : ''} ${parseInt(seconds) > 0 ? `${parseInt(seconds) < 10 ? '0' : ''}${seconds} seconds` : ''}`;
 }
 export function nowPlayingEmbed(queue: GuildQueue, track: Track) {
     let slidebar = queue.node.createProgressBar();
