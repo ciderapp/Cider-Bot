@@ -6,6 +6,6 @@ export default {
     once: false,
     devOnly: true,
     execute(info: string) {
-        consola.debug(info);
+        consola.debug("\x1b[33m%s\x1b[90m%s\x1b[0m", "[DJS]", info);
     }
 }

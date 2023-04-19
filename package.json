@@ -14,18 +14,18 @@
   "license": "ISC",
   "dependencies": {
     "@discord-player/equalizer": "0.2.1",
-    "@discord-player/extractor": "4.1.2",
+    "@discord-player/extractor": "4.2.1",
     "@discord-player/utils": "0.2.1",
     "@discordjs/opus": "^0.9.0",
     "@discordjs/rest": "^1.7.0",
     "@discordjs/voice": "^0.16.0",
-    "consola": "^2.15.3",
-    "discord-player": "6.1.1",
+    "consola": "^3.1.0",
+    "discord-player": "6.2.1",
     "discord.js": "^14.9.0",
-    "firebase-admin": "^11.6.0",
+    "firebase-admin": "^11.7.0",
     "m3u8-stream-list": "^1.1.0",
     "node-youtube-music": "^0.10.2",
-    "ytdl-core": "^4.11.3"
+    "ytdl-core": "^4.11.4"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
