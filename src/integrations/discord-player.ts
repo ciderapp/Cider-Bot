@@ -2,8 +2,6 @@ import { Player, GuildQueue, PlayerEvents, Track, PlayerTriggeredReason, onBefor
 import consola from 'consola';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from 'discord.js';
 import { clearInterval } from 'timers';
-//@ts-ignore
-import { VoiceConnectionStatus } from '@discordjs/voice';
 
 export const playerEvents = (player: Player) => {
     player.on('debug', (message) => consola.debug('\x1b[33m%s\x1b[90m%s\x1b[0m', '[DPlayer]', message));
@@ -11,6 +9,8 @@ export const playerEvents = (player: Player) => {
     player.events.on('error', (queue, error) => consola.error(error));
     player.events.on('playerStart', async (queue, track) => {
         let metadata = queue.metadata as any;
+        if(metadata.interval) clearInterval(metadata.interval);
+        if(metadata.embed) metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`));
         let embed = await metadata.channel.send({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) });
         let interval = setInterval(() => {
             metadata.embed.edit({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) }).catch((e: Error)=>{});
@@ -28,7 +28,7 @@ export const playerEvents = (player: Player) => {
     });
     player.events.on('disconnect', (queue) => {
         let metadata = queue.metadata as any;
-        metadata.channel.send({ content: `No one was  ${queue.channel}` });
+        metadata.channel.send({ content: `Looks like my job here is done, leaving now!` });
     });
     player.events.on('playerError', (queue, error, track) => {
         let metadata = queue.metadata as any;
@@ -55,14 +55,20 @@ export const playerEvents = (player: Player) => {
 
     player.events.on('playerSkip', (queue, track) => {
         let metadata = queue.metadata as any;
-        metadata.channel.send({ content: `Skipped **${track.title}**` });
+        metadata.channel.send({ content: `Skipped **${track.title}** due to an issue` });
+        let errorChannel = queue.player.client.guilds.cache.get(CiderServers.main)?.channels.cache.get(CiderGuildChannels.botLog) as TextChannel;
+        errorChannel.send({ content: `Cant find ${track.title} by ${track.author} @ ${track.url}` });
         clearInterval(metadata.interval);
         metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Skipped`));
+        delete metadata.interval;
+        delete metadata.embed;
     });
     player.events.on('playerFinish', (queue, track) => {
         let metadata = queue.metadata as any;
         clearInterval(metadata.interval);
-        metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`));
+        metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`))
+        delete metadata.interval;
+        delete metadata.embed;
     });
     return player;
 };
