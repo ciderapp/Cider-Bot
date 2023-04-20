@@ -33,29 +33,7 @@ export const command = {
         try {
             let searchResult = await player.search(query, { requestedBy: interaction.user });
             let queue = player.nodes.get(interaction.guildId!);
-            if (!queue) {
-                queue = player.nodes.create(interaction.guild!, {
-                    metadata: {
-                        channel: interaction.channel,
-                        client: interaction.guild!.members.me,
-                        requestedBy: interaction.user
-                    },
-                    selfDeaf: true,
-                    volume: 80,
-                    leaveOnEmpty: true,
-                    leaveOnEmptyCooldown: 300000,
-                    leaveOnEnd: true,
-                    leaveOnEndCooldown: 300000,
-                    async onBeforeCreateStream(track, source, queue) {
-                        if (source === 'appleMusicSong') {
-                            track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title == track.title)[0].youtubeId}`;
-                            consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
-                        }
-                        if(track.raw.url === undefined) track.raw.url = track.url;
-                        return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
-                    }
-                });
-            }
+            if (!queue) queue = createQueue(interaction);
             if (!queue.connection) await queue.connect((interaction.member as GuildMember).voice.channel as GuildVoiceChannelResolvable);
             queue.addTrack(searchResult.hasPlaylist() ? (searchResult.playlist?.tracks as Track[]) : searchResult.tracks[0]);
             if (!queue.isPlaying()) await queue.node.play();
@@ -70,3 +48,28 @@ export const command = {
         }
     }
 };
+
+export function createQueue(interaction: ChatInputCommandInteraction) {
+    let player = interaction.client.player;
+    return player.nodes.create(interaction.guild!, {
+        metadata: {
+            channel: interaction.channel,
+            client: interaction.guild!.members.me,
+            requestedBy: interaction.user
+        },
+        selfDeaf: true,
+        volume: 80,
+        leaveOnEmpty: true,
+        leaveOnEmptyCooldown: 300000,
+        leaveOnEnd: true,
+        leaveOnEndCooldown: 300000,
+        async onBeforeCreateStream(track, source) {
+            if (source === 'appleMusicSong') {
+                track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title == track.title)[0].youtubeId}`;
+                consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
+                return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
+            }
+            return null;
+        }
+    });
+}
