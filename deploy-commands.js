@@ -14,12 +14,12 @@ for (const folder of commandFolders) {
     }
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
     try {
         console.log('Started refreshing application (/) commands.');
-        await rest.put(Routes.applicationCommands(process.env.AUTH_CLIENTID),{ body: commands });
+        await rest.put(Routes.applicationCommands(process.env.DISCORD_ID),{ body: commands });
         console.log('Successfully reloaded application (/) commands.\n' + commands.map(c => c.name).join(', '));
     } catch (error) {
         console.error(error);
