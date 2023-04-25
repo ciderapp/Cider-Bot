@@ -3,6 +3,7 @@ node_modules/
 yarn.lock
 .history
 .env*
+.env
 serviceAccountKey.json
 headers.ts
 build/
