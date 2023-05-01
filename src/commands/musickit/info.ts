@@ -49,7 +49,7 @@ export const command = {
         let embed = new EmbedBuilder()
             .setAuthor({
                 name: `${client.user.username} | ${info.type.slice(0, 1).toUpperCase()}${info.type.slice(1, -1)} Info`,
-                iconURL: 'https://cdn.discordapp.com/attachments/912441248298696775/935348933213970442/Cider-Logo.png?width=671&height=671'
+                iconURL: interaction.client.user.displayAvatarURL()
             })
             .setTitle(info.attributes.name)
             .setURL(info.attributes.url)
@@ -63,7 +63,7 @@ export const command = {
         if (info.attributes.genreNames) embed.addFields({ name: 'Genre', value: info.attributes.genreNames.join(', '), inline: true });
         if (info.attributes.releaseDate) embed.addFields({ name: 'Release Date', value: `<t:${Date.parse(info.attributes.releaseDate) / 1000}:D>`, inline: true });
         if (info.attributes.recordLabel) embed.addFields({ name: 'Record Label', value: info.attributes.recordLabel, inline: true });
-        if (info.attributes.durationInMillis) embed.addFields({ name: 'Duration', value: `${Math.floor(info.attributes.durationInMillis / 60000)}:${Math.floor((info.attributes.durationInMillis % 60000) / 1000)}`, inline: true });
+        if (info.attributes.durationInMillis) embed.addFields({ name: 'Duration', value: msToTime(info.attributes.durationInMillis), inline: true });
         if (info.attributes.isrc) embed.addFields({ name: 'ISRC', value: info.attributes.isrc, inline: true });
         if (info.attributes.audioTraits?.length > 0) embed.addFields({ name: 'Audio Traits', value: info.attributes.audioTraits.join(', '), inline: true });
         if (info.attributes.trackNumber != null) embed.addFields({ name: 'Track Number', value: `${info.attributes.trackNumber}`, inline: true });
@@ -74,3 +74,10 @@ export const command = {
         await interaction.editReply({ content: '', embeds: [embed] });
     }
 };
+function msToTime(ms: number) {
+    let secs = Math.floor(ms / 1000);
+    ms %= 1000;
+    let mins = Math.floor(secs / 60);
+    secs %= 60;
+    return mins + ":" + (secs < 10 ? "0" : "") + secs;
+  }
