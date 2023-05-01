@@ -2,7 +2,8 @@ package-lock.json
 node_modules/
 yarn.lock
 .history
-.env*
+*.env*
+*.env
 serviceAccountKey.json
 headers.ts
 build/
