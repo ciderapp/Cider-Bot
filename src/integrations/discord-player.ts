@@ -1,4 +1,4 @@
-import { Player, GuildQueue, PlayerEvents, Track, PlayerTriggeredReason, onBeforeCreateStream } from 'discord-player';
+import { Player, GuildQueue, Track } from 'discord-player';
 import consola from 'consola';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from 'discord.js';
 import { clearInterval } from 'timers';

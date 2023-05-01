@@ -12,6 +12,7 @@ export default {
     once: true,
     async execute(client: Client<true>) {
         client.amAPIToken = await getAPIToken();
+        await client.player.extractors.loadDefault();
         consola.success(`Logged in as ${client.user.tag}`);
         client.user.setActivity('Starting up...', { type: ActivityType.Playing });
         const Guilds = client.guilds.cache.map(guild => guild.name);

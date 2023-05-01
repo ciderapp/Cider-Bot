@@ -29,6 +29,7 @@ export const command = {
             return await interaction.reply({ content: 'You are not in my voice channel!', ephemeral: true });
         let query = interaction.options.get('query')?.value as string;
         if (query.startsWith('http') && query.includes('youtube.com') && query.includes('watch?v=') && query.includes('&list')) query = `https://youtube.com/playlist?list=${query.split('list=')[1]}`;
+        else if(query.startsWith('http') && query.includes('soundcloud.com')) query = query.split('?')[0];
         await interaction.reply({ content: `Searching for \`${query}\`` });
         try {
             let searchResult = await player.search(query, { requestedBy: interaction.user });

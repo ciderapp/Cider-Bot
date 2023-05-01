@@ -10,7 +10,7 @@ export const command = {
         let queue = interaction.client.player.nodes.get(interaction.guildId as string);
         if(!queue) return await interaction.reply({ content: "There is no music playing!", ephemeral: true });
         if(queue.history.isEmpty()) return await interaction.reply({ content: "There is no previous song to skip to!", ephemeral: true });
-        queue.history.back();
         await interaction.reply({ content: `Re-playing **${queue.history.previousTrack?.title}**`, ephemeral: interaction.isButton() })
+        queue.history.back();
     }
 }

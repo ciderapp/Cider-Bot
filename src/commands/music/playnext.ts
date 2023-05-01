@@ -1,6 +1,5 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, GuildMember, GuildVoiceChannelResolvable, SlashCommandBuilder } from 'discord.js';
 import { QueryType, SearchResult, Track } from 'discord-player';
-import { searchMusics } from 'node-youtube-music';
 import consola from 'consola';
 import { createQueue } from './play.js';
 export const command = {
@@ -12,12 +11,14 @@ export const command = {
     async autocomplete(interaction: AutocompleteInteraction) {
         let query = interaction.options.getFocused();
         const results = await interaction.client.player.search(query!, {
-            searchEngine: QueryType.APPLE_MUSIC_SEARCH
+            searchEngine: QueryType.APPLE_MUSIC_SEARCH,
+            requestedBy: interaction.user
         });
+        consola.info(results)
         return interaction.respond(
             results.tracks.slice(0, 10).map((t) => ({
-                name: (t.author + ' - ' + t.title).length > 100 ? (t.author + ' - ' + t.title).slice(0, 100) + '...' : t.author + ' - ' + t.title,
-                value: t.url.length > 100 ? t.title + ' by ' + t.author : t.url
+                name: (t.author + ' - ' + t.title).length > 100 ? (t.author + ' - ' + t.title).slice(0, 97) + '...' : t.author + ' - ' + t.title,
+                value: t.url.length > 100 ? (t.title + ' by ' + t.author).slice(0, 100) : t.url
             }))
         );
     },
@@ -28,10 +29,13 @@ export const command = {
         if ((interaction.guild as Guild).members.me!.voice.channelId && (interaction.member as GuildMember).voice.channelId !== (interaction.guild as Guild).members.me!.voice.channelId)
             return await interaction.reply({ content: 'You are not in my voice channel!', ephemeral: true });
         let query = interaction.options.get('query')?.value as string;
+        if (query.startsWith('http') && query.includes('youtube.com') && query.includes('watch?v=') && query.includes('&list')) query = `https://youtube.com/playlist?list=${query.split('list=')[1]}`;
+        else if(query.startsWith('http') && query.includes('soundcloud.com')) query = query.split('?')[0];
         await interaction.reply({ content: `Searching for \`${query}\`` });
         try {
             let result = await player.search(query, { requestedBy: interaction.user.id });
-            consola.info('TRACK:', result.tracks[0]);
+            consola.info('TRACK:');
+            console.log(result.tracks[0])
             let queue = player.nodes.get(interaction.guildId as string);
             if (!queue) {
                 queue = createQueue(interaction);
@@ -44,6 +48,7 @@ export const command = {
                     return interaction.editReply({ content: `Added **${result.tracks[0].author} - ${result.tracks[0].title}** to the queue` });
                 }
             }
+            
             queue.insertTrack(result.tracks[0], 0);
             if (result.tracks[0].raw.source === 'youtube' && result.tracks[0].author.endsWith(' - Topic')) result.tracks[0].author = result.tracks[0].author.replace(' - Topic', '');
             interaction.editReply({ content: `Added **${result.tracks[0].author} - ${result.tracks[0].title}** to the queue` });

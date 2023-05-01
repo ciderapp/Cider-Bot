@@ -1,5 +1,6 @@
 import { CiderGET as CiderHeader, MusicKit as MusicKitHeader } from '../data/headers.js';
 import 'dotenv/config';
+import { consola } from 'consola';
 
 export const getAPIToken = async () => {
     let apiToken = await fetch("https://api.cider.sh/v1", { headers: CiderHeader() });
@@ -29,10 +30,10 @@ export const getArtwork = async (apiToken: string, query: string, animatedArtwor
 export const getInfo = async (apiToken: string, query: string) => {
     if (query.startsWith('https://music.apple.com/') || query.startsWith('https://beta.music.apple.com/')) query = await convertLinkToAPI(query) as string;
     let href = `https://amp-api.music.apple.com${query}`;
-    // consola.info(href)
+    consola.info(href)
     let res = await (await fetch(href, { headers: MusicKitHeader(apiToken) })).json();
     if (res.results) res = res.results.top;
-    // consola.info(res.data[0])
+    consola.info(res.data[0])
     return res.data[0];
 }
 
