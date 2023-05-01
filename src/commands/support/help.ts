@@ -44,8 +44,7 @@ export const command = {
                     new EmbedBuilder()
                         .setColor('Random')
                         .setTitle(`Help - ${categoryValue}`)
-                        .setDescription(client.commands.filter((cmd) => cmd.category === categoryValue).map((cmd) => `</${cmd.data.name}:${applicationCommands.find((command) => command.name === cmd.data.name)!.id}> - ${cmd.data.description}`).join('\n'))
-                ],
+                        .setDescription(client.commands.filter((cmd) => cmd.category === categoryValue).map((cmd) => `</${cmd.data.name}:${applicationCommands.find((command) => command.name === cmd.data.name)!.id}> - ${cmd.data.description}`).join('\n'))                ],
             });
         });
 

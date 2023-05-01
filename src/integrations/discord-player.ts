@@ -89,7 +89,7 @@ export function nowPlayingEmbed(queue: GuildQueue, track: Track) {
                     return ($1 && ' ') + $2.toUpperCase();
                 })}. Requested by ${track.requestedBy}\n${
                     queue.node.isPlaying() ? ':arrow_forward:' : ':pause_button:'
-                } ${slidebar}\n\nUseful Commands: </play:1087278852813881383> </playnext:1087278852960690217> </lyrics:1087278852813881381> </queue:1087278852960690219> `
+                } ${slidebar}\n\nUseful Commands: </play:1100430078665576497> </playnext:1100430079084990635> </lyrics:1100430078665576495> </queue:1100430079084990637> `
             )
             .setColor(0xf21f52)
             .setThumbnail(track.thumbnail)
