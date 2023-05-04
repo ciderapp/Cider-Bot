@@ -11,7 +11,17 @@ export const playerEvents = (player: Player) => {
         let metadata = queue.metadata as any;
         if(metadata.interval) clearInterval(metadata.interval);
         if(metadata.embed) metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`));
-        let embed = await metadata.channel.send({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) });
+        let embed = await metadata.channel.send({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) }).catch((e: Error)=>{
+            const channel = queue.guild.channels.cache.find(c => c.isTextBased() && c.permissionsFor(guild.client.user)?.has('SendMessages')) as TextChannel;
+            channel.send({content: '', embeds: [
+                new EmbedBuilder()
+                    .setAuthor({ name: queue.player.client.user!.username, iconURL: queue.player.client.user!.avatarURL() as string, url: 'https://discord.com/users/921475709694771252' })
+                    .setTitle(`Missing Permissions`)
+                    .setDescription(`Uh oh, looks like I'm missing some permissions to send messages in ${metadata.channel}. Please make sure I have the \`SEND_MESSAGES\` permission in this channel.`)             
+                    .setColor(0xf21f52)
+                    .setTimestamp()
+            ]});
+        });
         let interval = setInterval(() => {
             metadata.embed.edit({ embeds: nowPlayingEmbed(queue, track), components: nowPlayingComponents(queue) }).catch((e: Error)=>{});
         }, 5000);
