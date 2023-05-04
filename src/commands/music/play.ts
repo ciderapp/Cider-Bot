@@ -66,7 +66,8 @@ export function createQueue(interaction: ChatInputCommandInteraction) {
         leaveOnEndCooldown: 300000,
         async onBeforeCreateStream(track, source) {
             if (source === 'appleMusicSong') {
-                track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title == track.title)[0].youtubeId}`;
+                console.log(await searchMusics(`${track.title} by ${track.author}`));
+                track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title?.includes(track.title))[0].youtubeId}`;
                 consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
                 return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
             }
