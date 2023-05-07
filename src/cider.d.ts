@@ -26,7 +26,8 @@ declare global {
     }
     const enum CiderServers {
         main = "843954443845238864",
-        afterDark = "940857077604167701"
+        afterDark = "940857077604167701",
+        testServer = "585180490202349578"
     }
 }
 export {};

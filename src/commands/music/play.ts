@@ -3,6 +3,7 @@ import { OnBeforeCreateStreamHandler, QueryType, SearchResult, Track, onBeforeCr
 import consola from 'consola';
 import { searchMusics } from 'node-youtube-music';
 import { stream } from 'play-dl';
+import { getInfo } from '../../integrations/musickitAPI.js';
 export const command = {
     data: new SlashCommandBuilder()
         .setName('play')
@@ -66,6 +67,7 @@ export function createQueue(interaction: ChatInputCommandInteraction) {
         leaveOnEndCooldown: 300000,
         async onBeforeCreateStream(track, source) {
             if (source === 'appleMusicSong') {
+                if(track.duration == "0:00") track.duration = msToTime((await getInfo(interaction.client.amAPIToken, track.url)).attributes.durationInMillis); 
                 track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title?.includes(track.title))[0].youtubeId}`;
                 consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
                 return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
@@ -73,4 +75,11 @@ export function createQueue(interaction: ChatInputCommandInteraction) {
             return null;
         }
     });
+}
+function msToTime(ms: number) {
+    let secs = Math.floor(ms / 1000);
+    ms %= 1000;
+    let mins = Math.floor(secs / 60);
+    secs %= 60;
+    return mins + ":" + (secs < 10 ? "0" : "") + secs;
 }

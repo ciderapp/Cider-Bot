@@ -7,4 +7,5 @@ yarn.lock
 serviceAccountKey.json
 headers.ts
 build/
+update.lock
 *.sh

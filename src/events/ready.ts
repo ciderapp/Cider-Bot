@@ -3,8 +3,10 @@ import { playerEvents } from '../integrations/discord-player.js';
 import { getAPIToken } from '../integrations/musickitAPI.js';
 import { firebase } from '../integrations/firebase.js';
 import { getServiceStatus } from "../integrations/serviceStatus.js";
+import { readFileSync, writeFileSync } from 'node:fs';
 import consola from 'consola';
 import 'dotenv/config';
+
 
 
 export default {
@@ -23,6 +25,7 @@ export default {
         setInterval(() => { syncAppleApiStatus(guild!); }, 300000);
         client.user.setActivity(`${client.guilds.cache.size} servers`, { type: ActivityType.Listening });
         playerEvents(client.player);
+        checkSelfUpdate(client);
         if(process.env.NODE_ENV === 'development') return client.user.setPresence({ activities: [{ name: '⚙️ in development' }], status: 'idle' });
     }
 }
@@ -101,4 +104,27 @@ async function syncOpenAIStatus(guild: Guild) {
         
         (channel as TextChannel).send({ embeds: [embed] });
     } 
+}
+
+function checkSelfUpdate(client: Client<true>) {
+    if(process.env.NODE_ENV != "production" || readFileSync("./update.lock", "utf-8") == process.env.npm_package_version) return;
+    client.guilds.cache.forEach(async (guild) => { // if(guild.id != CiderServers.testServer) return;
+        let channel = guild.channels.cache.find(c => c.isTextBased() && c.permissionsFor(client.user!)?.has('SendMessages') && c.name == "general") as TextChannel;
+        if(!channel) channel = guild.channels.cache.find(c => c.isTextBased() && c.permissionsFor(client.user!)?.has('SendMessages')) as TextChannel;
+        let changelog = [
+            "- Fixed Apple Music songs duration not showing",
+            "- Fixed automatic bot disconnecting",
+            "- Tweaked </time:1100430078665576493> to properly show the time in the user's timezone",
+            "- Fixed API calls to Musickit to use the new key",
+            "- Added failsafe instructions to </play:1100430078665576497> when it requires permissions"
+        ]
+        channel.send({ embeds: [
+            new EmbedBuilder()
+                .setAuthor({ name: "Cider Bot Updates", iconURL: client.user?.displayAvatarURL() })
+                .setTitle(`:tada: Updated to v${process.env.npm_package_version}`)
+                .setDescription(`**Changelog**\n\n${changelog.join("\n")}}`)
+        ]})
+        writeFileSync("./update.lock", `${process.env.npm_package_version}`);
+    });
+
 }

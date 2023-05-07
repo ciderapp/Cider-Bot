@@ -1,6 +1,6 @@
 {
   "name": "cider-bot",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "Official Discord Bot for Cider",
   "main": "build/index.js",
   "type": "module",
