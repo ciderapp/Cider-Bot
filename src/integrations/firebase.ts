@@ -44,7 +44,7 @@ export const firebase = {
                 firestore.doc(`cider-bot/releases/cider-2/${branch}`).set({ ready: false })
             default:
                 try {
-                    let releases: any[] = await (await fetch(`https://api.github.com/repos/ciderapp/cider-releases/releases/tags/v1.6.1?per_page=100`)).json()
+                    let releases: any[] = await (await fetch(`https://api.github.com/repos/ciderapp/cider/releases/tags/v1.6.1?per_page=100`)).json()
                     releases.sort((a: any, b: any) => { return Date.parse(b.published_at) - Date.parse(a.published_at) })
                     for (let release of releases) {
                         if (String(release.name).split(' ')[String(release.name).split(' ').length - 1].replace(/[(+)]/g, '') === branch) {
