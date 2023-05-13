@@ -76,7 +76,7 @@ export const playerEvents = (player: Player) => {
     player.events.on('playerFinish', (queue, track) => {
         let metadata = queue.metadata as any;
         clearInterval(metadata.interval);
-        metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`))
+        if(metadata.embed) metadata.embed.delete().catch((e: Error) => console.log(`Failed to delete embed for ${queue.guild} - Finished`))
         delete metadata.interval;
         delete metadata.embed;
     });
