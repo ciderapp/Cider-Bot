@@ -42,7 +42,6 @@ export const search = async (apiToken: string, query: string, storefront: string
     href.searchParams.set('omit[resource]', 'autos');
     
     let res = await (await fetch(href.toString(), { headers: MusicKitHeader(apiToken) })).json();
-    console.log(res.results.top.data);
     return res.results.top.data;
     
 };
