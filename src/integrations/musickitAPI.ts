@@ -33,18 +33,17 @@ export const getInfo = async (apiToken: string, query: string) => {
 };
 
 export const search = async (apiToken: string, query: string, storefront: string = 'us', limit: number = 10) => {
-    let href = new URL(`v1/catalog/${storefront}/search/`, 'https://api.music.apple.com/');
+    let href = new URL(`v1/catalog/${storefront}/search/`, 'https://amp-api.music.apple.com/');
     href.searchParams.set('term', query);
     href.searchParams.set('platform', 'web');
-    href.searchParams.set('types', 'activities,albums,apple-curators,artists,curators,editorial-items,music-movies,music-videos,playlists,songs,stations,tv-episodes,uploaded-videos,record-labels');
+    href.searchParams.set('types', 'albums,playlists,songs');
     href.searchParams.set('limit', `${limit}`);
     href.searchParams.set('with', 'serverBubbles,lyricHighlights');
     href.searchParams.set('omit[resource]', 'autos');
     
-    let res = await fetch(href.toString(), { headers: MusicKitHeader(apiToken) });
-    res = await res.json();
-    console.log(res);
-    return res;
+    let res = await (await fetch(href.toString(), { headers: MusicKitHeader(apiToken) })).json();
+    console.log(res.results.top.data);
+    return res.results.top.data;
     
 };
 

@@ -1,7 +1,10 @@
 import { AutocompleteInteraction, ChatInputCommandInteraction, Guild, GuildMember, GuildVoiceChannelResolvable, SlashCommandBuilder } from 'discord.js';
-import { QueryType, SearchResult, Track } from 'discord-player';
+import { SearchResult, Track } from 'discord-player';
 import consola from 'consola';
 import { createQueue } from './play.js';
+import { search } from '../../integrations/musickitAPI.js';
+
+type SongType = { type: string, attributes: { artistName: string; name: string; url: string; }; }
 export const command = {
     data: new SlashCommandBuilder()
         .setName('playnext')
@@ -10,15 +13,18 @@ export const command = {
     category: 'Music',
     async autocomplete(interaction: AutocompleteInteraction) {
         let query = interaction.options.getFocused();
-        const results = await interaction.client.player.search(query!, {
-            searchEngine: QueryType.APPLE_MUSIC_SEARCH,
-            requestedBy: interaction.user
+        const results = await search(interaction.client.amAPIToken, query, 'us', 10);
+        results.forEach((t: SongType ) => {
+            if (t.type === 'songs') t.type = 'Song';
+            else if (t.type === 'albums') t.type = 'Album';
+            else if (t.type === 'playlists') t.type = 'Playlist';
+            if(!t.attributes.artistName) t.attributes.artistName = '';
+            t.attributes.name = `${t.type}: ${t.attributes.artistName != '' ? t.attributes.artistName + ' - ' : ''}${t.attributes.name}`.slice(0, 100);
         });
-        consola.info(results)
         return interaction.respond(
-            results.tracks.slice(0, 10).map((t) => ({
-                name: (t.author + ' - ' + t.title).length > 100 ? (t.author + ' - ' + t.title).slice(0, 97) + '...' : t.author + ' - ' + t.title,
-                value: t.url.length > 100 ? (t.title + ' by ' + t.author).slice(0, 100) : t.url
+            results.map((t: SongType) => ({
+                name: t.attributes.name,
+                value: t.attributes.url.length > 100 ? (t.attributes.name + ' by ' + t.attributes.artistName).slice(0, 100) : t.attributes.url
             }))
         );
     },
