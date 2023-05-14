@@ -74,7 +74,10 @@ export function createQueue(interaction: ChatInputCommandInteraction) {
         async onBeforeCreateStream(track, source) {
             if (source === 'appleMusicSong') {
                 if(track.duration == "0:00") track.duration = msToTime((await getInfo(interaction.client.amAPIToken, track.url)).attributes.durationInMillis); 
-                track.raw.url = `https://youtube.com/watch?v=${(await searchMusics(`${track.title} by ${track.author}`)).filter((r) => r.title?.includes(track.title))[0].youtubeId}`;
+                const results = await searchMusics(`${track.title} by ${track.author}`);
+                let filteredResults = results.filter((r) => r.title === track.title);
+                if (filteredResults.length > 0) filteredResults = results.filter((r) => r.title?.includes(track.title))
+                track.raw.url = `https://youtube.com/watch?v=${filteredResults[0].youtubeId}`;
                 consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
                 return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
             }
