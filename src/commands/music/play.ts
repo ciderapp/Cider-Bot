@@ -78,10 +78,14 @@ export function createQueue(interaction: ChatInputCommandInteraction) {
                 consola.debug(`Playing ${track.title} by ${track.author} @ ${track.url}`);
                 const results = await searchMusics(`${track.title} by ${track.author}`);
                 // consola.debug(results);
-                let filteredResults = results.filter((r) => r.title === track.title);
-                if (filteredResults.length === 0) filteredResults = results.filter((r) => r.title?.replaceAll(",", "")?.includes(track.title.replaceAll(",", "")));
-                consola.debug(filteredResults);
-                track.raw.url = `https://youtube.com/watch?v=${filteredResults[0].youtubeId}`;
+                let matchedResult = results.find((r) => r.title === track.title)?.youtubeId;
+                // filter results by title includes if no exact match but sanitize the title first
+                if (!matchedResult) matchedResult = results.find((t) => sanitize(t.title!).includes(sanitize(track.title)))?.youtubeId;
+
+                consola.debug(matchedResult);
+                // consola.debug("Checking:", sanitize(track.title));
+                // consola.debug(results.map((r) => sanitize(r.title!)));
+                track.raw.url = `https://youtube.com/watch?v=${matchedResult}`;
                 consola.success(`Playing ${track.title} by ${track.author} @ ${track.raw.url}`);
                 return (await stream(track.raw.url, { discordPlayerCompatibility: true })).stream;
             }
@@ -95,4 +99,24 @@ function msToTime(ms: number) {
     let mins = Math.floor(secs / 60);
     secs %= 60;
     return mins + ":" + (secs < 10 ? "0" : "") + secs;
+}
+
+function sanitize(str: string) {
+    // remove parenthesis and everything inside if the string inside the parenthesis includes "feat" or "ft."
+    if (str.includes('(') && str.includes(')')) {
+        let inside = str.slice(str.indexOf('(') + 1, str.indexOf(')'));
+        if (inside.includes('feat') || inside.includes('ft.')) str = str.replace(`(${inside})`, '');
+    }
+    // remove all brackets and parenthesis only
+    str = str.replace(/[\[\]\(\)]/g, '');
+    // remove all punctuation
+    str = str.replace(/[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/g, '');
+    // remove extra spaces
+    str = str.replace(/\s{2,}/g, ' ');
+    // trim the string
+    str = str.toLowerCase().trim();
+    return str;
+    
+    
+    
 }
