@@ -14,6 +14,7 @@ export const command = {
     category: 'Music',
     async autocomplete(interaction: AutocompleteInteraction) {
         let query = interaction.options.getFocused();
+        if (!query) return interaction.respond([]);
         const results = await search(interaction.client.amAPIToken, query, 'us', 10);
         results.forEach((t: SongType ) => {
             if (t.type === 'songs') t.type = 'Song';
