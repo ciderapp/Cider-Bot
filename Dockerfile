@@ -14,6 +14,6 @@ RUN git clone https://github.com/ciderapp/cider-bot.git .
 RUN yarn install --production
 
 # Pull for updates every time the container is started
-ENTRYPOINT ["sh", "-c", "git pull && npm start"]
+ENTRYPOINT ["sh", "-c", "cd app && git pull && npm start"]
 
 # Don't dodge me next time.
