@@ -1,8 +1,8 @@
 # Specify base image
-FROM node:18-alpine
+FROM node:18
 
-# Install git
-RUN apk add --no-cache git
+# Install Python and git
+RUN apt-get update && apt-get install -y git python3.8 python3-pip
 
 # Set working directory
 WORKDIR /app
