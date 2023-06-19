@@ -10,9 +10,6 @@ WORKDIR /app
 # Clone your discord bot's repo
 RUN git clone https://github.com/ciderapp/cider-bot.git .
 
-# Copy .env file
-COPY .env ./
-
 # Install dependencies
 RUN yarn install --production
 
