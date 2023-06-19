@@ -14,7 +14,7 @@ RUN git clone https://github.com/ciderapp/Cider-Bot.git .
 COPY .env ./
 
 # Install dependencies
-RUN npm install
+RUN yarn install --production
 
 # Pull for updates every time the container is started
 ENTRYPOINT ["sh", "-c", "git pull && npm start"]
