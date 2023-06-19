@@ -5,7 +5,7 @@ FROM node:18
 RUN apt-get update && apt-get install -y git python3 python3-pip
 
 # Set working directory
-WORKDIR /var/lib/docker/volumes/appdata/Cider-Bot
+WORKDIR /app
 
 # Clone your discord bot's repo
 RUN git clone https://github.com/ciderapp/cider-bot.git .
