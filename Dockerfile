@@ -17,6 +17,6 @@ RUN yarn install
 RUN yarn run build
 
 # Pull for updates every time the container is started
-ENTRYPOINT ["sh", "-c", "yarn run start || true"]
+ENTRYPOINT sh -c "yarn run start || true"
 
 # Don't dodge me next time.
