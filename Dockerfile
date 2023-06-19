@@ -8,7 +8,7 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Clone your discord bot's repo
-RUN git clone https://github.com/ciderapp/Cider-Bot.git .
+RUN git clone https://github.com/ciderapp/cider-bot.git .
 
 # Copy .env file
 COPY .env ./
