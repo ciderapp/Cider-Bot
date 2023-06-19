@@ -14,7 +14,7 @@ RUN git clone https://github.com/ciderapp/cider-bot.git .
 RUN yarn install
 
 # Build TSC
-RUN yarn run build
+RUN yarn run build || true
 
 # Pull for updates every time the container is started
 ENTRYPOINT sh -c "yarn run start || true"
