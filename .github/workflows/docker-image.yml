@@ -2,7 +2,7 @@ name: Push Docker image to Docker Hub
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   push_to_registry:
