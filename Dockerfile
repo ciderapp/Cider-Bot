@@ -11,7 +11,7 @@ WORKDIR /app
 RUN git clone https://github.com/ciderapp/cider-bot.git .
 
 # Install dependencies
-RUN yarn install --production
+RUN yarn install
 
 # Build TSC
 RUN yarn run build
