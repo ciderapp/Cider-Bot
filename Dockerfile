@@ -1,8 +1,8 @@
 # Specify base image
 FROM node:18
 
-# Install Python and git
-RUN apt-get update && apt-get install -y git python3 python3-pip
+# Install Python, git and ffmpeg
+RUN apt-get update && apt-get install -y git python3 python3-pip ffmpeg
 
 # Set working directory
 WORKDIR /app
