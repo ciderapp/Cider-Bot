@@ -1,7 +1,8 @@
-import { Player, GuildQueue, Track } from 'discord-player';
+import { Player, GuildQueue, Track, QueueRepeatMode } from 'discord-player';
 import consola from 'consola';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from 'discord.js';
 import { clearInterval } from 'timers';
+import { b } from 'consola/dist/consola-3fef035a';
 
 export const playerEvents = (player: Player) => {
     player.on('debug', (message) => consola.debug('\x1b[33m%s\x1b[90m%s\x1b[0m', '[DPlayer]', message));
@@ -107,6 +108,26 @@ export function nowPlayingEmbed(queue: GuildQueue, track: Track) {
     ];
 }
 export function nowPlayingComponents(queue: GuildQueue) {
+    let loopButton = {
+        action: 'loop', 
+        emoji: '🔁'
+    }
+    console.info("Track Size:", queue.tracks.size)
+    switch(queue.repeatMode) {
+        case QueueRepeatMode.OFF:
+            loopButton.emoji = '🔁';
+            loopButton.action = 'loopqueue';
+            break;
+        case QueueRepeatMode.QUEUE:
+            loopButton.emoji = '🔂';
+            loopButton.action = 'looptrack';
+        case QueueRepeatMode.TRACK:
+            loopButton.emoji = '♾️';
+            loopButton.action = 'loopautoplay';
+        case QueueRepeatMode.AUTOPLAY:
+            loopButton.emoji = '➡️';
+            loopButton.action = 'loopoff';
+    }
     return [
         new ActionRowBuilder().addComponents(
             new ButtonBuilder()
@@ -129,10 +150,9 @@ export function nowPlayingComponents(queue: GuildQueue) {
                 .setCustomId('skip')
                 .setDisabled(queue.tracks.size < 1),
             new ButtonBuilder()
-                .setEmoji('🔁')
+                .setEmoji(loopButton.emoji)
                 .setStyle(ButtonStyle.Secondary)
-                .setCustomId('loop')
-                .setDisabled(queue.tracks.size < 1)
+                .setCustomId(loopButton.action)
         )
     ];
 }
