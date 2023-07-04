@@ -20,7 +20,7 @@
     "@discordjs/rest": "^1.7.1",
     "@discordjs/voice": "^0.16.0",
     "consola": "^3.2.2",
-    "discord-player": "6.6.0",
+    "discord-player": "6.5.0",
     "discord.js": "^14.11.0",
     "firebase-admin": "^11.9.0",
     "m3u8-stream-list": "^1.1.0",
