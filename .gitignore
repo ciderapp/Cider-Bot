@@ -9,3 +9,10 @@ headers.ts
 build/
 update.lock
 *.sh
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

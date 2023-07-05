@@ -2,7 +2,7 @@ import { Player, GuildQueue, Track, QueueRepeatMode } from 'discord-player';
 import consola from 'consola';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, TextChannel } from 'discord.js';
 import { clearInterval } from 'timers';
-import { b } from 'consola/dist/consola-3fef035a';
+
 
 export const playerEvents = (player: Player) => {
     player.on('debug', (message) => consola.debug('\x1b[33m%s\x1b[90m%s\x1b[0m', '[DPlayer]', message));
