@@ -10,6 +10,6 @@ WORKDIR /app
 RUN git config --global --add safe.directory /app
 
 # Pull for updates every time the container is started
-ENTRYPOINT sh -c "if [ -d .git ]; then git pull; else git clone https://github.com/ciderapp/Cider-Bot.git .; fi && git pull && yarn cache clean && yarn clean && yarn install && yarn run build && yarn run start || true"
+ENTRYPOINT sh -c "if [ -d .git ]; then git pull; else git clone https://github.com/ciderapp/Cider-Bot.git .; fi && git reset --hard && git pull && yarn cache clean && yarn clean && yarn install && yarn run build && yarn run start || true"
 
 # Don't dodge me next time.
