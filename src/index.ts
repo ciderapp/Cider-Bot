@@ -3,6 +3,13 @@ import 'dotenv/config';
 import consola from 'consola';
 import { readdirSync } from 'fs';
 import { Player } from 'discord-player';
+import * as Sentry from '@sentry/node';
+
+Sentry.init({
+    dsn: 'https://abd160622caf3d98674db59f4ed21ad7@o4505637250793472.ingest.sentry.io/4505637252169728',
+    // Performance Monitoring
+    tracesSampleRate: 1.0
+});
 
 declare module 'discord.js' {
     export interface Client {
@@ -67,17 +74,22 @@ for (const file of eventFiles) {
         client.on(event.name, (...args) => event.execute(...args));
     }
 }
-
-client.login(process.env.DISCORD_TOKEN);
+try {
+    client.login(process.env.DISCORD_TOKEN);
+} catch (e) {
+    Sentry.captureException(e);
+}
 
 /*** ERROR HANDLING ***/
 process.on('unhandledRejection', (error: Error) => {
+    Sentry.captureException(error);
     consola.info('Unhandled Rejection');
     consola.error(error);
     consola.error(error.stack);
     (client.channels.cache.get(CiderGuildChannels.botLog) as TextChannel)?.send({ content: `Unhandled Rejection`, embeds: [createErrorEmbed(error)] });
 });
 process.on('uncaughtException', (error: Error) => {
+    Sentry.captureException(error);
     consola.info('Uncaught Exception');
     consola.error(error);
     consola.error(error.stack);
