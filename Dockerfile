@@ -1,6 +1,9 @@
 # Specify base image
 FROM node:18
 
+# Install pnpm
+RUN npm install -g pnpm
+
 # Install Python, git and ffmpeg
 RUN apt-get update && apt-get install -y git python3 python3-pip ffmpeg
 
