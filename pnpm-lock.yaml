@@ -17,9 +17,6 @@ dependencies:
   '@discordjs/opus':
     specifier: ^0.9.0
     version: 0.9.0
-  '@discordjs/rest':
-    specifier: ^2.0.0
-    version: 2.0.0
   '@discordjs/voice':
     specifier: ^0.16.0
     version: 0.16.0(@discordjs/opus@0.9.0)
