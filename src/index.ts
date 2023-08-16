@@ -1,8 +1,8 @@
-import { Client, GatewayIntentBits, Partials, Events, User, Collection, TextChannel, resolveColor, EmbedBuilder, Colors } from 'discord.js';
+import { Client, GatewayIntentBits, Partials, Collection, TextChannel, EmbedBuilder, Colors } from 'discord.js';
 import 'dotenv/config';
 import consola from 'consola';
 import { readdirSync } from 'fs';
-import { Player } from 'discord-player';
+// import { Player } from 'discord-player';
 import * as Sentry from '@sentry/node';
 
 Sentry.init({
@@ -18,8 +18,8 @@ declare module 'discord.js' {
         canPingKeefe: boolean;
         interactions: Collection<unknown, any>;
         replies: Collection<unknown, any>;
-        player: Player;
-        playerEmbeds: Map<string, any>;
+        // player: Player;
+        // playerEmbeds: Map<string, any>;
     }
 }
 
@@ -36,8 +36,8 @@ const client = new Client({
     ],
     partials: [Partials.Channel, Partials.User, Partials.GuildMember, Partials.Reaction]
 });
-client.playerEmbeds = new Map();
-client.player = new Player(client);
+// client.playerEmbeds = new Map();
+// client.player = new Player(client);
 client.commands = new Collection();
 client.interactions = new Collection();
 
