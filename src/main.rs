@@ -1,4 +1,5 @@
 use poise::{serenity_prelude::GatewayIntents, command, builtins};
+use surrealdb::{Surreal, engine::remote::ws::{Client, Ws}, opt::auth::Root};
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -21,14 +22,15 @@ type TokenLock = Arc<RwLock<Option<String>>>;
 extern crate lazy_static;
 
 lazy_static! {
-    // pub static ref DATABASE_IP: String =
-    //     std::env::var("DB_IP").expect("Please set the DB_IP env variable");
-    // pub static ref DATABASE_PASSWORD: String =
-    //     std::env::var("DB_PASS").expect("Please set the DB_PASS env variable");
+    pub static ref DATABASE_IP: String =
+        std::env::var("DB_IP").expect("Please set the DB_IP env variable");
+    pub static ref DATABASE_PASSWORD: String =
+        std::env::var("DB_PASS").expect("Please set the DB_PASS env variable");
     pub static ref TOKEN: String =
         std::env::var("TOKEN").expect("Please set the TOKEN env variable");
 }
 
+static DB: Surreal<Client> = Surreal::init();
 
 #[tokio::main]
 async fn main() {
@@ -36,6 +38,20 @@ async fn main() {
     tracing_subscriber::fmt()
         .with_env_filter("ciderbot=trace")
         .init();
+
+    info!("Connecting to SurrealDB @ {}", DATABASE_IP.as_str());
+
+    crate::DB.connect::<Ws>(DATABASE_IP.as_str())
+        .await
+        .expect("Unable to connect to database");
+    crate::DB.signin(Root {
+        username: "root",
+        password: &*DATABASE_PASSWORD,
+    })
+    .await
+    .unwrap();
+    
+    crate::DB.use_ns("cider").use_db("cider-bot").await.unwrap();
 
     // Setup the developer token object
     let developer_token = TokenLock::default();
@@ -58,9 +74,9 @@ async fn main() {
             event_handler: |_ctx, event, _framework, _data| {
                 Box::pin(async move {
                     match event {
-                        poise::Event::Message { new_message } => {
-                            info!("todo")
-                        },
+                        // poise::Event::Message { new_message } => {
+                        //     info!("todo")
+                        // },
                         _ => (),
                     }
                     Ok(())
@@ -72,17 +88,21 @@ async fn main() {
                     // https://github.com/serenity-rs/poise/blob/e2f40bd88aa13a63bf61b4c9c21a1d0b539f2cc4/src/builtins/mod.rs#L46
                     poise::FrameworkError::Command { error, ctx } => {
                         Box::pin(async move {
-                            ctx.send(|b| {
+                            if ctx.send(|b| {
                                 b.content(error.to_string())
                                     .reply(true)
                                     .ephemeral(true)
-                            }).await.unwrap();
+                            }).await.is_err() {
+                                warn!("Unable to send error message to user")
+                            };
                         })
                     },  
                     // Passthough everything else into its default behaviour
                     _ => {
                         Box::pin(async move {
-                            builtins::on_error(error).await.unwrap()
+                            if builtins::on_error(error).await.is_err() {
+                                warn!("Unable passthough message to its default functionallity")
+                            }
                         })
                     },
                 }
