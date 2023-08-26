@@ -1,25 +1,31 @@
-use log::info;
-use poise::{command, serenity_prelude::futures};
-use chrono_tz::{TZ_VARIANTS, Tz};
-use serde::{Serialize, Deserialize};
+use chrono_tz::{Tz, TZ_VARIANTS};
 use futures::{Stream, StreamExt};
+use log::{info, trace};
+use poise::{command, serenity_prelude::futures};
+use serde::{Deserialize, Serialize};
 
-use crate::{commands::{Context, Error}, models::User, DB};
+use crate::{
+    commands::{Context, Error},
+    models::User,
+    DB,
+};
 
 async fn autocomplete_timezone<'a>(
     _ctx: Context<'_>,
-    partial: &'a str
+    partial: &'a str,
 ) -> impl Stream<Item = String> + 'a {
     futures::stream::iter(TZ_VARIANTS.iter())
-        .filter(move |name| futures::future::ready(name.to_string().to_lowercase().contains(partial)))
+        .filter(move |name| {
+            futures::future::ready(name.to_string().to_lowercase().contains(partial))
+        })
         .map(|name| name.to_string())
 }
 
 /// Set your local time zone
 #[command(slash_command)]
 pub async fn settimezone(
-    ctx: Context<'_>, 
-    #[description = "Provide your local timezone"] 
+    ctx: Context<'_>,
+    #[description = "Provide your local timezone"]
     #[autocomplete = "autocomplete_timezone"]
     timezone: String,
 ) -> Result<(), Error> {
@@ -40,11 +46,15 @@ pub async fn settimezone(
         timezone: Option<Tz>,
     }
 
-    let user: User = DB.update(("user", ctx.author().id.0))
-        .merge(MergeUser {
-            timezone: Some(tz)
-        }).await?;
+    let user: User = DB
+        .update(("user", ctx.author().id.0))
+        .merge(MergeUser { timezone: Some(tz) })
+        .await?;
 
-    info!("user: {:?}", user);
+    info!(
+        "Adding {}'s timezone ({}) to the database",
+        user.username, tz
+    );
+    trace!("user: {:?}", user);
     Ok(())
 }

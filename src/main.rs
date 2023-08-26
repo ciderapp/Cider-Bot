@@ -1,5 +1,9 @@
-use poise::{serenity_prelude::GatewayIntents, builtins};
-use surrealdb::{Surreal, engine::remote::ws::{Client, Ws}, opt::auth::Root};
+use poise::{builtins, serenity_prelude::GatewayIntents};
+use surrealdb::{
+    engine::remote::ws::{Client, Ws},
+    opt::auth::Root,
+    Surreal,
+};
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -8,15 +12,14 @@ use log::*;
 
 // Submodules
 mod api;
-mod update;
 mod commands;
 mod models;
+mod update;
 // end Submodules
 
 // Types
 type TokenLock = Arc<RwLock<Option<String>>>;
 // end Types
-
 
 #[macro_use]
 extern crate lazy_static;
@@ -41,16 +44,18 @@ async fn main() {
 
     info!("Connecting to SurrealDB @ {}", DATABASE_IP.as_str());
 
-    crate::DB.connect::<Ws>(DATABASE_IP.as_str())
+    crate::DB
+        .connect::<Ws>(DATABASE_IP.as_str())
         .await
         .expect("Unable to connect to database");
-    crate::DB.signin(Root {
-        username: "root",
-        password: &*DATABASE_PASSWORD,
-    })
-    .await
-    .unwrap();
-    
+    crate::DB
+        .signin(Root {
+            username: "root",
+            password: &DATABASE_PASSWORD,
+        })
+        .await
+        .unwrap();
+
     crate::DB.use_ns("cider").use_db("cider-bot").await.unwrap();
 
     // Setup the developer token object
@@ -61,7 +66,6 @@ async fn main() {
         | GatewayIntents::GUILD_MESSAGES
         | GatewayIntents::GUILD_INTEGRATIONS;
 
-
     info!("Spawning token update task");
     tokio::task::spawn(update::token_updater(developer_token.clone()));
 
@@ -70,7 +74,7 @@ async fn main() {
             commands: vec![
                 commands::about::about(),
                 commands::settimezone::settimezone(),
-                commands::time::time()
+                commands::time::time(),
             ],
             event_handler: |_ctx, event, _framework, _data| {
                 Box::pin(async move {
@@ -87,25 +91,21 @@ async fn main() {
                 match error {
                     // Handle a command error. Overriden from the main functionallity of just sending a message.
                     // https://github.com/serenity-rs/poise/blob/e2f40bd88aa13a63bf61b4c9c21a1d0b539f2cc4/src/builtins/mod.rs#L46
-                    poise::FrameworkError::Command { error, ctx } => {
-                        Box::pin(async move {
-                            if ctx.send(|b| {
-                                b.content(error.to_string())
-                                    .reply(true)
-                                    .ephemeral(true)
-                            }).await.is_err() {
-                                warn!("Unable to send error message to user")
-                            };
-                        })
-                    },  
+                    poise::FrameworkError::Command { error, ctx } => Box::pin(async move {
+                        if ctx
+                            .send(|b| b.content(error.to_string()).reply(true).ephemeral(true))
+                            .await
+                            .is_err()
+                        {
+                            warn!("Unable to send error message to user")
+                        };
+                    }),
                     // Passthough everything else into its default behaviour
-                    _ => {
-                        Box::pin(async move {
-                            if builtins::on_error(error).await.is_err() {
-                                warn!("Unable passthough message to its default functionallity")
-                            }
-                        })
-                    },
+                    _ => Box::pin(async move {
+                        if builtins::on_error(error).await.is_err() {
+                            warn!("Unable passthough message to its default functionallity")
+                        }
+                    }),
                 }
             },
             ..Default::default()

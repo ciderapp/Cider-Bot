@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use poise::serenity_prelude::{OnlineStatus, Activity, Context};
+use poise::serenity_prelude::{Activity, Context, OnlineStatus};
 use serde::{Deserialize, Serialize};
 use tracing::log::*;
 
@@ -40,9 +40,7 @@ pub async fn token_updater(token: TokenLock) {
 pub async fn status_updater(ctx: Context) {
     let status = OnlineStatus::DoNotDisturb;
     loop {
-        let activity = Activity::watching(format!(
-            "Cider | BOT IN DEVELOPMENT"
-        ));
+        let activity = Activity::watching(format!("Cider | BOT IN DEVELOPMENT"));
         ctx.set_presence(Some(activity.clone()), status).await;
         tokio::time::sleep(Duration::from_secs(10)).await;
     }

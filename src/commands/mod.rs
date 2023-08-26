@@ -1,6 +1,6 @@
 pub mod about;
-pub mod time;
 pub mod settimezone;
+pub mod time;
 
 // Data for all commands to access
 pub struct Data {}

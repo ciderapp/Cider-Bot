@@ -11,7 +11,7 @@ pub struct User {
     pub username: String,
     pub timezone: Option<Tz>,
     pub created: DateTime<Utc>,
-    pub deleted: Option<DateTime<Utc>>
+    pub deleted: Option<DateTime<Utc>>,
 }
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -28,13 +28,11 @@ impl User {
                 ..Default::default()
             };
 
-            let user: User = DB.update(("user", id))
-                .content(&user)
-                .await?;
+            let user: User = DB.update(("user", id)).content(&user).await?;
 
             Ok(user)
         } else {
             Ok(user.unwrap())
         }
-    } 
+    }
 }
