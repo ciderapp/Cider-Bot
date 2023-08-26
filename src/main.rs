@@ -1,4 +1,4 @@
-use poise::{serenity_prelude::GatewayIntents, command};
+use poise::{serenity_prelude::GatewayIntents, command, builtins};
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -8,51 +8,14 @@ use log::*;
 // Submodules
 mod api;
 mod update;
+mod commands;
+mod models;
 // end Submodules
 
 // Types
 type TokenLock = Arc<RwLock<Option<String>>>;
 // end Types
 
-
-struct Data {} // User data, which is stored and accessible in all command invocations
-type Error = Box<dyn std::error::Error + Send + Sync>;
-type Context<'a> = poise::Context<'a, Data, Error>;
-
-pub fn split_authors(authors: &str) -> String {
-    authors.split(':').collect::<Vec<&str>>().join(", ")
-}
-
-trait NaIfNone {
-    fn na(&self) -> String;
-}
-
-impl NaIfNone for Option<&str> {
-    fn na(&self) -> String {
-        self.unwrap_or("N/A").to_string()
-    }
-}
-
-/// Get information about Cider
-#[command(slash_command)]
-async fn about(
-    ctx: Context<'_>,
-) -> Result<(), Error> {
-    
-    ctx.say(format!(
-        "Version: {}
-Author(s): {}
-Build time: {}
-Commit hash: [{hash}](https://github.com/ciderapp/Cidar/commit/{hash})
-Rust version: {}",
-        option_env!("CARGO_PKG_VERSION").na(),
-        split_authors(&option_env!("CARGO_PKG_AUTHORS").na()),
-        option_env!("VERGEN_BUILD_TIMESTAMP").na(),
-        option_env!("VERGEN_RUSTC_SEMVER").na(),
-        hash=option_env!("VERGEN_GIT_SHA").na()
-    )).await?;
-    Ok(())
-}
 
 #[macro_use]
 extern crate lazy_static;
@@ -88,7 +51,10 @@ async fn main() {
 
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![about()],
+            commands: vec![
+                commands::about::about(),
+                commands::settimezone::settimezone()
+            ],
             event_handler: |_ctx, event, _framework, _data| {
                 Box::pin(async move {
                     match event {
@@ -100,15 +66,37 @@ async fn main() {
                     Ok(())
                 })
             },
+            on_error: |error| {
+                match error {
+                    // Handle a command error. Overriden from the main functionallity of just sending a message.
+                    // https://github.com/serenity-rs/poise/blob/e2f40bd88aa13a63bf61b4c9c21a1d0b539f2cc4/src/builtins/mod.rs#L46
+                    poise::FrameworkError::Command { error, ctx } => {
+                        Box::pin(async move {
+                            ctx.send(|b| {
+                                b.content(error.to_string())
+                                    .reply(true)
+                                    .ephemeral(true)
+                            }).await.unwrap();
+                        })
+                    },  
+                    // Passthough everything else into its default behaviour
+                    _ => {
+                        Box::pin(async move {
+                            builtins::on_error(error).await.unwrap()
+                        })
+                    },
+                }
+            },
             ..Default::default()
         })
         .token(TOKEN.as_str())
         .intents(intents)
         .setup(|ctx, _ready, framework| {
             info!("{} logged in", _ready.user.name);
+            tokio::task::spawn(update::status_updater(ctx.clone()));
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(Data {})
+                Ok(commands::Data {})
             })
         });
 
