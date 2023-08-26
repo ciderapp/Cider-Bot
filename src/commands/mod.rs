@@ -1,4 +1,5 @@
 pub mod about;
+pub mod time;
 pub mod settimezone;
 
 // Data for all commands to access

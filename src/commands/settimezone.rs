@@ -11,7 +11,7 @@ async fn autocomplete_timezone<'a>(
     partial: &'a str
 ) -> impl Stream<Item = String> + 'a {
     futures::stream::iter(TZ_VARIANTS.iter())
-        .filter(move |name| futures::future::ready(name.to_string().starts_with(partial)))
+        .filter(move |name| futures::future::ready(name.to_string().to_lowercase().contains(partial)))
         .map(|name| name.to_string())
 }
 
@@ -24,9 +24,8 @@ pub async fn settimezone(
     timezone: String,
 ) -> Result<(), Error> {
     let tz: Tz = timezone.parse()?;
-    //ctx.say(format!("timezone: {:?}", tz)).await?;
     ctx.send(|b| {
-        b.content(format!("timezone: {:?}", tz))
+        b.content(format!("Set timezone to {:?}", tz))
             .reply(true)
             .ephemeral(true)
     })

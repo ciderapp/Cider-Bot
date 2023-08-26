@@ -1,4 +1,4 @@
-use poise::{serenity_prelude::GatewayIntents, command, builtins};
+use poise::{serenity_prelude::GatewayIntents, builtins};
 use surrealdb::{Surreal, engine::remote::ws::{Client, Ws}, opt::auth::Root};
 
 use std::sync::Arc;
@@ -69,7 +69,8 @@ async fn main() {
         .options(poise::FrameworkOptions {
             commands: vec![
                 commands::about::about(),
-                commands::settimezone::settimezone()
+                commands::settimezone::settimezone(),
+                commands::time::time()
             ],
             event_handler: |_ctx, event, _framework, _data| {
                 Box::pin(async move {
