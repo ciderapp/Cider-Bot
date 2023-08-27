@@ -48,7 +48,7 @@ pub async fn set(
     // If the user option is empty, set as ourself
     let user = if let Some(user) = user {
         // Verify permissions before continuing!!!
-        if ctx.author().id.0 != user.id.0 && !is_admin(&ctx, &ctx.author()).await
+        if ctx.author().id != user.id && !is_admin(&ctx, &ctx.author()).await
             || !is_higher(&ctx, &ctx.author(), &user).await
         {
             ctx.send(|b| {

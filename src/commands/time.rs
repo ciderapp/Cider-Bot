@@ -27,11 +27,15 @@ pub async fn time(
             let local_time = current_utc_time.with_timezone(&tz);
 
             ctx.send(|b| {
-                b.content(format!(
-                    "The time for **{}** is {}",
-                    user.name,
-                    local_time.format("%A, %B %e, %Y %I:%M:%S %p | %T %Z")
-                ))
+                b.embed(|e| {
+                    e.title(local_time.format("%I:%M%p (%I:%M:%S %Z)"))
+                        .color(15093583)
+                        .author(|a| {
+                            a.name(format!("Current timezone for @{}", user.name))
+                                .icon_url(user.static_avatar_url().unwrap_or("".to_string()))
+                        })
+                        .footer(|f| f.text(local_time.format("%B %e, %Y - %A")))
+                })
                 .reply(true)
             })
             .await?;
