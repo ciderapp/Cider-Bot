@@ -34,6 +34,7 @@ pub async fn timezone(_ctx: Context<'_>) -> Result<(), Error> {
 pub async fn set(
     ctx: Context<'_>,
     #[description = "Provide your local timezone"]
+    #[max_length = 32] // Maximum TZ str len
     #[autocomplete = "autocomplete_timezone"]
     timezone: String,
     #[description = "Sets a users timezone (Admin Only)"] user: Option<SerenityUser>,
