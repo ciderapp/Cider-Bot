@@ -90,7 +90,6 @@ async fn main() {
                 Box::pin(async move {
                     match event {
                         // poise::Event::Message { new_message } => {
-                        //     info!("todo")
                         // },
                         _ => (),
                     }

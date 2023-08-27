@@ -8,7 +8,7 @@ use poise::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    commands::{is_admin, Context, Error},
+    commands::{is_admin, is_higher, Context, Error},
     models::User,
     DB,
 };
@@ -19,7 +19,11 @@ async fn autocomplete_timezone<'a>(
 ) -> impl Stream<Item = String> + 'a {
     futures::stream::iter(TZ_VARIANTS.iter())
         .filter(move |name| {
-            futures::future::ready(name.to_string().to_lowercase().contains(&partial.to_lowercase()))
+            futures::future::ready(
+                name.to_string()
+                    .to_lowercase()
+                    .contains(&partial.to_lowercase()),
+            )
         })
         .map(|name| name.to_string())
 }
@@ -40,17 +44,13 @@ pub async fn set(
     #[description = "Sets a users timezone (Admin Only)"] user: Option<SerenityUser>,
 ) -> Result<(), Error> {
     let tz: Tz = timezone.parse()?;
-    ctx.send(|b| {
-        b.content(format!("Set timezone to {:?}", tz))
-            .reply(true)
-            .ephemeral(true)
-    })
-    .await?;
 
     // If the user option is empty, set as ourself
     let user = if let Some(user) = user {
         // Verify permissions before continuing!!!
-        if ctx.author().id.0 != user.id.0 && !is_admin(&ctx, &ctx.author()).await {
+        if ctx.author().id.0 != user.id.0 && !is_admin(&ctx, &ctx.author()).await
+            || !is_higher(&ctx, &ctx.author(), &user).await
+        {
             ctx.send(|b| {
                 b.content("You do not have permissions to set users timezone")
                     .reply(true)
@@ -86,6 +86,14 @@ pub async fn set(
         "Adding {}'s timezone ({}) to the database",
         user.username, tz
     );
+
+    ctx.send(|b| {
+        b.content(format!("Set timezone to {:?}", tz))
+            .reply(true)
+            .ephemeral(true)
+    })
+    .await?;
+
     trace!("user: {:?}", user);
     Ok(())
 }
