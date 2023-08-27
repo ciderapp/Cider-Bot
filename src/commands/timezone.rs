@@ -19,7 +19,7 @@ async fn autocomplete_timezone<'a>(
 ) -> impl Stream<Item = String> + 'a {
     futures::stream::iter(TZ_VARIANTS.iter())
         .filter(move |name| {
-            futures::future::ready(name.to_string().to_lowercase().contains(partial))
+            futures::future::ready(name.to_string().to_lowercase().contains(&partial.to_lowercase()))
         })
         .map(|name| name.to_string())
 }
