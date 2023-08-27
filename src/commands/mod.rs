@@ -4,6 +4,7 @@ use poise::serenity_prelude::{Permissions, User};
 use crate::api;
 
 pub mod about;
+pub mod deletetimezone;
 pub mod settimezone;
 pub mod time;
 

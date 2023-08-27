@@ -64,12 +64,16 @@ pub async fn settimezone(
 
     #[derive(Debug, Serialize, Deserialize)]
     struct MergeUser {
+        username: String,
         timezone: Option<Tz>,
     }
 
     let user: User = DB
         .update(("user", user.id.0))
-        .merge(MergeUser { timezone: Some(tz) })
+        .merge(MergeUser {
+            username: user.name, // Update the username to keep it up-to-date
+            timezone: Some(tz),
+        })
         .await?;
 
     info!(
@@ -79,3 +83,35 @@ pub async fn settimezone(
     trace!("user: {:?}", user);
     Ok(())
 }
+
+// NOTE: Apparently discord does not fully support sub commands on slash commands
+// It is unable to call the base command with this, which is weird.
+
+// The following has been split into src/deletetimezone.rs
+
+// Respect user data, and allow the user to remove their data from the database.
+// Delete you data from the database
+// #[poise::command(slash_command)]
+// pub async fn delete(ctx: Context<'_>) -> Result<(), Error> {
+//     // Assure the user exists before deleting
+//     let user: Option<User> = DB.select(("user", ctx.author().id.0)).await?;
+
+//     if user.is_none() {
+//         ctx.send(|b| {
+//             b.content("User is not in the database")
+//                 .reply(true)
+//                 .ephemeral(true)
+//         })
+//         .await?;
+//         return Ok(());
+//     }
+
+//     let _user: User = DB.delete(("user", ctx.author().id.0)).await?;
+//     ctx.send(|b| {
+//         b.content("Deleted user info in the database.")
+//             .reply(true)
+//             .ephemeral(true)
+//     })
+//     .await?;
+//     Ok(())
+// }

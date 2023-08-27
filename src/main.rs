@@ -84,6 +84,7 @@ async fn main() {
             commands: vec![
                 commands::about::about(),
                 commands::settimezone::settimezone(),
+                commands::deletetimezone::deletetimezone(),
                 commands::time::time(),
             ],
             event_handler: |_ctx, event, _framework, _data| {
