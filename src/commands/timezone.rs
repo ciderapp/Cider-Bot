@@ -24,9 +24,14 @@ async fn autocomplete_timezone<'a>(
         .map(|name| name.to_string())
 }
 
+#[command(slash_command, subcommands("set", "delete"))]
+pub async fn timezone(_ctx: Context<'_>) -> Result<(), Error> {
+    Ok(())
+}
+
 /// Set your local time zone
 #[command(slash_command)]
-pub async fn settimezone(
+pub async fn set(
     ctx: Context<'_>,
     #[description = "Provide your local timezone"]
     #[autocomplete = "autocomplete_timezone"]
@@ -84,34 +89,32 @@ pub async fn settimezone(
     Ok(())
 }
 
-// NOTE: Apparently discord does not fully support sub commands on slash commands
-// It is unable to call the base command with this, which is weird.
-
-// The following has been split into src/deletetimezone.rs
-
 // Respect user data, and allow the user to remove their data from the database.
-// Delete you data from the database
-// #[poise::command(slash_command)]
-// pub async fn delete(ctx: Context<'_>) -> Result<(), Error> {
-//     // Assure the user exists before deleting
-//     let user: Option<User> = DB.select(("user", ctx.author().id.0)).await?;
+/// Delete you data from the database
+#[poise::command(slash_command)]
+pub async fn delete(ctx: Context<'_>) -> Result<(), Error> {
+    // Assure the user exists before deleting
+    let user: Option<User> = DB.select(("user", ctx.author().id.0)).await?;
 
-//     if user.is_none() {
-//         ctx.send(|b| {
-//             b.content("User is not in the database")
-//                 .reply(true)
-//                 .ephemeral(true)
-//         })
-//         .await?;
-//         return Ok(());
-//     }
+    if user.is_none() {
+        ctx.send(|b| {
+            b.content("User is not in the database")
+                .reply(true)
+                .ephemeral(true)
+        })
+        .await?;
+        return Ok(());
+    }
 
-//     let _user: User = DB.delete(("user", ctx.author().id.0)).await?;
-//     ctx.send(|b| {
-//         b.content("Deleted user info in the database.")
-//             .reply(true)
-//             .ephemeral(true)
-//     })
-//     .await?;
-//     Ok(())
-// }
+    let _user: User = DB.delete(("user", ctx.author().id.0)).await?;
+
+    info!("Deleting {} in the database", ctx.author().name);
+
+    ctx.send(|b| {
+        b.content("Deleted user info in the database.")
+            .reply(true)
+            .ephemeral(true)
+    })
+    .await?;
+    Ok(())
+}

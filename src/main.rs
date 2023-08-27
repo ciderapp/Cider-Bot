@@ -83,8 +83,7 @@ async fn main() {
         .options(poise::FrameworkOptions {
             commands: vec![
                 commands::about::about(),
-                commands::settimezone::settimezone(),
-                commands::deletetimezone::deletetimezone(),
+                commands::timezone::timezone(),
                 commands::time::time(),
             ],
             event_handler: |_ctx, event, _framework, _data| {

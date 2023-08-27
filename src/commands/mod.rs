@@ -1,12 +1,11 @@
-use log::{info, trace, warn};
-use poise::serenity_prelude::{Permissions, User};
+use log::*;
+use poise::serenity_prelude::User;
 
 use crate::api;
 
 pub mod about;
-pub mod deletetimezone;
-pub mod settimezone;
 pub mod time;
+pub mod timezone;
 
 // Data for all commands to access
 pub struct Data {
