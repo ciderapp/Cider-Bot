@@ -10,6 +10,8 @@ use tokio::sync::RwLock;
 
 use log::*;
 
+use crate::commands::Data;
+
 // Submodules
 mod api;
 mod commands;
@@ -60,6 +62,14 @@ async fn main() {
 
     // Setup the developer token object
     let developer_token = TokenLock::default();
+
+    // Shared data to be used in poise/serenity
+    let data = Data {
+        api: api::AppleMusicApi {
+            client: Arc::new(RwLock::new(reqwest::Client::new())),
+            developer_token: developer_token.clone(),
+        },
+    };
 
     let intents = GatewayIntents::non_privileged()
         | GatewayIntents::MESSAGE_CONTENT
@@ -114,10 +124,12 @@ async fn main() {
         .intents(intents)
         .setup(|ctx, _ready, framework| {
             info!("{} logged in", _ready.user.name);
+
+            info!("Spawing status task");
             tokio::task::spawn(update::status_updater(ctx.clone()));
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-                Ok(commands::Data {})
+                Ok(data)
             })
         });
 
