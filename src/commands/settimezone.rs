@@ -1,11 +1,14 @@
 use chrono_tz::{Tz, TZ_VARIANTS};
 use futures::{Stream, StreamExt};
 use log::{info, trace};
-use poise::{command, serenity_prelude::futures};
+use poise::{
+    command,
+    serenity_prelude::{futures, User as SerenityUser},
+};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    commands::{Context, Error},
+    commands::{is_admin, Context, Error},
     models::User,
     DB,
 };
@@ -28,6 +31,7 @@ pub async fn settimezone(
     #[description = "Provide your local timezone"]
     #[autocomplete = "autocomplete_timezone"]
     timezone: String,
+    #[description = "Sets a users timezone (Admin Only)"] user: Option<SerenityUser>,
 ) -> Result<(), Error> {
     let tz: Tz = timezone.parse()?;
     ctx.send(|b| {
@@ -37,7 +41,24 @@ pub async fn settimezone(
     })
     .await?;
 
-    User::create_if_not_exist(ctx.author().id.0, &ctx.author().name).await?;
+    // If the user option is empty, set as ourself
+    let user = if let Some(user) = user {
+        // Verify permissions before continuing!!!
+        if ctx.author().id.0 != user.id.0 && !is_admin(&ctx, &ctx.author()).await {
+            ctx.send(|b| {
+                b.content("You do not have permissions to set users timezone")
+                    .reply(true)
+                    .ephemeral(true)
+            })
+            .await?;
+            return Ok(());
+        }
+        user
+    } else {
+        ctx.author().to_owned()
+    };
+
+    User::create_if_not_exist(user.id.0, &user.name).await?;
 
     // Set TZ in the users profile
 
@@ -47,7 +68,7 @@ pub async fn settimezone(
     }
 
     let user: User = DB
-        .update(("user", ctx.author().id.0))
+        .update(("user", user.id.0))
         .merge(MergeUser { timezone: Some(tz) })
         .await?;
 

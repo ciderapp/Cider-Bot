@@ -30,8 +30,7 @@ pub async fn time(
                 b.content(format!(
                     "The time for **{}** is {}",
                     user.name,
-                    local_time
-                        .format("%A, %B %e, %Y %I:%M:%S %p | %T %Z")
+                    local_time.format("%A, %B %e, %Y %I:%M:%S %p | %T %Z")
                 ))
                 .reply(true)
             })

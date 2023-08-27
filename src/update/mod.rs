@@ -19,17 +19,16 @@ pub async fn token_updater(token: TokenLock) {
             .header("User-Agent", "Cider")
             .header("Referer", "tauri.localhost")
             .send()
-            .await else {
-                warn!("Failed to get new token, keeping previous");
-                return
-            };
+            .await
+        else {
+            warn!("Failed to get new token, keeping previous");
+            return;
+        };
 
-        let Ok(serialized) = response
-            .json::<TokenBody>()
-            .await else {
-                warn!("Failed to get new token, keeping previous");
-                return
-            };
+        let Ok(serialized) = response.json::<TokenBody>().await else {
+            warn!("Failed to get new token, keeping previous");
+            return;
+        };
 
         *token.write().await = Some(serialized.token);
 
