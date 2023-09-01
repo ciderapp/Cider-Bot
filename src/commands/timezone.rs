@@ -115,12 +115,20 @@ pub async fn delete(ctx: Context<'_>) -> Result<(), Error> {
         return Ok(());
     }
 
-    let _user: User = DB.delete(("user", ctx.author().id.0)).await?;
+    #[derive(Debug, Serialize, Deserialize)]
+    struct MergeUser {
+        timezone: Option<Tz>,
+    }
 
-    info!("Deleting {} in the database", ctx.author().name);
+    let _user: User = DB
+        .update(("user", ctx.author().id.0))
+        .merge(MergeUser { timezone: None })
+        .await?;
+
+    info!("Deleting {}'s timezone in the database", ctx.author().name);
 
     ctx.send(|b| {
-        b.content("Deleted user info in the database.")
+        b.content("Deleted user's timezone in the database.")
             .reply(true)
             .ephemeral(true)
     })
