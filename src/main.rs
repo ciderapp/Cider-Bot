@@ -3,7 +3,7 @@ use poise::{
     builtins,
     serenity_prelude::{
         async_trait, Client, ClientBuilder, EventHandler, GatewayIntents, Http, Ready,
-        ShardManager, UserId,
+        ShardManager, Timestamp, UserId,
     },
     FrameworkOptions,
 };
@@ -17,7 +17,7 @@ use songbird::{
     id::ChannelId,
     input::{reader::MediaSource, Input, Metadata, Reader},
     serenity,
-    tracks::Track,
+    tracks::{Track, TrackHandle},
     Event, EventContext, SerenityInit, Songbird, TrackEvent,
 };
 use thiserror::Error;
@@ -28,7 +28,7 @@ use yokai::{
 use yokai_apple::{AppleProvider, AppleTrack};
 
 use std::{fmt, future::Future, sync::Arc, thread, time::Duration};
-use tokio::sync::RwLock;
+use tokio::{sync::RwLock, time::Instant};
 
 use log::*;
 
@@ -42,6 +42,7 @@ mod api;
 mod commands;
 mod models;
 mod update;
+mod vpath;
 // end Submodules
 
 // Types
@@ -62,7 +63,8 @@ lazy_static! {
         std::env::var("TOKEN").expect("Please set the TOKEN env variable");
 }
 
-static DB: Surreal<SClient> = Surreal::init();
+use once_cell::sync::Lazy;
+static DB: Lazy<Surreal<surrealdb::engine::remote::ws::Client>> = Lazy::new(Surreal::init);
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
 
@@ -143,27 +145,14 @@ fn resample(input_signal: &[f32], input_rate: u32, output_rate: u32) -> Vec<f32>
 
 use rubato::{SincFixedIn, SincInterpolationType, WindowFunction};
 
-lazy_static! {
-    static ref LOCKED: Arc<RwLock<bool>> = { Arc::new(RwLock::new(false)) };
-}
-
 struct SongEndNotifier {
     song: QueueItem,
 }
 
-#[async_trait]
-impl songbird::events::EventHandler for SongEndNotifier {
-    async fn act(&self, _ctx: &EventContext<'_>) -> Option<Event> {
-        info!("Removing {} from queue", self.song.song);
-        let Some(_success) = QUEUE.write().await.remove(&self.song) else {
-            info!("Song already removed from queue");
-            *LOCKED.write().await = false;
-            return None;
-        };
-        info!("Removed {} from queue", self.song.song);
-        *LOCKED.write().await = false;
-        None
-    }
+lazy_static! {
+    pub static ref PROVIDER: Arc<RwLock<Option<AppleProvider<'static>>>> =
+        Arc::new(RwLock::new(None));
+    pub static ref APPLE_TOKEN: TokenLock = Arc::new(RwLock::new(None));
 }
 
 #[async_trait]
@@ -186,121 +175,15 @@ impl poise::serenity_prelude::EventHandler for Hanler {
         poise::builtins::register_globally(&_ctx, &framework_data.options().commands)
             .await
             .unwrap();
-        let thread_ctx = _ctx.clone();
-        tokio::task::spawn(async move {
-            let apple =
-                yokai_apple::AppleProvider::new(".", "".to_string(), "".to_string()).unwrap();
-            // See if any song is in the queue
-            loop {
-                if *LOCKED.read().await {
-                    tokio::time::sleep(Duration::from_millis(250)).await;
-                    continue;
-                }
 
-                let read = QUEUE.read().await.clone();
-                let Some(a) = read.peek() else {
-                    //drop(read);
-                    tokio::time::sleep(Duration::from_secs(1)).await;
-                    continue;
-                };
-
-                let a = a.0;
-
-                //drop(read);
-
-                *LOCKED.write().await = true;
-
-                info!("Got queue item, playing {}", a.song);
-
-                let track = AppleTrack::from_remote_id(a.song.to_string());
-                let Ok(mut audio) = apple.get_audio_track(track).await else {
-                    info!("Invalid song");
-                    info!("Removing {} from queue", a.song);
-                    let Some(_success) = QUEUE.write().await.remove(&a) else {
-                        info!("Song already removed from queue");
-                        *LOCKED.write().await = false;
-                        continue;
-                    };
-                    info!("Removed {} from queue", a.song);
-                    *LOCKED.write().await = false;
-                    continue;
-                };
-
-                let byte_stream = Arc::new(std::sync::RwLock::new(Vec::new()));
-
-                let mut samplerate = 0;
-
-                let mut position = 0f32;
-                let mut started = false;
-                while position < audio.get_length().await.unwrap() {
-                    let mut data = vec![Vec::new(); 2];
-                    info!("Position: {}", position);
-                    let segment = audio.get_segment_containing(position).await.unwrap();
-                    position += segment.data[0].len() as f32 / segment.sample_rate as f32;
-                    samplerate = segment.sample_rate;
-                    data[0].extend_from_slice(&segment.data[0]);
-                    data[1].extend_from_slice(&segment.data[1]);
-
-                    let mut stream = Vec::new();
-
-                    for sample in 0..data[0].len() {
-                        for channel in &data {
-                            let sample = channel[sample];
-                            stream.push(sample);
-                        }
-                    }
-
-                    let stream = resample(&stream, samplerate, a.speed.get_value());
-
-                    for sample in stream {
-                        byte_stream
-                            .write()
-                            .unwrap()
-                            .extend_from_slice(&sample.to_le_bytes());
-                    }
-
-                    if !started {
-                        started = true;
-                        // Create the playback thread!
-                        // Create some important copies of things...
-                        let ctx_clone = _ctx.clone();
-                        let byte_stream_copy = byte_stream.clone();
-                        let a_copy = a.clone();
-
-                        tokio::task::spawn(async move {
-                            info!("Started playback thread");
-
-                            let input = Input::new(
-                                true,
-                                Reader::Extension(Box::new(AudioBuffer::new(
-                                    byte_stream_copy.clone(),
-                                ))),
-                                songbird::input::Codec::FloatPcm,
-                                Container::Raw,
-                                Some(Metadata {
-                                    channels: Some(2),
-                                    sample_rate: Some(44100),
-                                    ..Default::default()
-                                }),
-                            );
-
-                            info!("{}", 44100);
-                            let manager = songbird::get(&ctx_clone).await.unwrap();
-                            let (handle, result) =
-                                manager.join(843954443845238864, 1146635519426560140).await;
-
-                            //Track::new_raw(source, commands, handle)
-
-                            let mut handle = handle.lock().await.play_source(input);
-                            let _ = handle.add_event(
-                                Event::Track(TrackEvent::End),
-                                SongEndNotifier { song: a_copy },
-                            );
-                        });
-                    }
-                }
-            }
-        });
+        *PROVIDER.write().await = Some(
+            yokai_apple::AppleProvider::new(
+                ".",
+                "".to_string(),
+                APPLE_TOKEN.read().await.clone().unwrap(),
+            )
+            .unwrap(),
+        );
     }
 
     async fn message(
@@ -358,33 +241,21 @@ async fn start() {
 
     info!("Connecting to SurrealDB @ {}", DATABASE_IP.as_str());
 
-    crate::DB
-        .connect::<Ws>(DATABASE_IP.as_str())
-        .await
-        .expect("Unable to connect to database");
-    crate::DB
-        .signin(Root {
-            username: "root",
-            password: &DATABASE_PASSWORD,
-        })
-        .await
-        .unwrap();
+    // crate::DB
+    //     .connect::<Ws>(DATABASE_IP.as_str())
+    //     .await
+    //     .expect("Unable to connect to database");
+    // crate::DB
+    //     .signin(Root {
+    //         username: "root",
+    //         password: &DATABASE_PASSWORD,
+    //     })
+    //     .await
+    //     .unwrap();
 
-    crate::DB.use_ns("cider").use_db("cider-bot").await.unwrap();
+    // crate::DB.use_ns("cider").use_db("cider-bot").await.unwrap();
 
     // Setup the developer token object
-    let developer_token = TokenLock::default();
-
-    let sb = Songbird::serenity();
-
-    // Shared data to be used in poise/serenity
-    let data = Data {
-        api: api::AppleMusicApi {
-            client: Arc::new(RwLock::new(reqwest::Client::new())),
-            developer_token: developer_token.clone(),
-        },
-        db: Arc::new(RwLock::new(sb)),
-    };
 
     let intents = GatewayIntents::non_privileged()
         | GatewayIntents::MESSAGE_CONTENT
@@ -392,7 +263,7 @@ async fn start() {
         | GatewayIntents::GUILD_INTEGRATIONS;
 
     info!("Spawning token update task");
-    tokio::task::spawn(update::token_updater(developer_token.clone()));
+    tokio::task::spawn(update::token_updater(APPLE_TOKEN.clone()));
 
     // let c = Client::builder(TOKEN.as_str(), intents).event_handler(event_handler)..register_songbird().await.unwrap();
 

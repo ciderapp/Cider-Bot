@@ -28,9 +28,9 @@ impl User {
                 ..Default::default()
             };
 
-            let user: User = DB.update(("user", id)).content(&user).await?;
+            let user: Option<User> = DB.update(("user", id)).content(&user).await?;
 
-            Ok(user)
+            Ok(user.unwrap())
         } else {
             Ok(user.unwrap())
         }
