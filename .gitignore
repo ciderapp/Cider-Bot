@@ -8,4 +8,6 @@
 #/target
 
 *.dll
+*.dylib
+*.so
 .vscode

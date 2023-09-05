@@ -5525,6 +5525,7 @@ dependencies = [
 [[package]]
 name = "yokai"
 version = "0.1.0"
+source = "git+https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround?branch=rewrite#c9b3eabc4e65c8daa856e8d6a3f6d0f0706f8baf"
 dependencies = [
  "async-trait",
  "reqwest",
@@ -5535,6 +5536,7 @@ dependencies = [
 [[package]]
 name = "yokai_apple"
 version = "0.1.0"
+source = "git+https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround?branch=rewrite#c9b3eabc4e65c8daa856e8d6a3f6d0f0706f8baf"
 dependencies = [
  "base64 0.21.3",
  "bmf-parse",
@@ -5555,14 +5557,17 @@ dependencies = [
 [[package]]
 name = "yokai_fairplay"
 version = "0.1.0"
+source = "git+https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround?branch=rewrite#c9b3eabc4e65c8daa856e8d6a3f6d0f0706f8baf"
 
 [[package]]
 name = "yokai_playready"
 version = "0.1.0"
+source = "git+https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround?branch=rewrite#c9b3eabc4e65c8daa856e8d6a3f6d0f0706f8baf"
 
 [[package]]
 name = "yokai_widevine"
 version = "0.2.0"
+source = "git+https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround?branch=rewrite#c9b3eabc4e65c8daa856e8d6a3f6d0f0706f8baf"
 dependencies = [
  "cc",
  "libloading",

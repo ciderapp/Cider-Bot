@@ -38,7 +38,9 @@ tracing-subscriber = { version = "0.3.17", features = ["serde", "serde_json", "e
 url = "2.4.1"
 urlencoding = "2.1.3"
 uuid = { version = "1.4.1", features = ["v4", "serde"] }
-yokai = {path = "/Users/user/Documents/Projects New/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround/yokai"}
+# yokai = {path = "/Users/user/Documents/Projects New/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround/yokai"}
 # yokai_provider = {git = "https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround", branch = "rewrite", package = "provider"}
+# yokai_apple = { path = "/Users/user/Documents/Projects New/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround/provider/apple" }
 
-yokai_apple = { path = "/Users/user/Documents/Projects New/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround/provider/apple" }
+yokai = {git = "https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround", branch = "rewrite", package = "yokai"}
+yokai_apple = {git = "https://github.com/ciderapp/pokimanefartcompilation4khdrdolbyatmosdolbyvisionimaxsurround", branch = "rewrite", package = "yokai_apple"}
