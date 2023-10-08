@@ -13,18 +13,18 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@sentry/node": "^7.61.1",
+        "@sentry/node": "^7.73.0",
         "consola": "^3.2.3",
-        "discord.js": "^14.12.1",
-        "firebase-admin": "^11.10.1",
+        "discord.js": "^14.13.0",
+        "firebase-admin": "^11.11.0",
         "m3u8-stream-list": "^1.1.0"
     },
     "devDependencies": {
-        "@types/node": "^20.4.9",
+        "@types/node": "^20.8.3",
         "dotenv": "^16.3.1",
         "nodemon": "^3.0.1",
         "ts-node": "^10.9.1",
-        "typescript": "^5.1.6"
+        "typescript": "^5.2.2"
     },
     "packageManager": "yarn@3.6.1"
 }

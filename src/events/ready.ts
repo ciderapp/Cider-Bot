@@ -1,5 +1,4 @@
 import { ActivityType, Client, ColorResolvable, EmbedBuilder, Events, Guild, GuildBasedChannel, TextChannel } from 'discord.js';
-import { playerEvents } from '../integrations/discord-player.js';
 import { getAPIToken } from '../integrations/musickitAPI.js';
 import { firebase } from '../integrations/firebase.js';
 import { getServiceStatus } from '../integrations/serviceStatus.js';
