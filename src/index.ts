@@ -2,7 +2,6 @@ import { Client, GatewayIntentBits, Partials, Collection, TextChannel, EmbedBuil
 import 'dotenv/config';
 import consola from 'consola';
 import { readdirSync } from 'fs';
-// import { Player } from 'discord-player';
 import * as Sentry from '@sentry/node';
 
 Sentry.init({
