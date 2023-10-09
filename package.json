@@ -5,8 +5,8 @@
     "main": "build/index.js",
     "type": "module",
     "scripts": {
-        "build": "tsc && node deploy-commands.js",
-        "start": "node .",
+        "build": "tsc && node --no-warnings deploy-commands.js",
+        "start": "node --no-warnings .",
         "dev": "nodemon --config nodemon.json src/index.ts"
     },
     "keywords": [],
